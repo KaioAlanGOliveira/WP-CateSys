@@ -138,6 +138,14 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>jakarta.ejb</groupId>
+			<artifactId>jakarta.ejb-api</artifactId>
+			<version>4.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+
 		<!-- Bean Validation Implementation 
            Provides portable constraints such as @Email 
            Hibernate Validator is shipped in WildFly / JBoss EAP -->
