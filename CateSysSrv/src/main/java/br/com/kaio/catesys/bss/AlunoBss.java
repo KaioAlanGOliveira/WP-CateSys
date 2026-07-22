@@ -11,14 +11,13 @@ import jakarta.persistence.TypedQuery;
 @Stateless
 public class AlunoBss {
 
-	@PersistenceContext
-	private static EntityManager em;
+	@PersistenceContext(unitName = "MeuPu")
+	private EntityManager em;
 
-	@SuppressWarnings("unused")
-	public static List<Aluno> getList() {
+	public List<Aluno> getList() {
 
 		try {
-			String jpql = "select from aluno";
+			String jpql = "select o from Aluno o";
 			TypedQuery<Aluno> quere = em.createQuery(jpql, Aluno.class);
 			return quere.getResultList();
 		} catch (Exception e) {

@@ -1,14 +1,10 @@
 package br.com.kaio.catesys.domain;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -36,17 +32,6 @@ public class Aluno {
 
 	@Column(name = "status")
 	private Integer status;
-
-	@ManyToMany(mappedBy = "alunos")
-	private Set<Turma> turmas = new HashSet<>();
-
-	@OneToMany(mappedBy = "aluno")
-	private Set<Presenca> presencas = new HashSet<>();
-
-	public Aluno() {
-	}
-
-	// Getters e Setters
 
 	public Integer getMatricula() {
 		return matricula;
@@ -103,20 +88,4 @@ public class Aluno {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-
-	public Set<Turma> getTurmas() {
-		return turmas;
-	}
-
-	public void setTurmas(Set<Turma> turmas) {
-		this.turmas = turmas;
-	}
-
-	public Set<Presenca> getPresencas() {
-		return presencas;
-	}
-
-	public void setPresencas(Set<Presenca> presencas) {
-        this.presencas = presencas;
-    }
 }
