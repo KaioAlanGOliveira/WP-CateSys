@@ -15,11 +15,7 @@ public class CateSysSrvEndpoint {
     private CateSysSrvService service;
 
     @GET
-    @Path("/{name}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response sayHello(final @PathParam("name") String name) {
-        String response = service.hello(name);
-
-        return Response.ok(response).build();
+    public String ola() {
+    	return "olaa";
     }
 }

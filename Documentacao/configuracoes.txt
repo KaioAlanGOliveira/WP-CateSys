@@ -1,0 +1,3 @@
+MYSQL_URL=jdbc:mysql://localhost:3306/catesys
+MYSQL_USER=root
+MYSQL_PASSWORD=1111

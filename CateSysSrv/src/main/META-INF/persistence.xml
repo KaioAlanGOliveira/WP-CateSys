@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence xmlns="https://jakarta.ee"
+             xmlns:xsi="http://w3.org"
+             xsi:schemaLocation="https://jakarta.ee https://jakarta.ee/persistence_3_0.xsd"
+             version="3.0">
+
+    <persistence-unit name="CateSysPU" transaction-type="JTA">
+        <!-- Diz ao JPA para usar a conexão que o WildFly preparou -->
+        <jta-data-source>java:jboss/datasources/MySQLDS</jta-data-source>
+
+        <!-- Registra a classe que analisamos antes -->
+      
+
+        <properties>
+            <!-- Traduz as queries Java para o dialeto correto do MySQL -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+  
+        </properties>
+    </persistence-unit>
+</persistence>

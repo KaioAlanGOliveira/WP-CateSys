@@ -3,7 +3,7 @@ package br.com.kaio.catesys;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
-@ApplicationPath("/hello")
+@ApplicationPath("/api")
 public class CateSysSrvApplication extends Application {
 
 }
