@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { LoginService } from '../../service/login.service';
 import { loginDto } from '../../domain/login.model';
 
@@ -11,10 +11,10 @@ class LoginResponse {
   selector: 'app-login',
   imports: [ReactiveFormsModule],
   standalone: true,
-  templateUrl: './login.html',
-  styleUrl: './login.css',
+  templateUrl: './aluno.html',
+  styleUrl: './aluno.css',
 })
-export class Login {
+export class Aluno {
   private loginService = inject(LoginService);
   // 2. Injete o Router se precisar redirecionar o usuário após o login
   private router = inject(Router);
@@ -44,8 +44,12 @@ export class Login {
           alert('Login inválido');
         }
       },
-      error: (err) => console.error('Erro na requisição:', err)
+      error: (err) => {
+        console.error('Servidor Backend fora do ar ou inacessível!');
+        alert('Não foi possível conectar ao servidor. Verifique se o backend está ligado.');
+        console.error('Erro retornado pelo Java:', err.status, err.message);
+        alert('Usuário ou senha inválidos.');
+      }
     });
-    // this.router.navigate(['/dashboard']);
   }
 }

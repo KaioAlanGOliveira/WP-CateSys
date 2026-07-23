@@ -8,13 +8,13 @@ import Aura from '@primeuix/themes/aura';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-      providePrimeNG({
-        theme: {
-            preset: Aura,
-            options: {
-                darkModeSelector: '.my-app-dark'
-            }
+    providePrimeNG({
+      theme: {
+        preset: Aura,
+        options: {
+          darkModeSelector: '.my-app-dark'
         }
+      }
     }),
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes), provideClientHydration(withEventReplay())

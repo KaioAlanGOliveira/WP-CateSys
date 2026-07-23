@@ -296,3 +296,40 @@ input {
 .porcentagem::after {
   content: "%";
 }
+
+/* ====================== CORES DA APLICAÇÃO ====================== */
+:root {
+  --primary-blue: #003087;      /* Azul escuro da header */
+  --primary-light: #0056b3;     /* Azul mais claro para hover */
+  --accent-blue: #007bff;       /* Azul dos botões */
+  --table-header: #f8f9fa;      /* Cinza claro da tabela */
+  --text-dark: #333333;
+  --border-color: #dee2e6;
+}
+
+/* Aplica as cores globais */
+.p-toolbar {
+  background: var(--primary-blue) !important;
+  color: white !important;
+  border-radius: 0;
+}
+
+.p-button {
+  background: var(--accent-blue) !important;
+  border-color: var(--accent-blue) !important;
+}
+
+.p-button:hover {
+  background: var(--primary-light) !important;
+  border-color: var(--primary-light) !important;
+}
+
+.p-table th {
+  background: var(--table-header) !important;
+  color: var(--text-dark) !important;
+  font-weight: 600;
+}
+
+.card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

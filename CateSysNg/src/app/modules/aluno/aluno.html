@@ -1,0 +1,76 @@
+
+<div class="container">
+  <div class="card">
+
+    <div class="p-toolbar-start">
+      <button pButton icon="pi pi-arrow-left" class="p-button-text p-button-rounded"></button>
+      <h2 class="ml-3 mb-0">Alunos</h2>
+    </div>
+
+
+    <!-- Filtros -->
+    <div class="p-fluid formgrid grid p-4 gap-3">
+      <div class="field col-12 md:col-3">
+        <label for="matricula">Matrícula</label>
+        <input pInputText id="matricula" placeholder="Matrícula" />
+      </div>
+
+      <div class="field col-12 md:col-4">
+        <label for="nome">Nome</label>
+        <input pInputText id="nome" placeholder="Nome do aluno" />
+      </div>
+
+      <div class="field col-12 md:col-4">
+        <label for="turma">Turma / Grupo</label>
+
+      </div>
+
+      <div class="field col-12 md:col-1 flex align-items-end">
+        <button pButton label="Pesquisar" icon="pi pi-search">
+        </button>
+      </div>
+    </div>
+
+    <!-- Lista -->
+
+
+    <!-- Tabela -->
+    <table>
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Matrícula</th>
+          <th>Nome</th>
+          <th>Turma</th>
+          <th>Status</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-aluno>
+        <tr>
+          <td>{{ aluno.matricula }}</td>
+          <td>{{ aluno.nome }}</td>
+          <td>{{ aluno.turma }}</td>
+          <td>
+            <span [class]="'status-badge ' + aluno.statusClass">{{ aluno.status }}</span>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" class="text-center py-6 text-500">
+            Nenhum aluno encontrado
+          </td>
+        </tr>
+      </ng-template>
+    </table>
+
+    <!-- Rodapé -->
+    <div class="flex justify-content-between align-items-center px-3 py-3 border-top">
+      <span>Total de registros encontrados: <strong></strong></span>
+
+      <div class="flex align-items-center gap-2">
+        <span>Máx. de linhas:</span>
+
+      </div>
+    </div>
+  </div>
+</div>

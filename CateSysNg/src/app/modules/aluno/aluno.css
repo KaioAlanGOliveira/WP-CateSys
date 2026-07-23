@@ -1,0 +1,221 @@
+/* Página inteira */
+.pagina {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #14c0d6;
+}
+
+
+/* =========================================
+   TÍTULO
+========================================= */
+
+.titulo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    height: 32px;
+    padding: 0 10px;
+
+    color: white;
+    background-color: #07588c;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    border-radius: 2px 2px 0 0;
+}
+
+.titulo i {
+    font-size: 13px;
+}
+
+
+/* =========================================
+   FILTROS
+========================================= */
+
+.filtros {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+
+    padding: 18px 8px 10px;
+
+    border: 1px solid #dddddd;
+    border-top: none;
+
+    background-color: #ffffff;
+}
+
+
+/* Cada campo */
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+
+/* Labels */
+.campo label {
+    font-size: 12px;
+    color: #222222;
+}
+
+
+/* Código */
+.campo-codigo {
+    width: 90px;
+}
+
+.campo-codigo p-inputNumber {
+    width: 100%;
+}
+
+
+/* Descrição */
+.campo-descricao {
+    flex: 1;
+}
+
+
+/* Cliente */
+.campo-cliente {
+    flex: 1;
+}
+
+
+/* Inputs */
+.campo input,
+.campo p-inputNumber {
+    width: 100%;
+}
+
+
+/* Pesquisa do cliente */
+.cliente-pesquisa {
+    display: flex;
+    width: 100%;
+}
+
+
+/* Input do cliente */
+.cliente-pesquisa input {
+    flex: 1;
+    width: 100%;
+}
+
+
+/* Botão lupa */
+.botao-lupa {
+    width: 40px;
+    height: 32px;
+
+    border-radius: 0 3px 3px 0;
+}
+
+
+/* =========================================
+   BOTÃO PESQUISAR
+========================================= */
+
+.area-pesquisar {
+    display: flex;
+    justify-content: flex-end;
+
+    padding: 0 8px 10px;
+
+    border-left: 1px solid #dddddd;
+    border-right: 1px solid #dddddd;
+}
+
+
+/* =========================================
+   CABEÇALHO DA LISTA
+========================================= */
+
+.cabecalho-lista {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 8px 0;
+
+    font-size: 13px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+
+/* Botão + */
+.cabecalho-lista button {
+    width: 30px;
+    height: 30px;
+}
+
+
+/* =========================================
+   TABELA
+========================================= */
+
+.tabela-container {
+    width: 100%;
+    min-height: 400px;
+
+    border: 1px solid #dddddd;
+}
+
+
+/* Linhas da tabela */
+.linha-tabela {
+    cursor: pointer;
+}
+
+
+/* Efeito ao passar o mouse */
+.linha-tabela:hover {
+    background-color: #eaf4fb;
+}
+
+
+/* Mensagem sem registros */
+.sem-registros {
+    text-align: center;
+    padding: 30px;
+
+    color: #777777;
+}
+
+
+/* =========================================
+   RODAPÉ
+========================================= */
+
+.rodape {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 8px 4px;
+
+    font-size: 12px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+
+/* Área do máximo de linhas */
+.linhas {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+/* Tamanho do dropdown */
+.linhas p-dropdown {
+    width: 80px;
+}

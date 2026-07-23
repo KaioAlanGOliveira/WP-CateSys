@@ -2,8 +2,11 @@ package br.com.kaio.catesys.eps;
 
 import java.util.Map;
 
+import br.com.kaio.catesys.bss.LoginBss;
+import br.com.kaio.catesys.domain.Professor;
 import br.com.kaio.catesys.eps.dto.LoginDto;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -17,21 +20,27 @@ import jakarta.ws.rs.core.Response;
 @RequestScoped
 public class LoginEp {
 
-	@POST
+	@Inject
+	private LoginBss loginBss;
 
+	@POST
 	public Response login(LoginDto login) {
 
-		System.out.println(login.getLogin());
-		System.out.println(login.getSenha());
+		Professor professor = loginBss.getProfessor(login.getLogin(), login.getSenha());
+
+		if (professor == null) {
+
+			Map<String, String> resposta = Map.of("status", "fracasso");
+			return Response.ok(resposta).build();
+		}
+
 		Map<String, String> resposta = Map.of("status", "sucesso");
 
-		  return Response.ok(resposta)
-		            // Estas linhas dão a permissão que o navegador (Angular) exige:
-		            .header("Access-Control-Allow-Origin", "http://localhost:4200")
-		            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-		            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-		            .build();
-		}
+		return Response.ok(resposta)
+				// Estas linhas dão a permissão que o navegador (Angular) exige:
+				.header("Access-Control-Allow-Origin", "http://localhost:4200")
+				.header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+				.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD").build();
 
 	}
 }
