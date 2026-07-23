@@ -1,0 +1,169 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(90deg, rgba(48, 155, 227, 0.4) 0%, rgba(48, 155, 227, 0.4) 57%, rgba(48, 155, 227, 0.7) 43%, rgba(48, 155, 227, 0.7) 100%);
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.card {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    max-width: 800px;
+    max-height: 450px;
+    background-color: white;
+    box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.login-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 55%;
+    background-color: #1e3a8a; /* Substituído fallback caso não use variáveis do PrimeNG */
+}
+
+.image {
+    width: 170px;
+}
+
+.login-form {
+    width: 45%;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.sistema {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+.form-title {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: .6rem;
+}
+
+.form-subtitle {
+    color: #4b5563;
+    font-weight: 300;
+    font-size: 1.2rem;
+}
+
+.form {
+    margin-top: 2.2rem;
+}
+
+.form-field {
+    margin-bottom: 1.2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-field > label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* Estilo personalizado para as caixas de texto (inputs) */
+.input-field {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.input-field:focus {
+    border-color: #309be3;
+    box-shadow: 0 0 0 3px rgba(48, 155, 227, 0.2);
+}
+
+/* Estilo personalizado para o botão entrar */
+.btn-primary {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background-color: #309be3;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #257cb8;
+}
+
+.btn-primary:disabled {
+    background-color: #cbd5e1;
+    cursor: not-allowed;
+    color: #94a3b8;
+}
+
+.form-action {
+    margin-top: 1.5rem;
+}
+
+/* Estilo para avisos de campos inválidos */
+.mensagem {
+    color: #ef4444;
+    font-weight: 500;
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
+}
+/* Estilo para o container da ação */
+.form-action {
+    margin-top: 1.5rem;
+    width: 100%;
+}
+
+/* Estilo do botão de entrar (#btn) */
+#btn {
+    width: 100%; /* Ocupa toda a largura disponível da coluna */
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #309be3; /* Cor correspondente ao seu fundo */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Efeito ao passar o mouse por cima */
+#btn:hover:not(:disabled) {
+    background-color: #1d82c4;
+}
+
+/* Efeito ao clicar no botão */
+#btn:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+/* Estado desabilitado (quando o formulário estiver inválido) */
+#btn:disabled {
+    background-color: #cbd5e1;
+    color: #94a3b8;
+    cursor: not-allowed;
+}

@@ -1,0 +1,41 @@
+<div class="container">
+    <div class="card">
+        <div class="login-img">
+            <!-- Caminho corrigido para assets relativo para evitar quebras em produção -->
+            <img class="image" src="loginImg.png" alt="Login Image">
+            
+        </div>
+        <div class="login-form">
+            <div class="sistema">
+                <i class="pi pi-cog">Sistema de cadastro</i> 
+            </div>
+            <h2 class="form-title">Login</h2>
+            <span class="form-subtitle">Seja bem vindo(a)!</span>
+            
+            <form class="form" [formGroup]="form" (ngSubmit)="entrar()">
+                <div class="form-field">
+                    <label for="matricula">Usuário</label>
+                    <input id="matricula" class="input-field" type="number" formControlName="matricula" placeholder="Digite sua matrícula">
+                    
+                    @if (form.controls.matricula.invalid && form.controls.matricula.touched) {
+                        <span class="mensagem">*Preencha o campo 'Usuário'!</span>
+                    }
+                </div>
+
+                <div class="form-field">
+                    <label for="senha">Senha</label>
+                    <input id="senha" class="input-field" type="password" formControlName="senha" placeholder="Digite sua senha">
+                    
+                    @if (form.controls.senha.invalid && form.controls.senha.touched) {
+                        <span class="mensagem">*Preencha o campo 'Senha'!</span>
+                    }
+                </div>
+
+                <div class="form-action">
+                    <!-- Tipo alterado para submit para habilitar envio com o Enter -->
+                    <button id="btn" class="btn-primary" type="submit" [disabled]="form.invalid" >Entrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
