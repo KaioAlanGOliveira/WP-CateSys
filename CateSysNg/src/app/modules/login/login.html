@@ -14,17 +14,17 @@
             
             <form class="form" [formGroup]="form" (ngSubmit)="entrar()">
                 <div class="form-field">
-                    <label for="matricula">Usuário</label>
-                    <input id="matricula" class="input-field" type="number" formControlName="matricula" placeholder="Digite sua matrícula">
+                    <label for="login">Usuário</label>
+                    <input id="login" class="input-field" formControlName="login" placeholder="Digite sua matrícula">
                     
-                    @if (form.controls.matricula.invalid && form.controls.matricula.touched) {
+                    @if (form.controls.login.invalid && form.controls.login.touched) {
                         <span class="mensagem">*Preencha o campo 'Usuário'!</span>
                     }
                 </div>
 
                 <div class="form-field">
                     <label for="senha">Senha</label>
-                    <input id="senha" class="input-field" type="password" formControlName="senha" placeholder="Digite sua senha">
+                    <input id="senha" class="input-field" formControlName="senha" placeholder="Digite sua senha">
                     
                     @if (form.controls.senha.invalid && form.controls.senha.touched) {
                         <span class="mensagem">*Preencha o campo 'Senha'!</span>

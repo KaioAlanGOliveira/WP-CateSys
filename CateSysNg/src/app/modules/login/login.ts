@@ -4,7 +4,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { LoginService } from '../../service/login.service';
 import { loginDto } from '../../domain/login.model';
+import { log } from 'node:console';
 
+class LoginResponse {
+ status?:String;
+}
 @Component({
   selector: 'app-login',
   imports: [ReactiveFormsModule,],
@@ -13,24 +17,38 @@ import { loginDto } from '../../domain/login.model';
   styleUrl: './login.css',
 })
 export class Login {
-  private LoginService = inject(LoginService);
+  private loginService = inject(LoginService);
+// 2. Injete o Router se precisar redirecionar o usuário após o login
+  private router = inject(Router);
+ 
+ idProfessor:  number | null = null; 
 
   
 
   form = new FormGroup({
-    matricula: new FormControl<number | null>(null, Validators.required),
-    senha: new FormControl<number | null>(null, Validators.required)
+    login: new FormControl<string | null>(null, Validators.required),
+    senha: new FormControl<string | null>(null, Validators.required)
   });
   
 
   entrar() {
-    alert("asdfas");
-
-    const dados = this.form.value as loginDto;
-    this.LoginService.listarTodos(dados ).subscribe({
-      next: () => console.log('s'),
-      error: () => console.error('Erro')
-    }) 
-
+    const dados = this.form.getRawValue() as loginDto;
+    console.log(dados.login);
+    
+    if (this.form.invalid) {
+      return
+    }
+    this.loginService.listarTodos(dados).subscribe({
+       next: (resposta: any) => { // Corrigido de 'respota' para 'resposta'
+      const resultado = resposta as LoginResponse;
+      if (resultado.status === 'sucesso') {
+        this.router.navigate(['/dashboard']); 
+      } else {
+        alert('Login inválido');
+      }
+    },
+    error: (err) => console.error('Erro na requisição:', err)
+  }); 
+ // this.router.navigate(['/dashboard']);
   }
 }
