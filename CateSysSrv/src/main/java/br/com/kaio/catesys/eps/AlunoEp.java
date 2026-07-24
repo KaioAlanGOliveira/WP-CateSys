@@ -21,8 +21,8 @@ public class AlunoEp {
 	private AlunoBss alunoBss;
 
 	@POST
-	public List<Aluno> getAluno(Integer matricula, String nome) {
+	public List<Aluno> getAluno(Aluno aluno) {
 
-		return alunoBss.getAluno(matricula, nome);
+		return alunoBss.getAluno(aluno.getMatricula(), aluno.getNome());
 	}
 }

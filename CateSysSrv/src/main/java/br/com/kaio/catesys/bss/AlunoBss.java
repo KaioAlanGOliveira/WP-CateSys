@@ -15,18 +15,25 @@ public class AlunoBss {
 	private EntityManager em;
 
 	public List<Aluno> getAluno(Integer matricula, String nome) {
+		
+		if (nome != null && nome.trim().isEmpty()) {
+            nome = null;
+        }
+		if (matricula != null) {
+			matricula = null;
+        }
+		
 		try {
 
-			String jpql = "SELECT o FROM Aluno o WHERE o.matricula = :matricula AND o.nome = :nome";
-			
-			TypedQuery<Aluno> quere = em.createQuery(jpql, Aluno.class);
-			quere.setParameter("nome", nome);
-			quere.setParameter("matricula", matricula);
+			String jpql = " SELECT o FROM Aluno o   WHERE (:matricula IS NULL OR o.matricula = :matricula)  AND (:nome IS NULL OR LOWER(o.nome) LIKE LOWER(CONCAT('%', :nome, '%')))";
 
-			return quere.getResultList();
+			TypedQuery<Aluno> query = em.createQuery(jpql, Aluno.class);
+			query.setParameter("nome", nome);
+			query.setParameter("matricula", matricula);
+
+			return query.getResultList();
 		} catch (Exception e) {
 			e.addSuppressed(e);
-			System.out.println("klj");
 		}
 		return null;
 	}
