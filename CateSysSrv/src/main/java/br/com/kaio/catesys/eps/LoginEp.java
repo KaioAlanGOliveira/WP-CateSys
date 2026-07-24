@@ -36,11 +36,7 @@ public class LoginEp {
 
 		Map<String, String> resposta = Map.of("status", "sucesso");
 
-		return Response.ok(resposta)
-				// Estas linhas dão a permissão que o navegador (Angular) exige:
-				.header("Access-Control-Allow-Origin", "http://localhost:4200")
-				.header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-				.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD").build();
+		return Response.ok(resposta).build();
 
 	}
 }
