@@ -1,339 +1,236 @@
+/* Página */
 :host {
   display: block;
-  min-height: 100vh;
-  padding: 2rem;
-  background: #f1f5f9;
-}
-
-/* =========================
-   CONTAINER
-========================= */
-
-.container {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* =========================
-   CARD PRINCIPAL
-========================= */
-
-.card {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e2e8f0;
-}
-
-
-/* =========================
-   CABEÇALHO
-========================= */
-
-.p-toolbar-start {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.p-toolbar-start h2 {
-  margin: 0;
-  color: #1e293b;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-
-/* Botão voltar */
-
-:host ::ng-deep .p-toolbar-start .p-button {
-  width: 40px;
-  height: 40px;
-  color: #1d4ed8;
-}
-
-:host ::ng-deep .p-toolbar-start .p-button:hover {
-  background: #eff6ff;
-  color: #1e40af;
-}
-
-
-/* =========================
-   ÁREA DE FILTROS
-========================= */
-
-.formgrid {
-  display: grid;
-  grid-template-columns: 3fr 4fr 4fr auto;
-  align-items: end;
-  gap: 1rem;
-
-  padding: 1.25rem !important;
-
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-
-  margin-bottom: 1.5rem;
-}
-
-
-/* =========================
-   CAMPOS
-========================= */
-
-.field {
-  margin: 0;
-}
-
-.field label {
-  display: block;
-  margin-bottom: 0.5rem;
-
-  color: #334155;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-
-/* =========================
-   INPUTS
-========================= */
-
-.p-inpult {
-  width: 100%;
-  height: 40px;
-
-  padding: 0.65rem 0.75rem;
-
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-
-  background: #ffffff;
-  color: #1e293b;
-
-  transition: all 0.2s ease;
-}
-
-
-/* Placeholder */
-
-p-inpult::placeholder {
-  color: #94a3b8;
-}
-
-
-/* Hover */
-
-:host ::ng-deep .p-inputtext:hover {
-  border-color: #94a3b8;
-}
-
-
-/* Focus */
-
-:host ::ng-deep .p-inputtext:focus {
-  border-color: #2563eb;
-
-  box-shadow:
-    0 0 0 3px rgba(37, 99, 235, 0.12);
-
-  outline: none;
-}
-
-
-/* =========================
-   BOTÃO PESQUISAR
-========================= */
-
-:host ::ng-deep .field .p-button {
-  height: 40px;
-
-  padding: 0 1rem;
-
-  background: #2563eb;
-  border: 1px solid #2563eb;
-  border-radius: 6px;
-
-  font-weight: 600;
-
-  transition: all 0.2s ease;
-}
-
-
-/* Hover */
-
-:host ::ng-deep .field .p-button:hover {
-  background: #1d4ed8;
-  border-color: #1d4ed8;
-}
-
-
-/* Active */
-
-:host ::ng-deep .field .p-button:active {
-  background: #1e40af;
-  border-color: #1e40af;
-}
-
-
-/* =========================
-   TABELA
-========================= */
-
-table {
-  width: 100%;
-
-  border-collapse: collapse;
-
-  background: #ffffff;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-
-  overflow: hidden;
+  padding: 24px;
+  background: #f5f7fb;
+  min-height: 100%;
 }
 
 
 /* Cabeçalho */
+.page-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
-table th {
-  padding: 1rem;
-
-  text-align: left;
-
-  background: #f8fafc;
-
-  color: #334155;
-
-  font-size: 0.9rem;
+.page-header h2 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 24px;
   font-weight: 600;
-
-  border-bottom: 1px solid #e2e8f0;
 }
 
 
-/* Células */
+/* Card principal */
+.alunos-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+}
 
-table td {
-  padding: 1rem;
 
-  color: #475569;
+/* Formulário */
+.filtros {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  padding-bottom: 24px;
+}
 
-  font-size: 0.9rem;
+
+/* Campo */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+
+/* Largura do campo nome */
+.form-field:first-child {
+  flex: 1;
+}
+
+
+/* Largura matrícula */
+.form-field:nth-child(2) {
+  width: 220px;
+}
+
+
+/* Label */
+.form-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+
+/* Input */
+.input-field {
+  height: 40px;
+  width: 100%;
+  padding: 0 12px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+
+  background: #ffffff;
+  color: #1f2937;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition: 0.2s;
+  box-sizing: border-box;
+}
+
+
+/* Input quando selecionado */
+.input-field:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+
+/* Placeholder */
+.input-field::placeholder {
+  color: #9ca3af;
+}
+
+
+/* Botão */
+.form-action {
+  display: flex;
+}
+
+
+.btn-primary {
+  height: 40px;
+  padding: 0 24px;
+
+  border: none;
+  border-radius: 6px;
+
+  background: #3b82f6;
+  color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: background 0.2s, transform 0.1s;
+}
+
+
+.btn-primary:hover {
+  background: #2563eb;
+}
+
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+
+/* Container da tabela */
+.tabela-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+
+/* Tabela */
+:host ::ng-deep .p-datatable {
+  width: 100%;
+}
+
+
+/* Cabeçalho da tabela */
+:host ::ng-deep .p-datatable-thead > tr > th {
+  background: #f8fafc;
+  color: #374151;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  padding: 12px 16px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+
+/* Linhas */
+:host ::ng-deep .p-datatable-tbody > tr > td {
+  padding: 12px 16px;
+
+  font-size: 14px;
+  color: #4b5563;
 
   border-bottom: 1px solid #f1f5f9;
 }
 
 
-/* Hover nas linhas */
-
-table tr:hover td {
+/* Hover da linha */
+:host ::ng-deep .p-datatable-tbody > tr:hover {
   background: #f8fafc;
 }
 
 
-/* =========================
-   STATUS
-========================= */
-
-.status-badge {
-  display: inline-flex;
-
-  align-items: center;
-  justify-content: center;
-
-  padding: 0.35rem 0.75rem;
-
-  border-radius: 20px;
-
-  font-size: 0.8rem;
-  font-weight: 600;
-
-  background: #dcfce7;
-  color: #166534;
-}
-
-
-/* =========================
-   RODAPÉ
-========================= */
-
-.border-top {
+/* Rodapé */
+.table-footer {
   display: flex;
-
   justify-content: space-between;
   align-items: center;
 
-  padding: 1rem;
+  padding: 16px 0 0;
 
-  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
 
-  border-top: 1px solid #e2e8f0;
-
-  color: #64748b;
-
-  font-size: 0.9rem;
+  color: #6b7280;
+  font-size: 13px;
 }
 
 
-.border-top strong {
-  color: #1e293b;
+.table-footer strong {
+  color: #1f2937;
+  font-weight: 600;
 }
 
 
-/* =========================
-   RESPONSIVIDADE
-========================= */
-
-@media (max-width: 900px) {
-
-  .formgrid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .field.col-12.md\:col-1 {
-    grid-column: span 2;
-  }
-
-}
-
-
-@media (max-width: 600px) {
+/* Responsividade */
+@media (max-width: 768px) {
 
   :host {
-    padding: 1rem;
+    padding: 16px;
   }
 
-  .card {
-    padding: 1rem;
+  .filtros {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .formgrid {
-    grid-template-columns: 1fr;
-  }
-
-  .field.col-12.md\:col-1 {
-    grid-column: span 1;
-  }
-
-  :host ::ng-deep .field .p-button {
+  .form-field:first-child,
+  .form-field:nth-child(2) {
     width: 100%;
   }
 
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
+  .form-action {
+    width: 100%;
   }
 
-  .border-top {
+  .btn-primary {
+    width: 100%;
+  }
+
+  .table-footer {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.75rem;
+    gap: 8px;
   }
-
 }
