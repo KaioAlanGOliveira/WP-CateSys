@@ -15,8 +15,8 @@ class LoginResponse {
   styleUrl: './login.css',
 })
 export class Login {
+  
   private loginService = inject(LoginService);
-  // 2. Injete o Router se precisar redirecionar o usuário após o login
   private router = inject(Router);
 
   idProfessor: number | null = null;

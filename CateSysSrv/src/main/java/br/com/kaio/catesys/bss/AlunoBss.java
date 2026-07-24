@@ -14,15 +14,20 @@ public class AlunoBss {
 	@PersistenceContext(unitName = "MeuPu")
 	private EntityManager em;
 
-	public List<Aluno> getAluno() {
+	public List<Aluno> getAluno(Integer matricula, String nome) {
 		try {
-			String jpql = "select o from Aluno o";
+
+			String jpql = "SELECT o FROM Aluno o WHERE o.matricula = :matricula AND o.nome = :nome";
+			
 			TypedQuery<Aluno> quere = em.createQuery(jpql, Aluno.class);
+			quere.setParameter("nome", nome);
+			quere.setParameter("matricula", matricula);
+
 			return quere.getResultList();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.addSuppressed(e);
+			System.out.println("klj");
 		}
 		return null;
 	}
-
 }

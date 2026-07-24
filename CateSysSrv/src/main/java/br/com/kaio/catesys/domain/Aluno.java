@@ -15,16 +15,16 @@ public class Aluno {
 	@Column(name = "matricula")
 	private Integer matricula;
 
-	@Column(name = "nome", nullable = false, length = 100)
+	@Column(name = "nome")
 	private String nome;
 
-	@Column(name = "telefone", length = 11)
+	@Column(name = "telefone")
 	private String telefone;
 
-	@Column(name = "nome_responsavel", length = 100)
+	@Column(name = "nome_responsavel")
 	private String nomeResponsavel;
 
-	@Column(name = "telefone_responsavel", length = 11)
+	@Column(name = "telefone_responsavel")
 	private String telefoneResponsavel;
 
 	@Column(name = "data_nascimento")

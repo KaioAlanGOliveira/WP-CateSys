@@ -8,27 +8,32 @@
 
     <!-- Filtros -->
     <div class="p-fluid formgrid grid p-4 gap-3">
-      <div class="field col-12 md:col-3">
-        <label for="matricula">Matrícula</label>
-        <input class="p-inpult" id="matricula" placeholder="Matrícula" />
-      </div>
+       <form class="form" [formGroup]="form" (ngSubmit)="pesquisar()">
+                <div class="form-field">
+                    <label for="nome">Nome</label>
+                    <input id="nome" class="input-field" formControlName="nome" placeholder="Digite sue nome">
+                    
+                    @if (form.controls.matricula.invalid && form.controls.matricula.touched) {
+                        <span class="mensagem">*Preencha o campo 'Nome'!</span>
+                    }
+                </div>
 
-      <div class="field col-12 md:col-4">
-        <label for="nome">Nome</label>
-        <input class="p-inpult" id="nome" placeholder="Nome do aluno" />
-      </div>
+                <div class="form-field">
+                    <label for="matricula">Matricula</label>
+                    <input id="matricula" class="input-field" formControlName="matricula" placeholder="Digite sua matricula">
+                    
+                    @if (form.controls.matricula.invalid && form.controls.matricula.touched) {
+                        <span class="mensagem">*Preencha o campo 'Matricula'!</span>
+                    }
+                </div>
 
-      <div class="field col-12 md:col-4">
-        <label for="turma">Turma / Grupo</label>
-      </div>
-
-      <div class="field col-12 md:col-1 flex align-items-end">
-        <button pButton label="Pesquisar" icon="pi pi-search" (click)="pesquisar()">Pesquisar</button>
-      </div>
-    </div>
+                <div class="form-action">
+                    <!-- Tipo alterado para submit para habilitar envio com o Enter -->
+                    <button id="btn" class="btn-primary" type="submit" [disabled]="form.invalid" >Entrar</button>
+                </div>
+            </form>
 
     <p-table [value]="listAlunos">
-
   <!-- Cabeçalho -->
   <ng-template pTemplate="header">
     <tr>

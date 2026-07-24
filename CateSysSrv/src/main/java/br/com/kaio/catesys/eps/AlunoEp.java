@@ -17,16 +17,12 @@ import jakarta.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
 public class AlunoEp {
-
 	@Inject
 	private AlunoBss alunoBss;
 
 	@POST
-	public List<Aluno> getAluno() {
+	public List<Aluno> getAluno(Integer matricula, String nome) {
 
-		List<Aluno> aluno = alunoBss.getAluno();
-		System.out.println(aluno);
-		return aluno;
-
+		return alunoBss.getAluno(matricula, nome);
 	}
 }

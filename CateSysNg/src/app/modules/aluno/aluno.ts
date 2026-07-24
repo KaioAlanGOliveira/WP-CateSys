@@ -25,8 +25,8 @@ export class Aluno {
   listAlunos:aluno[] = [];
 
   form = new FormGroup({
-    login: new FormControl<string | null>(null, Validators.required),
-    senha: new FormControl<string | null>(null, Validators.required)
+    matricula: new FormControl<number | null>(null, Validators.required),
+    nome: new FormControl<string | null>(null, Validators.required)
   });
 
   entrar() {
@@ -45,30 +45,20 @@ export class Aluno {
         }
       },
       error: (err) => {
-        console.error('Servidor Backend fora do ar ou inacessível!');
-        alert('Não foi possível conectar ao servidor. Verifique se o backend está ligado.');
-        console.error('Erro retornado pelo Java:', err.status, err.message);
         alert('Usuário ou senha inválidos.');
       }
     });
   }
 
   pesquisar() {
-    this.alunoServece.listarTodos().subscribe({
+    const dado = this.form.getRawValue() as aluno;
+    this.alunoServece.listarTodos(dado).subscribe({
       next: (dado) => {
         this.listAlunos = dado;
       },
       error: (err) => {
+        console.log(err);
       }
     });
-  }
-
-  alunos = [
-    {
-      matricula: '001',
-      nome: 'João',
-      turma: 'A',
-      status: 'Ativo'
-    }
-  ];
+  }  
 }
