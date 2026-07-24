@@ -35,7 +35,7 @@ export class Login {
     }
 
     const dados = this.form.getRawValue() as loginDto;
-    this.loginService.listarTodos(dados).subscribe({
+    this.loginService.logar(dados).subscribe({
       next: (resposta: any) => {
         const resultado = resposta as LoginResponse;
         if (resultado.status === 'sucesso') {
@@ -44,7 +44,7 @@ export class Login {
           alert('Login inválido');
         }
       },
-      error: (err) => console.error('Erro na requisição:', err)
+      error: (err) => console.error('Erro na requisição:', err),
     });
     // this.router.navigate(['/dashboard']);
   }

@@ -13,9 +13,7 @@ export class LoginService {
 
   constructor(private http: HttpClient) { }
 
-  listarTodos(loginDto: loginDto): Observable<any> {
-    console.log(this.http.post(this.apiUrl, loginDto));
-    
+  logar(loginDto: loginDto): Observable<any> {
     return this.http.post(this.apiUrl, loginDto);
   }
 }

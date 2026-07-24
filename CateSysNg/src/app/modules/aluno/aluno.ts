@@ -2,32 +2,32 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
 import { LoginService } from '../../service/login.service';
+import { AlunoService } from '../../service/aluno.service';
 import { loginDto } from '../../domain/login.model';
+import { TableModule } from 'primeng/table';
+import { aluno } from '../../domain/aluno.model';
 
 class LoginResponse {
   status?: String;
 }
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, TableModule],
   standalone: true,
   templateUrl: './aluno.html',
   styleUrl: './aluno.css',
 })
+
 export class Aluno {
+  private alunoServece = inject(AlunoService);
   private loginService = inject(LoginService);
-  // 2. Injete o Router se precisar redirecionar o usuário após o login
   private router = inject(Router);
-
-  idProfessor: number | null = null;
-
-
+  listAlunos:aluno[] = [];
 
   form = new FormGroup({
     login: new FormControl<string | null>(null, Validators.required),
     senha: new FormControl<string | null>(null, Validators.required)
   });
-
 
   entrar() {
     if (this.form.invalid) {
@@ -35,7 +35,7 @@ export class Aluno {
     }
 
     const dados = this.form.getRawValue() as loginDto;
-    this.loginService.listarTodos(dados).subscribe({
+    this.loginService.logar(dados).subscribe({
       next: (resposta: any) => {
         const resultado = resposta as LoginResponse;
         if (resultado.status === 'sucesso') {
@@ -52,4 +52,23 @@ export class Aluno {
       }
     });
   }
+
+  pesquisar() {
+    this.alunoServece.listarTodos().subscribe({
+      next: (dado) => {
+        this.listAlunos = dado;
+      },
+      error: (err) => {
+      }
+    });
+  }
+
+  alunos = [
+    {
+      matricula: '001',
+      nome: 'João',
+      turma: 'A',
+      status: 'Ativo'
+    }
+  ];
 }

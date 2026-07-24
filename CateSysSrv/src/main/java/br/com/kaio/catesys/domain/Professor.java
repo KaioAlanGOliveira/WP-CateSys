@@ -29,8 +29,7 @@ public class Professor {
 	@Column(name = "status")
 	private Integer status;
 
-	@OneToMany(mappedBy = "professor")
-	private Set<Turma> turmas = new HashSet<>();
+	
 
 	public Professor() {
 	}
@@ -73,13 +72,5 @@ public class Professor {
 
 	public void setStatus(Integer status) {
 		this.status = status;
-	}
-
-	public Set<Turma> getTurmas() {
-		return turmas;
-	}
-
-	public void setTurmas(Set<Turma> turmas) {
-		this.turmas = turmas;
 	}
 }

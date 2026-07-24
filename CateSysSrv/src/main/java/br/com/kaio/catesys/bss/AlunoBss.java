@@ -14,8 +14,7 @@ public class AlunoBss {
 	@PersistenceContext(unitName = "MeuPu")
 	private EntityManager em;
 
-	public List<Aluno> getList() {
-
+	public List<Aluno> getAluno() {
 		try {
 			String jpql = "select o from Aluno o";
 			TypedQuery<Aluno> quere = em.createQuery(jpql, Aluno.class);

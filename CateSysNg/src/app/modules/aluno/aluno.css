@@ -1,221 +1,339 @@
-/* Página inteira */
-.pagina {
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
-    background-color: #14c0d6;
+:host {
+  display: block;
+  min-height: 100vh;
+  padding: 2rem;
+  background: #f1f5f9;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* =========================
+   CARD PRINCIPAL
+========================= */
+
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
 }
 
 
-/* =========================================
-   TÍTULO
-========================================= */
+/* =========================
+   CABEÇALHO
+========================= */
 
-.titulo {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-
-    height: 32px;
-    padding: 0 10px;
-
-    color: white;
-    background-color: #07588c;
-
-    font-size: 14px;
-    font-weight: bold;
-
-    border-radius: 2px 2px 0 0;
+.p-toolbar-start {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.titulo i {
-    font-size: 13px;
+.p-toolbar-start h2 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 
-/* =========================================
-   FILTROS
-========================================= */
+/* Botão voltar */
 
-.filtros {
-    display: flex;
-    align-items: flex-end;
-    gap: 6px;
+:host ::ng-deep .p-toolbar-start .p-button {
+  width: 40px;
+  height: 40px;
+  color: #1d4ed8;
+}
 
-    padding: 18px 8px 10px;
-
-    border: 1px solid #dddddd;
-    border-top: none;
-
-    background-color: #ffffff;
+:host ::ng-deep .p-toolbar-start .p-button:hover {
+  background: #eff6ff;
+  color: #1e40af;
 }
 
 
-/* Cada campo */
-.campo {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+/* =========================
+   ÁREA DE FILTROS
+========================= */
+
+.formgrid {
+  display: grid;
+  grid-template-columns: 3fr 4fr 4fr auto;
+  align-items: end;
+  gap: 1rem;
+
+  padding: 1.25rem !important;
+
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+
+  margin-bottom: 1.5rem;
 }
 
 
-/* Labels */
-.campo label {
-    font-size: 12px;
-    color: #222222;
+/* =========================
+   CAMPOS
+========================= */
+
+.field {
+  margin: 0;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.5rem;
+
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 
-/* Código */
-.campo-codigo {
-    width: 90px;
-}
+/* =========================
+   INPUTS
+========================= */
 
-.campo-codigo p-inputNumber {
-    width: 100%;
-}
+.p-inpult {
+  width: 100%;
+  height: 40px;
 
+  padding: 0.65rem 0.75rem;
 
-/* Descrição */
-.campo-descricao {
-    flex: 1;
-}
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
 
+  background: #ffffff;
+  color: #1e293b;
 
-/* Cliente */
-.campo-cliente {
-    flex: 1;
-}
-
-
-/* Inputs */
-.campo input,
-.campo p-inputNumber {
-    width: 100%;
+  transition: all 0.2s ease;
 }
 
 
-/* Pesquisa do cliente */
-.cliente-pesquisa {
-    display: flex;
-    width: 100%;
+/* Placeholder */
+
+p-inpult::placeholder {
+  color: #94a3b8;
 }
 
 
-/* Input do cliente */
-.cliente-pesquisa input {
-    flex: 1;
-    width: 100%;
+/* Hover */
+
+:host ::ng-deep .p-inputtext:hover {
+  border-color: #94a3b8;
 }
 
 
-/* Botão lupa */
-.botao-lupa {
-    width: 40px;
-    height: 32px;
+/* Focus */
 
-    border-radius: 0 3px 3px 0;
+:host ::ng-deep .p-inputtext:focus {
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.12);
+
+  outline: none;
 }
 
 
-/* =========================================
+/* =========================
    BOTÃO PESQUISAR
-========================================= */
+========================= */
 
-.area-pesquisar {
-    display: flex;
-    justify-content: flex-end;
+:host ::ng-deep .field .p-button {
+  height: 40px;
 
-    padding: 0 8px 10px;
+  padding: 0 1rem;
 
-    border-left: 1px solid #dddddd;
-    border-right: 1px solid #dddddd;
+  background: #2563eb;
+  border: 1px solid #2563eb;
+  border-radius: 6px;
+
+  font-weight: 600;
+
+  transition: all 0.2s ease;
 }
 
 
-/* =========================================
-   CABEÇALHO DA LISTA
-========================================= */
+/* Hover */
 
-.cabecalho-lista {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 8px 0;
-
-    font-size: 13px;
-    font-style: italic;
-    font-weight: bold;
+:host ::ng-deep .field .p-button:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
 }
 
 
-/* Botão + */
-.cabecalho-lista button {
-    width: 30px;
-    height: 30px;
+/* Active */
+
+:host ::ng-deep .field .p-button:active {
+  background: #1e40af;
+  border-color: #1e40af;
 }
 
 
-/* =========================================
+/* =========================
    TABELA
-========================================= */
+========================= */
 
-.tabela-container {
-    width: 100%;
-    min-height: 400px;
+table {
+  width: 100%;
 
-    border: 1px solid #dddddd;
+  border-collapse: collapse;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  overflow: hidden;
 }
 
 
-/* Linhas da tabela */
-.linha-tabela {
-    cursor: pointer;
+/* Cabeçalho */
+
+table th {
+  padding: 1rem;
+
+  text-align: left;
+
+  background: #f8fafc;
+
+  color: #334155;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  border-bottom: 1px solid #e2e8f0;
 }
 
 
-/* Efeito ao passar o mouse */
-.linha-tabela:hover {
-    background-color: #eaf4fb;
+/* Células */
+
+table td {
+  padding: 1rem;
+
+  color: #475569;
+
+  font-size: 0.9rem;
+
+  border-bottom: 1px solid #f1f5f9;
 }
 
 
-/* Mensagem sem registros */
-.sem-registros {
-    text-align: center;
-    padding: 30px;
+/* Hover nas linhas */
 
-    color: #777777;
+table tr:hover td {
+  background: #f8fafc;
 }
 
 
-/* =========================================
+/* =========================
+   STATUS
+========================= */
+
+.status-badge {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.35rem 0.75rem;
+
+  border-radius: 20px;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  background: #dcfce7;
+  color: #166534;
+}
+
+
+/* =========================
    RODAPÉ
-========================================= */
+========================= */
 
-.rodape {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.border-top {
+  display: flex;
 
-    padding: 8px 4px;
+  justify-content: space-between;
+  align-items: center;
 
-    font-size: 12px;
-    font-style: italic;
-    font-weight: bold;
+  padding: 1rem;
+
+  background: #ffffff;
+
+  border-top: 1px solid #e2e8f0;
+
+  color: #64748b;
+
+  font-size: 0.9rem;
 }
 
 
-/* Área do máximo de linhas */
-.linhas {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.border-top strong {
+  color: #1e293b;
 }
 
 
-/* Tamanho do dropdown */
-.linhas p-dropdown {
-    width: 80px;
+/* =========================
+   RESPONSIVIDADE
+========================= */
+
+@media (max-width: 900px) {
+
+  .formgrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .field.col-12.md\:col-1 {
+    grid-column: span 2;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  :host {
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .formgrid {
+    grid-template-columns: 1fr;
+  }
+
+  .field.col-12.md\:col-1 {
+    grid-column: span 1;
+  }
+
+  :host ::ng-deep .field .p-button {
+    width: 100%;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .border-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
 }
