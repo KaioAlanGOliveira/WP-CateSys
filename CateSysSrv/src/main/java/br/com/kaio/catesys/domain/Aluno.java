@@ -8,29 +8,29 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "aluno")
+@Table(name = "ALUNO")
 public class Aluno {
 
 	@Id
-	@Column(name = "matricula")
+	@Column(name = "MATRICULA")
 	private Integer matricula;
 
-	@Column(name = "nome")
+	@Column(name = "NOME")
 	private String nome;
 
-	@Column(name = "telefone")
+	@Column(name = "TELEFONE")
 	private String telefone;
 
-	@Column(name = "nome_responsavel")
+	@Column(name = "NOME_RESPONSAVEL")
 	private String nomeResponsavel;
 
-	@Column(name = "telefone_responsavel")
+	@Column(name = "TELEFONE_RESPONSAVEL")
 	private String telefoneResponsavel;
 
-	@Column(name = "data_nascimento")
+	@Column(name = "DATA_NASCIMENTO")
 	private LocalDate dataNascimento;
 
-	@Column(name = "status")
+	@Column(name = "STATUS")
 	private Integer status;
 
 	public Integer getMatricula() {

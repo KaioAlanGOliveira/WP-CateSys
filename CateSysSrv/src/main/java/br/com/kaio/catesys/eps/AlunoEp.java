@@ -7,7 +7,7 @@ import br.com.kaio.catesys.domain.Aluno;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
@@ -20,9 +20,9 @@ public class AlunoEp {
 	@Inject
 	private AlunoBss alunoBss;
 
-	@POST
-	public List<Aluno> getAluno(Aluno aluno) {
+	@GET
+	public List<Aluno> getAlunos() {
 
-		return alunoBss.getAluno(aluno.getMatricula(), aluno.getNome());
+		return alunoBss.getAlunos();
 	}
 }

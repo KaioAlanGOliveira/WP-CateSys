@@ -7,43 +7,33 @@
 <div class="alunos-card">
 
   <!-- Filtros -->
-  <form
-    class="filtros"
-    [formGroup]="form"
-    (ngSubmit)="pesquisar()"
-  >
+  <form class="filtros" [formGroup]="form" (ngSubmit)="carregarDados()">
 
     <div class="form-field">
       <label for="nome">Nome</label>
 
-      <input
-        id="nome"
-        class="input-field"
-        type="text"
-        formControlName="nome"
-        placeholder="Digite o nome"
-      >
+      <input id="nome" class="input-field" type="text" formControlName="nome" placeholder="Digite o nome" #inputNome
+        (input)="pesquisar(inputNome.value,  inputMatricular.value)"
+        (keyup.enter)="pesquisar(inputNome.value,  inputMatricular.value)">
     </div>
 
     <div class="form-field">
       <label for="matricula">Matrícula</label>
 
-      <input
-        id="matricula"
-        class="input-field"
-        type="number"
-        formControlName="matricula"
-        placeholder="Digite a matrícula"
-      >
+      <input id="matricula" class="input-field" type="number" formControlName="matricula"
+        placeholder="Digite a matrícula" #inputMatricular (input)="pesquisar(inputNome.value,  inputMatricular.value)"
+        (keyup.enter)="pesquisar(inputNome.value,  inputMatricular.value)">
     </div>
 
     <div class="form-action">
-      <button
-        id="btn"
-        class="btn-primary"
-        type="submit"
-      >
+      <button id="btn" class="btn-primary" type="submit" (click)="pesquisar(inputNome.value, inputMatricular.value)">
         Pesquisar
+      </button>
+    </div>
+    
+    <div class="form-action">
+      <button id="btn" class="btn-primary" type="submit" (click)="add()">
+        +
       </button>
     </div>
 
@@ -53,10 +43,7 @@
   <!-- Tabela -->
   <div class="tabela-container">
 
-    <p-table
-      [value]="listAlunos"
-      [tableStyle]="{ 'min-width': '50rem' }"
-    >
+    <p-table [value]="alunosFiltrados" [tableStyle]="{ 'min-width': '50rem' }">
 
       <ng-template pTemplate="header">
         <tr>
