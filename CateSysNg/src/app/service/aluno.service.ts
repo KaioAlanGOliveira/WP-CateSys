@@ -14,7 +14,7 @@ export class AlunoService {
 
   constructor(private http: HttpClient) { }
 
-  listarTodos(aluno: aluno ): Observable<aluno[]> {
-    return this.http.post<aluno[]>(this.apiUrl, aluno);
+  listarTodos(): Observable<aluno[]> {
+    return this.http.get<aluno[]>(this.apiUrl);
   }
 }

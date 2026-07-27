@@ -6,6 +6,7 @@ import { AlunoService } from '../../service/aluno.service';
 import { loginDto } from '../../domain/login.model';
 import { TableModule } from 'primeng/table';
 import { aluno } from '../../domain/aluno.model';
+import { log } from 'node:console';
 
 @Component({
   selector: 'app-aluno',
@@ -16,10 +17,12 @@ import { aluno } from '../../domain/aluno.model';
 })
 
 export class Aluno implements OnInit {
+
   private alunoServece = inject(AlunoService);
   private loginService = inject(LoginService);
   private cdr = inject(ChangeDetectorRef);
   private router = inject(Router);
+
   listAlunos: aluno[] = [];
   alunosFiltrados: any[] = [];
 
@@ -29,15 +32,12 @@ export class Aluno implements OnInit {
   });
 
   ngOnInit() {
-    this.pesquisar();
+    this.carregarDados();
   }
-  pesquisar() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
+
+  carregarDados() {
     const dado = this.form.getRawValue() as aluno;
-    this.alunoServece.listarTodos(dado).subscribe({
+    this.alunoServece.listarTodos().subscribe({
       next: (dados) => {
         console.log('Dados recebidos:', dados);
 
@@ -50,5 +50,25 @@ export class Aluno implements OnInit {
         console.log(err);
       }
     });
+  }
+
+  pesquisar(termoNome: string, termoMatricula: string) {
+
+    if (!termoNome && !termoNome) {
+      this.alunosFiltrados = this.listAlunos;
+      return;
+    }
+
+    const buscaNome = termoNome ? termoNome.toLocaleLowerCase().trim() : '';
+    const buscaMatricula = termoMatricula ? termoMatricula.trim() : '';
+
+    this.alunosFiltrados = this.listAlunos.filter(a =>
+      (termoNome && a.nome && a.nome.toLocaleLowerCase().includes(termoNome.toLocaleLowerCase().trim())) ||
+      (termoMatricula && a.matricula && String(a.matricula).includes(termoMatricula.trim()))
+    );
+  }
+
+  add() {
+    throw new Error('Method not implemented.');
   }
 }
