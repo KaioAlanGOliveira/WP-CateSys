@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
-import { LoginService } from '../../service/login.service';
-import { AlunoService } from '../../service/aluno.service';
-import { loginDto } from '../../domain/login.model';
+import { LoginService } from '../../../service/login.service';
+import { AlunoService } from '../../../service/aluno.service';
+import { loginDto } from '../../../domain/login.model';
 import { TableModule } from 'primeng/table';
-import { aluno } from '../../domain/aluno.model';
+import { aluno } from '../../../domain/aluno.model';
 import { log } from 'node:console';
 
 @Component({
@@ -69,6 +69,6 @@ export class Aluno implements OnInit {
   }
 
   add() {
-    throw new Error('Method not implemented.');
+    
   }
 }

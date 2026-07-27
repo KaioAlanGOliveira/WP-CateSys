@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { Login } from './modules/login/login';
-import { Aluno } from './modules/aluno/aluno';
+import { Aluno } from './modules/aluno-modules/aluno/aluno';
 import { MenuLateral } from './shared/menu-lateral/menu-lateral';
 export const routes: Routes = [
 
