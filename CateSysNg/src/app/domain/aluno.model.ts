@@ -1,9 +1,9 @@
 export class aluno {
     matricula?: number;
-	nome?: String;
-	telefone?: String;
-	nomeResponsavel?: String;
-	telefoneResponsavel?: String;
+	nome?: string;
+	telefone?: string;
+	nomeResponsavel?: string;
+	telefoneResponsavel?: string;
 	dataNascimento?: Date;
 	status?: number;
 }

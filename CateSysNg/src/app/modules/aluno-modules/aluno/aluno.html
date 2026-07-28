@@ -32,7 +32,7 @@
     </div>
     
     <div class="form-action">
-      <button id="btn" class="btn-primary" type="submit" (click)="add()">
+      <button id="btn" class="btn-primary" type="button" (click)="add()">
         +
       </button>
     </div>
@@ -49,16 +49,14 @@
         <tr>
           <th>Matrícula</th>
           <th>Nome</th>
-          <th>Turma</th>
           <th>Status</th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-aluno>
-        <tr>
+        <tr (dblclick)="selecionado(aluno)">
           <td>{{ aluno.matricula }}</td>
           <td>{{ aluno.nome }}</td>
-          <td>{{ aluno.turma }}</td>
           <td>{{ aluno.status }}</td>
         </tr>
       </ng-template>
@@ -84,3 +82,6 @@
   </div>
 
 </div>
+<app-pops [(visivel)]="exibirModalPrincipal" (visivelChange)="retornoPopUp($event)"  [Selecionado]="alunoSelecionado" [alterar]="alterar">
+
+</app-pops>

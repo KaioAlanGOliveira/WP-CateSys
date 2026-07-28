@@ -7,10 +7,12 @@ import { loginDto } from '../../../domain/login.model';
 import { TableModule } from 'primeng/table';
 import { aluno } from '../../../domain/aluno.model';
 import { log } from 'node:console';
+import { AlunoP } from "../aluno-p/aluno-p";
+
 
 @Component({
   selector: 'app-aluno',
-  imports: [ReactiveFormsModule, TableModule],
+  imports: [ReactiveFormsModule, TableModule, AlunoP],
   standalone: true,
   templateUrl: './aluno.html',
   styleUrl: './aluno.css',
@@ -22,10 +24,13 @@ export class Aluno implements OnInit {
   private loginService = inject(LoginService);
   private cdr = inject(ChangeDetectorRef);
   private router = inject(Router);
-
+  exibirModalPrincipal: boolean = false;
+  alunoSelecionado!: any;
+  formAluno!: Aluno;
   listAlunos: aluno[] = [];
   alunosFiltrados: any[] = [];
 
+  alterar: boolean = false;
   form = new FormGroup({
     matricula: new FormControl<number | null>(null),
     nome: new FormControl<string | "">("", Validators.required)
@@ -43,7 +48,6 @@ export class Aluno implements OnInit {
 
         this.listAlunos = dados || [];
         this.alunosFiltrados = dados || [];
-
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -51,11 +55,15 @@ export class Aluno implements OnInit {
       }
     });
   }
-
+  novoPagamento() {
+    this.alterar = false;
+    this.exibirModalPrincipal = true;
+    this.abrirMeuPopup();
+  }
   pesquisar(termoNome: string, termoMatricula: string) {
 
-    if (!termoNome && !termoNome) {
-      this.alunosFiltrados = this.listAlunos;
+    if (!termoNome && !termoMatricula) {
+      this.alunosFiltrados = [...this.listAlunos];
       return;
     }
 
@@ -63,12 +71,29 @@ export class Aluno implements OnInit {
     const buscaMatricula = termoMatricula ? termoMatricula.trim() : '';
 
     this.alunosFiltrados = this.listAlunos.filter(a =>
-      (termoNome && a.nome && a.nome.toLocaleLowerCase().includes(termoNome.toLocaleLowerCase().trim())) ||
-      (termoMatricula && a.matricula && String(a.matricula).includes(termoMatricula.trim()))
+      (buscaNome && a.nome && a.nome.toLocaleLowerCase().includes(buscaNome.toLocaleLowerCase().trim())) ||
+      (buscaMatricula && a.matricula && String(a.matricula).includes(buscaMatricula.trim()))
     );
   }
-
+  abrirMeuPopup() {
+    this.exibirModalPrincipal = true;
+    this.alterar = true;
+  }
   add() {
-    
+    this.alterar = false;
+    this.exibirModalPrincipal = true;
+    this.abrirMeuPopup();
+  }
+  retornoPopUp(exib: boolean) {
+
+    if (!exib) {
+      this.carregarDados();
+    }
+  }
+  selecionado(aluno: aluno) {
+    this.alterar = true;
+    this.alunoSelecionado = aluno;
+    this.form.patchValue(aluno);
+    this.abrirMeuPopup();
   }
 }

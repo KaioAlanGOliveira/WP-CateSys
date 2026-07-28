@@ -9,6 +9,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumber } from "primeng/inputnumber";
 import { aluno } from '../../../domain/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
+import { Aluno } from '../aluno/aluno';
 
 @Component({
   selector: 'app-pops',
@@ -22,7 +23,6 @@ import { AlunoService } from '../../../service/aluno.service';
     MessageModule,
     InputTextModule,
     FormsModule,
-    InputNumber
   ],
   templateUrl: './aluno-p.html',
   styleUrl: './aluno-p.css'
@@ -33,6 +33,8 @@ export class AlunoP implements OnChanges, OnInit {
 
   formularioAluno!: FormGroup;
 
+  tipoPagamento: any;
+
   private modo: 'initial' | 'creating' | 'editing' = 'initial';
 
   @Input() Selecionado: aluno | null = null;
@@ -40,7 +42,6 @@ export class AlunoP implements OnChanges, OnInit {
   @Input() visivel = false;
   @Input() cmpAtivo = false;
   @Input() alterar = false;
-
   private fb = inject(FormBuilder);
   private AlunoService = inject(AlunoService);
 
@@ -48,7 +49,7 @@ export class AlunoP implements OnChanges, OnInit {
 
   ngOnInit() {
     this.initForm();
-    this.carregarAluno();
+    this.carregarAlunos();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -64,18 +65,21 @@ export class AlunoP implements OnChanges, OnInit {
 
   private initForm(): void {
     this.formularioAluno = this.fb.group({
-      cpf: [{ value: '', disabled: true }, [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
+      matricula: [{ value: '', disabled: true }, [Validators.required]],
       nome: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]],
-      email: [{ value: '', disabled: true }, [Validators.email]],
-      idade: [{ value: null, disabled: true }, [Validators.min(0), Validators.max(120)]],
-      telefone: [{ value: '', disabled: true }]
+      telefone: [{ value: '', disabled: true }],
+      nomeResponsavel: [{ value: '', disabled: true }, [Validators.required]],
+      telefoneResponsavel: [{ value: '', disabled: true }],
+      dataNascimento: [{ value: null, disabled: true }, [Validators.required]],
+      idade: [{ value: null, disabled: true }],
+      tipo: [{ value: 1, disabled: true }, [Validators.required]]
     });
   }
 
-  carregarAluno() {
+  carregarAlunos() {
     this.AlunoService.listarTodos().subscribe({
       next: (dados) => this.aluno = dados || [],
-      error: (err) => console.error('Erro ao buscar fiéis:', err)
+      error: (err) => console.error('Erro ao buscar alunos:', err)
     });
   }
 
@@ -122,8 +126,8 @@ export class AlunoP implements OnChanges, OnInit {
     return valor.toString().replace(/\D/g, '');
   }
 
- 
- 
+
+
   cancelar() {
     if (this.modo === 'creating') {
       this.fecharModal();
@@ -136,7 +140,7 @@ export class AlunoP implements OnChanges, OnInit {
 
   private finalizarComSucesso() {
     this.fecharModal();
-    this.carregarAluno();
+    this.carregarAlunos();
   }
 
   fecharModal() {
@@ -159,4 +163,7 @@ export class AlunoP implements OnChanges, OnInit {
     }
     this.atualizarEstadoUI();
   }
+
+
+
 }
