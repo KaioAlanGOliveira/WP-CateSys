@@ -1,76 +1,112 @@
 <p-dialog header="Cadastro dos Fieis" [(visible)]="visivel" (onHide)="fecharModal()" [modal]="true"
   [style]="{ width: '800px', height: '60vh' }">
   <!-- Formulário envolve o container do grid -->
-  <form [formGroup]="formulario" >
+  <form [formGroup]="formularioAluno">
 
-    <div class="container">
+    <div class="campos">
 
-      <!-- BLOCO DA ESQUERDA: CAMPOS (1fr) -->
-      <div class="campos">
-        <div class="mensagem">
-          @if (formulario.invalid && formulario.touched) {
-          <p-message severity="error" icon="pi pi-times-circle" styleClass="mb-2">A validação falhou!</p-message>
-          }
-        </div>
+      <div class="mensagem">
+        @if (formularioAluno.invalid && formularioAluno.touched) {
+        <p-message severity="error" icon="pi pi-times-circle" styleClass="mb-2">
+          A validação falhou!
+        </p-message>
+        }
+      </div>
 
-        <!-- CPF -->
+      <!-- Matrícula -->
+      <div class="campo">
+        <label>Matrícula</label>
+        <input pInputText formControlName="matricula" placeholder="Matrícula"
+          [invalid]="formularioAluno.get('matricula')?.invalid && formularioAluno.get('matricula')?.touched" />
+        @if (formularioAluno.get('matricula')?.invalid && formularioAluno.get('matricula')?.touched) {
+        <p-message severity="error" variant="simple" size="small">A matrícula é obrigatória</p-message>
+        }
+      </div>
+
+      <!-- Nome -->
+      <div class="campo">
+        <label>Nome</label>
+        <input pInputText formControlName="nome" placeholder="Nome"
+          [invalid]="formularioAluno.get('nome')?.invalid && formularioAluno.get('nome')?.touched" />
+        @if (formularioAluno.get('nome')?.invalid && formularioAluno.get('nome')?.touched) {
+        <p-message severity="error" variant="simple" size="small">O nome é obrigatório</p-message>
+        }
+      </div>
+
+      <!-- Telefone -->
+      <div class="campo">
+        <label>Telefone</label>
+        <p-inputmask mask="(99) 99999-9999" formControlName="telefone" placeholder="Telefone"
+          [invalid]="formularioAluno.get('telefone')?.invalid && formularioAluno.get('telefone')?.touched" />
+        @if (formularioAluno.get('telefone')?.invalid && formularioAluno.get('telefone')?.touched) {
+        <p-message severity="error" variant="simple" size="small">Telefone inválido</p-message>
+        }
+      </div>
+
+      <!-- Nome Responsável -->
+      <div class="campo">
+        <label>Nome responsável</label>
+        <input pInputText formControlName="nomeResponsavel" placeholder="Nome responsável"
+          [invalid]="formularioAluno.get('nomeResponsavel')?.invalid && formularioAluno.get('nomeResponsavel')?.touched" />
+        @if (formularioAluno.get('nomeResponsavel')?.invalid && formularioAluno.get('nomeResponsavel')?.touched) {
+        <p-message severity="error" variant="simple" size="small">Nome do responsável é obrigatório</p-message>
+        }
+      </div>
+
+      <!-- Telefone Responsável -->
+      <div class="campo">
+        <label>Telefone Responsável</label>
+        <p-inputmask mask="(99) 99999-9999" formControlName="telefoneResponsavel" placeholder="Telefone Responsável"
+          [invalid]="formularioAluno.get('telefoneResponsavel')?.invalid && formularioAluno.get('telefoneResponsavel')?.touched" />
+        @if (formularioAluno.get('telefoneResponsavel')?.invalid && formularioAluno.get('telefoneResponsavel')?.touched)
+        {
+        <p-message severity="error" variant="simple" size="small">Telefone do responsável inválido</p-message>
+        }
+      </div>
+
+      <!-- Data de Nascimento + Idade -->
+      <div class="campo-linha">
         <div class="campo">
-          <p-inputmask mask="999.999.999-99" formControlName="cpf" placeholder="CPF"
-            [invalid]="formulario.get('cpf')?.invalid && formulario.get('cpf')?.touched" />
-          @if (formulario.get('cpf')?.invalid && formulario.get('cpf')?.touched) {
-          <p-message severity="error" variant="simple" size="small">O CPF é obrigatório</p-message>
-          }
-        </div>
-
-        <!-- Gmail (E-mail) -->
-        <div class="campo">
-          <input pInputText type="email" formControlName="email" placeholder="Gmail"
-            [invalid]="formulario.get('email')?.invalid && formulario.get('email')?.touched" />
-          @if (formulario.get('email')?.invalid && formulario.get('email')?.touched) {
-          <p-message severity="error" variant="simple" size="small">E-mail inválido</p-message>
-          }
-        </div>
-
-        <!-- Idade -->
-        <div class="campo">
-          <p-inputNumber formControlName="idade" placeholder="Idade"
-            [invalid]="formulario.get('idade')?.invalid && formulario.get('idade')?.touched" />
-          @if (formulario.get('idade')?.invalid && formulario.get('idade')?.touched) {
-          <p-message severity="error" variant="simple" size="small">Idade inválida</p-message>
-          }
-        </div>
-
-        <!-- Telefone -->
-        <div class="campo">
-          <p-inputmask mask="(99) 99999-9999" formControlName="telefone" placeholder="Telefone"
-            [invalid]="formulario.get('telefone')?.invalid && formulario.get('telefone')?.touched" />
-          @if (formulario.get('telefone')?.invalid && formulario.get('telefone')?.touched) {
-          <p-message severity="error" variant="simple" size="small">Telefone inválido</p-message>
-          }
-        </div>
-
-        <!-- Nome (Ocupa as duas colunas do bloco da esquerda) -->
-        <div class="campo nome">
-          <input pInputText placeholder="Nome" formControlName="nome" aria-label="nome"
-            [invalid]="formulario.get('nome')?.invalid && formulario.get('nome')?.touched" />
-          @if (formulario.get('nome')?.invalid && formulario.get('nome')?.touched) {
-          <p-message severity="error" variant="simple" size="small">O nome é obrigatório</p-message>
-          }
+          <label>Data nascimento</label>
+          <p-datepicker formControlName="dataNascimento" dateFormat="dd/mm/yy" placeholder="Data nascimento" />
+           <input pInputText formControlName="nome" placeholder="Nome"
+          [invalid]="formularioAluno.get('nome')?.invalid && formularioAluno.get('nome')?.touched" />
+        @if (formularioAluno.get('nome')?.invalid && formularioAluno.get('nome')?.touched) {
+        <p-message severity="error" variant="simple" size="small">O nome é obrigatório</p-message>
+        } 
         </div>
       </div>
 
+      <!-- Status (radio) -->
+      <div class="campo">
+        <label>Status</label>
+        <div class="flex align-items-center gap-2">
+          <p-radiobutton name="tipo" formControlName="tipo" inputId="statusAtivo" value="1">
+          </p-radiobutton>
 
+          <label for="oferta">Ativo</label>
+        </div>
 
-      <!-- BLOCO DA DIREITA: BOTÕES (180px) -->
-      <div class="acoes">
-        <p-button label="Novo" [disabled]="!novoHabilitado" (onClick)="novoFiel()"></p-button>
-        <p-button label="Alterar" [disabled]="!alterarHabilitado" (onClick)="editar()"></p-button>
-        <p-button label="Apagar" [disabled]="!apagarHabilitado" (onClick)="apagar()"></p-button>
-        <p-button label="Salvar" [disabled]="!salvarHabilitado" (onClick)="salvar()"></p-button>
-        <p-button label="Cancelar" [disabled]="!cancelarHabilitado" (onClick)="cancelar()"></p-button>
-        <p-button label="Fechar" [disabled]="!fecharHabilitado" (onClick)="fecharModal()"></p-button>
+        <div class="flex align-items-center gap-2">
+          <p-radiobutton name="tipo" formControlName="tipo" inputId="statusInativo" value="2">
+          </p-radiobutton>
+
+          <label for="dizimo">Inativo</label>
+        </div>
       </div>
-
     </div>
+
+
+
+    <!-- BLOCO DA DIREITA: BOTÕES (180px) -->
+    <div class="acoes">
+      <!-- <p-button label="Novo" [disabled]="!novoHabilitado" (onClick)="novoaluno()"></p-button> -->
+      <p-button label="Alterar" [disabled]="!alterarHabilitado" (onClick)="editar()"></p-button>
+      <!-- <p-button label="Apagar" [disabled]="!apagarHabilitado" (onClick)="apagar()"></p-button> -->
+      <!-- <p-button label="Salvar" [disabled]="!salvarHabilitado" (onClick)="salvar()"></p-button> -->
+      <p-button label="Cancelar" [disabled]="!cancelarHabilitado" (onClick)="cancelar()"></p-button>
+      <p-button label="Fechar" [disabled]="!fecharHabilitado" (onClick)="fecharModal()"></p-button>
+    </div>
+
   </form>
 </p-dialog>
