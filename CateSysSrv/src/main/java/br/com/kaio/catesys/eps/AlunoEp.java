@@ -1,16 +1,21 @@
 package br.com.kaio.catesys.eps;
 
 import java.util.List;
+import java.util.Map;
 
 import br.com.kaio.catesys.bss.AlunoBss;
 import br.com.kaio.catesys.domain.Aluno;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @Path(value = "/aluno")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -22,7 +27,39 @@ public class AlunoEp {
 
 	@GET
 	public List<Aluno> getAlunos() {
-
 		return alunoBss.getAlunos();
+	}
+
+	@POST
+	public String adicionar(Aluno aluno) {
+
+		try {
+			alunoBss.adicionar(aluno);
+			return "Novo cadastrado no banco";
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}
+
+	@DELETE
+	public Response remover(Aluno aluno) {
+
+		try {
+			alunoBss.remover(aluno);
+			return Response.ok(Map.of("mensagem", " apagado com sucesso")).build();
+		} catch (Exception e) {
+			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
+		}
+	}
+
+	@PUT
+	public Response editar(Aluno aluno) {
+
+		try {
+			alunoBss.alterar(aluno);
+			return Response.ok(Map.of("mensagem", "Fiel alterado com sucesso")).build();
+		} catch (Exception e) {
+			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
+		}
 	}
 }
