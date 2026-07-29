@@ -10,6 +10,7 @@ import { InputNumber } from "primeng/inputnumber";
 import { aluno } from '../../../domain/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { Aluno } from '../aluno/aluno';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @Component({
   selector: 'app-pops',
@@ -23,6 +24,7 @@ import { Aluno } from '../aluno/aluno';
     MessageModule,
     InputTextModule,
     FormsModule,
+    RadioButtonModule,
   ],
   templateUrl: './aluno-p.html',
   styleUrl: './aluno-p.css'
@@ -72,7 +74,7 @@ export class AlunoP implements OnChanges, OnInit {
       telefoneResponsavel: [{ value: '', disabled: true }],
       dataNascimento: [{ value: null, disabled: true }, [Validators.required]],
       idade: [{ value: null, disabled: true }],
-      tipo: [{ value: 1, disabled: true }, [Validators.required]]
+      status: [{ value: 1, disabled: true }, [Validators.required]]
     });
   }
 

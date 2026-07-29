@@ -69,30 +69,25 @@
         <div class="campo">
           <label>Data nascimento</label>
           <p-datepicker formControlName="dataNascimento" dateFormat="dd/mm/yy" placeholder="Data nascimento" />
-           <input pInputText formControlName="nome" placeholder="Nome"
-          [invalid]="formularioAluno.get('nome')?.invalid && formularioAluno.get('nome')?.touched" />
-        @if (formularioAluno.get('nome')?.invalid && formularioAluno.get('nome')?.touched) {
-        <p-message severity="error" variant="simple" size="small">O nome é obrigatório</p-message>
-        } 
+          <input pInputText formControlName="nome" placeholder="Nome"
+            [invalid]="formularioAluno.get('nome')?.invalid && formularioAluno.get('nome')?.touched" />
+          @if (formularioAluno.get('nome')?.invalid && formularioAluno.get('nome')?.touched) {
+          <p-message severity="error" variant="simple" size="small">O nome é obrigatório</p-message>
+          }
         </div>
       </div>
 
       <!-- Status (radio) -->
       <div class="campo">
         <label>Status</label>
-        <div class="flex align-items-center gap-2">
-          <p-radiobutton name="tipo" formControlName="tipo" inputId="statusAtivo" value="1">
-          </p-radiobutton>
+        <p-radioButton name="status" [value]="1" formControlName="status" inputId="ativo">
+        </p-radioButton>
 
-          <label for="oferta">Ativo</label>
-        </div>
+        <label for="ativo">Ativo</label>
 
-        <div class="flex align-items-center gap-2">
-          <p-radiobutton name="tipo" formControlName="tipo" inputId="statusInativo" value="2">
-          </p-radiobutton>
 
-          <label for="dizimo">Inativo</label>
-        </div>
+        <p-radioButton name="status" [value]="0" formControlName="status" inputId="inativo">
+        </p-radioButton>
       </div>
     </div>
 
