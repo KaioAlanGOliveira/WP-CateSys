@@ -1,3 +1,9 @@
 MYSQL_URL=jdbc:mysql://localhost:3306/catesys
 MYSQL_USER=root
 MYSQL_PASSWORD=1111
+
+https://chatgpt.com/share/6a5e52b8-7bf4-83e9-9c29-e6eba36f9dac
+
+mvn clean install
+
+mvn clean package 
