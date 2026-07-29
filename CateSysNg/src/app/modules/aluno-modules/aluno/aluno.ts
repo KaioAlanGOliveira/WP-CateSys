@@ -81,7 +81,7 @@ export class Aluno implements OnInit {
   }
   add() {
     this.alterar = false;
-    this.exibirModalPrincipal = true;
+    this.form.reset();
     this.abrirMeuPopup();
   }
   retornoPopUp(exib: boolean) {
