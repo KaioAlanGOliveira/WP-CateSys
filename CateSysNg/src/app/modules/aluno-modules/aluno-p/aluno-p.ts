@@ -10,6 +10,8 @@ import { InputNumber } from "primeng/inputnumber";
 import { aluno } from '../../../domain/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { Aluno } from '../aluno/aluno';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
   selector: 'app-pops',
@@ -23,6 +25,8 @@ import { Aluno } from '../aluno/aluno';
     MessageModule,
     InputTextModule,
     FormsModule,
+    RadioButtonModule,
+    DatePickerModule,
   ],
   templateUrl: './aluno-p.html',
   styleUrl: './aluno-p.css'
@@ -31,17 +35,15 @@ export class AlunoP implements OnChanges, OnInit {
 
   aluno: aluno[] = [];
 
-  formularioAluno!: FormGroup;
+  formulario!: FormGroup;
 
   tipoPagamento: any;
 
-  private modo: 'initial' | 'creating' | 'editing' = 'initial';
+  private modo: 'initial' | 'creating' | 'editing' = 'creating';
 
   @Input() Selecionado: aluno | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
-  @Input() cmpAtivo = false;
-  @Input() alterar = false;
   private fb = inject(FormBuilder);
   private AlunoService = inject(AlunoService);
 
@@ -49,7 +51,7 @@ export class AlunoP implements OnChanges, OnInit {
 
   ngOnInit() {
     this.initForm();
-    this.carregarAlunos();
+    // this.carregarAlunos();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -57,14 +59,14 @@ export class AlunoP implements OnChanges, OnInit {
       this.resetToInitialState();
     }
 
-    if (changes['Selecionado'] && this.Selecionado && this.formularioAluno) {
+    if (changes['Selecionado'] && this.Selecionado && this.formulario) {
       this.originalAluno = { ...this.Selecionado };
-      this.formularioAluno.patchValue(this.Selecionado);
+      this.formulario.patchValue(this.Selecionado);
     }
   }
 
   private initForm(): void {
-    this.formularioAluno = this.fb.group({
+    this.formulario = this.fb.group({
       matricula: [{ value: '', disabled: true }, [Validators.required]],
       nome: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]],
       telefone: [{ value: '', disabled: true }],
@@ -72,7 +74,7 @@ export class AlunoP implements OnChanges, OnInit {
       telefoneResponsavel: [{ value: '', disabled: true }],
       dataNascimento: [{ value: null, disabled: true }, [Validators.required]],
       idade: [{ value: null, disabled: true }],
-      tipo: [{ value: 1, disabled: true }, [Validators.required]]
+      status: [{ value: 1, disabled: true }, [Validators.required]]
     });
   }
 
@@ -85,16 +87,13 @@ export class AlunoP implements OnChanges, OnInit {
 
   // ==================== CONTROLE CENTRALIZADO ====================
   private atualizarEstadoUI(): void {
-    if (!this.formularioAluno) return;
+    if (!this.formulario) return;
     const isInitial = this.modo === 'initial';
 
     if (isInitial) {
-      this.formularioAluno.disable();
+      this.formulario.disable();
     } else {
-      this.formularioAluno.enable();
-      if (this.modo === 'editing') {
-        this.formularioAluno.get('cpf')?.disable();
-      }
+      this.formulario.enable();
     }
   }
 
@@ -108,7 +107,7 @@ export class AlunoP implements OnChanges, OnInit {
   // ==================== AÇÕES ====================
   novoAluno() {
     this.modo = 'creating';
-    this.formularioAluno.reset();
+    this.formulario.reset();
     this.originalAluno = null;
     this.atualizarEstadoUI();
   }
@@ -117,7 +116,7 @@ export class AlunoP implements OnChanges, OnInit {
     if (!this.Selecionado) return;
     this.modo = 'editing';
     this.originalAluno = { ...this.Selecionado };
-    this.formularioAluno.patchValue(this.Selecionado);
+    this.formulario.patchValue(this.Selecionado);
     this.atualizarEstadoUI();
   }
 
@@ -126,13 +125,11 @@ export class AlunoP implements OnChanges, OnInit {
     return valor.toString().replace(/\D/g, '');
   }
 
-
-
   cancelar() {
     if (this.modo === 'creating') {
       this.fecharModal();
     } else if (this.modo === 'editing' && this.originalAluno) {
-      this.formularioAluno.patchValue(this.originalAluno);
+      this.formulario.patchValue(this.originalAluno);
       this.modo = 'initial';
       this.atualizarEstadoUI();
     }
@@ -146,7 +143,7 @@ export class AlunoP implements OnChanges, OnInit {
   fecharModal() {
     this.modo = 'initial';
     this.originalAluno = null;
-    this.formularioAluno.reset();
+    this.formulario.reset();
     this.visivel = false;
     this.visivelChange.emit(false);
   }
@@ -159,11 +156,65 @@ export class AlunoP implements OnChanges, OnInit {
     this.modo = 'initial';
     this.originalAluno = null;
     if (this.Selecionado) {
-      this.formularioAluno.patchValue(this.Selecionado);
+      this.formulario.patchValue(this.Selecionado);
     }
     this.atualizarEstadoUI();
   }
 
 
+  salvar() {
+    if (this.formulario.invalid) {
+      this.formulario.markAllAsTouched();
+      return;
+    }
+
+    const formValue = this.formulario.getRawValue();
+    const alunoFormatado: aluno = {
+      ...formValue,
+      telefone: this.removerMascaras(formValue.telefone),
+      telefoneResponsavel: this.removerMascaras(formValue.telefoneResponsavel)
+    };
+    alert("ola1"+ alunoFormatado.dataNascimento);
+    if (this.modo === 'creating') {
+      alert("ola2");
+      this.salvarNovo(alunoFormatado);
+      this.fecharModal();
+    } else {
+      this.atualizarFiel(alunoFormatado);
+    }
+    this.modo = 'initial';
+    this.atualizarEstadoUI();
+  }
+
+  private salvarNovo(alunoFormatado: aluno) {
+
+    this.AlunoService.salvar(alunoFormatado).subscribe({
+      next: () => this.finalizarComSucesso(),
+      error: (err) => console.error('Erro ao salvar:', err)
+    });
+  }
+
+  private atualizarFiel(alunoFormatado: aluno) {
+    if (!this.Selecionado) return;
+
+    const atualizado: aluno = { ...this.Selecionado, ...alunoFormatado };
+
+    this.AlunoService.editar(atualizado).subscribe({
+      next: (dados) => {
+        console.log(dados);
+        this.finalizarComSucesso();
+      },
+      error: (err) => console.error('Erro ao atualizar:', err)
+    });
+  }
+
+  apagar() {
+    if (!this.Selecionado?.matricula) return;
+
+    this.AlunoService.apagar(this.Selecionado).subscribe({
+      next: () => { this.finalizarComSucesso(); },
+      error: (err) => { this.finalizarComSucesso(); },
+    });
+  }
 
 }

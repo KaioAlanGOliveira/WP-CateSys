@@ -19,4 +19,30 @@ public class AlunoBss {
 		Dao<Aluno> dao = new Dao<>(em, Aluno.class);
 		return dao.getList();
 	}
+	
+	public void adicionar(Aluno aluno) throws Exception {
+
+		try {
+			em.persist(aluno);
+		} catch (Exception e) {
+			throw new RuntimeException("Erro ao adicionar", e);
+		}
+	}
+	public void alterar(Aluno aluno) {
+
+		try {
+			em.merge(aluno);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao atualizar", e);
+		}
+	}
+	public void remover(Aluno aluno) {
+
+		try {
+			em.remove(em.find(Aluno.class, aluno.getMatricula()));
+		} catch (Exception e) {
+			throw new RuntimeException("Erro ao remover o fiel", e);
+		}
+	}
 }

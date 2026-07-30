@@ -14,7 +14,21 @@ export class AlunoService {
 
   constructor(private http: HttpClient) { }
 
+  apagar(aluno: aluno) {
+    return this.http.delete<{ mensagem: string }>(this.apiUrl, {
+      body: aluno
+    });
+  }
+
   listarTodos(): Observable<aluno[]> {
     return this.http.get<aluno[]>(this.apiUrl);
+  }
+
+  editar(aluno: aluno) {
+    return this.http.put(this.apiUrl, aluno);
+  }
+
+  salvar(aluno: aluno): Observable<aluno> {
+    return this.http.post<aluno>(this.apiUrl, aluno);
   }
 }
