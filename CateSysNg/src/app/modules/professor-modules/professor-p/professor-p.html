@@ -1,0 +1,73 @@
+<p-dialog header="Cadastro dos Fieis" [(visible)]="visivel" (onHide)="fecharModal()" [modal]="true"
+  [style]="{ width: '800px', height: '60vh' }">
+  <!-- Formulário envolve o container do grid -->
+  <form [formGroup]="formulario">
+
+    <div class="campos">
+
+      <div class="mensagem">
+        @if (formulario.invalid && formulario.touched) {
+        <p-message severity="error" icon="pi pi-times-circle" styleClass="mb-2">
+          A validação falhou!
+        </p-message>
+        }
+      </div>
+
+      <!-- Matrícula -->
+      <div class="campo">
+        <label>Matrícula</label>
+        <input pInputText formControlName="matricula" placeholder="Matrícula"
+          [invalid]="formulario.get('matricula')?.invalid && formulario.get('matricula')?.touched" />
+        @if (formulario.get('matricula')?.invalid && formulario.get('matricula')?.touched) {
+        <p-message severity="error" variant="simple" size="small">A matrícula é obrigatória</p-message>
+        }
+      </div>
+
+      <!-- Nome -->
+      <div class="campo">
+        <label>Nome</label>
+        <input pInputText formControlName="nome" placeholder="Nome"
+          [invalid]="formulario.get('nome')?.invalid && formulario.get('nome')?.touched" />
+        @if (formulario.get('nome')?.invalid && formulario.get('nome')?.touched) {
+        <p-message severity="error" variant="simple" size="small">O nome é obrigatório</p-message>
+        }
+      </div>
+
+      <!-- Telefone -->
+      <div class="campo">
+        <label>Telefone</label>
+        <p-inputmask mask="(99) 99999-9999" formControlName="telefone" placeholder="Telefone"
+          [invalid]="formulario.get('telefone')?.invalid && formulario.get('telefone')?.touched" />
+        @if (formulario.get('telefone')?.invalid && formulario.get('telefone')?.touched) {
+        <p-message severity="error" variant="simple" size="small">Telefone inválido</p-message>
+        }
+      </div>
+
+      <div class="campo">
+        <label>Status</label>
+
+        <!-- Ativo -->
+        <p-radioButton name="status" [value]="1" formControlName="status" inputId="ativo" />
+        <label for="ativo">Ativo</label>
+
+        <!-- Inativo -->
+        <p-radioButton name="status" [value]="0" formControlName="status" inputId="inativo" />
+        <label for="inativo">Inativo</label>
+      </div>
+
+    </div>
+
+
+
+    <!-- BLOCO DA DIREITA: BOTÕES (180px) -->
+    <div class="acoes">
+      <p-button label="Novo" [disabled]="!novoHabilitado" (onClick)="novoAluno()"></p-button>
+      <p-button label="Alterar" [disabled]="!alterarHabilitado" (onClick)="editar()"></p-button>
+      <p-button label="Apagar" [disabled]="!apagarHabilitado" (onClick)="apagar()"></p-button>
+      <p-button label="Salvar" [disabled]="!salvarHabilitado" (onClick)="salvar()"></p-button>
+      <p-button label="Cancelar" [disabled]="!cancelarHabilitado" (onClick)="cancelar()"></p-button>
+      <p-button label="Fechar" [disabled]="!fecharHabilitado" (onClick)="fecharModal()"></p-button>
+    </div>
+
+  </form>
+</p-dialog>

@@ -1,0 +1,179 @@
+/* ===========================
+   FORMULÁRIO
+=========================== */
+
+form {
+    display: grid;
+    grid-template-columns: 1fr 180px;
+    gap: 20px;
+    height: 100%;
+    padding: 20px;
+    background: #f4f7fb;
+    box-sizing: border-box;
+}
+
+/* ===========================
+   CAMPOS
+=========================== */
+
+.campos {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    overflow-y: auto;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campo label {
+    font-size: .9rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+/* ===========================
+   INPUTS
+=========================== */
+
+.campo input,
+.campo .p-inputtext,
+.campo .p-inputmask,
+.campo .p-datepicker,
+.campo .p-inputnumber,
+.campo .p-dropdown,
+.campo textarea {
+    width: 100%;
+}
+
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-inputmask,
+:host ::ng-deep .p-inputnumber-input,
+:host ::ng-deep .p-datepicker input {
+    height: 42px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    transition: .2s;
+}
+
+:host ::ng-deep .p-inputtext:focus,
+:host ::ng-deep .p-inputmask:focus,
+:host ::ng-deep .p-inputnumber-input:focus,
+:host ::ng-deep .p-datepicker input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.18);
+}
+
+/* ===========================
+   DATA + IDADE
+=========================== */
+
+.campo-linha {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* ===========================
+   STATUS
+=========================== */
+
+.campo-status {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 6px;
+}
+
+.campo-status label {
+    margin-left: 6px;
+    font-weight: 500;
+    color: #374151;
+}
+
+/* ===========================
+   MENSAGENS
+=========================== */
+
+.mensagem {
+    margin-bottom: 8px;
+}
+
+/* ===========================
+   BOTÕES
+=========================== */
+
+.acoes {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.acoes .p-button {
+    width: 100%;
+    height: 42px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* ===========================
+   DIALOG
+=========================== */
+
+:host ::ng-deep .p-dialog {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+:host ::ng-deep .p-dialog-header {
+    background: linear-gradient(90deg,#2563eb,#1d4ed8);
+    color: white;
+    padding: 16px 20px;
+}
+
+:host ::ng-deep .p-dialog-title {
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+:host ::ng-deep .p-dialog-header-icon {
+    color: white;
+}
+
+:host ::ng-deep .p-dialog-content {
+    background: #f4f7fb;
+    padding: 0;
+}
+
+/* ===========================
+   RESPONSIVO
+=========================== */
+
+@media (max-width: 900px) {
+
+    form {
+        grid-template-columns: 1fr;
+    }
+
+    .acoes {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .acoes .p-button {
+        flex: 1 1 calc(50% - 8px);
+    }
+
+    .campo-linha {
+        grid-template-columns: 1fr;
+    }
+
+}

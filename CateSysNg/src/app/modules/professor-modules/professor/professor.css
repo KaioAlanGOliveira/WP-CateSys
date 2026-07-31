@@ -1,0 +1,236 @@
+/* Página */
+:host {
+  display: block;
+  padding: 24px;
+  background: #f5f7fb;
+  min-height: 100%;
+}
+
+
+/* Cabeçalho */
+.page-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.page-header h2 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+
+/* Card principal */
+.alunos-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+
+/* Formulário */
+.filtros {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  padding-bottom: 24px;
+}
+
+
+/* Campo */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+
+/* Largura do campo nome */
+.form-field:first-child {
+  flex: 1;
+}
+
+
+/* Largura matrícula */
+.form-field:nth-child(2) {
+  width: 220px;
+}
+
+
+/* Label */
+.form-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+
+/* Input */
+.input-field {
+  height: 40px;
+  width: 100%;
+  padding: 0 12px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+
+  background: #ffffff;
+  color: #1f2937;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition: 0.2s;
+  box-sizing: border-box;
+}
+
+
+/* Input quando selecionado */
+.input-field:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+
+/* Placeholder */
+.input-field::placeholder {
+  color: #9ca3af;
+}
+
+
+/* Botão */
+.form-action {
+  display: flex;
+}
+
+
+.btn-primary {
+  height: 40px;
+  padding: 0 24px;
+
+  border: none;
+  border-radius: 6px;
+
+  background: #3b82f6;
+  color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: background 0.2s, transform 0.1s;
+}
+
+
+.btn-primary:hover {
+  background: #2563eb;
+}
+
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+
+/* Container da tabela */
+.tabela-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+
+/* Tabela */
+:host ::ng-deep .p-datatable {
+  width: 100%;
+}
+
+
+/* Cabeçalho da tabela */
+:host ::ng-deep .p-datatable-thead > tr > th {
+  background: #f8fafc;
+  color: #374151;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  padding: 12px 16px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+
+/* Linhas */
+:host ::ng-deep .p-datatable-tbody > tr > td {
+  padding: 12px 16px;
+
+  font-size: 14px;
+  color: #4b5563;
+
+  border-bottom: 1px solid #f1f5f9;
+}
+
+
+/* Hover da linha */
+:host ::ng-deep .p-datatable-tbody > tr:hover {
+  background: #f8fafc;
+}
+
+
+/* Rodapé */
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 16px 0 0;
+
+  border-top: 1px solid #e5e7eb;
+
+  color: #6b7280;
+  font-size: 13px;
+}
+
+
+.table-footer strong {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+
+/* Responsividade */
+@media (max-width: 768px) {
+
+  :host {
+    padding: 16px;
+  }
+
+  .filtros {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-field:first-child,
+  .form-field:nth-child(2) {
+    width: 100%;
+  }
+
+  .form-action {
+    width: 100%;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
+
+  .table-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

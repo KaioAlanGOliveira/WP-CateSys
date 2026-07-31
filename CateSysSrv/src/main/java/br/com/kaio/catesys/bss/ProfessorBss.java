@@ -2,23 +2,23 @@ package br.com.kaio.catesys.bss;
 
 import java.util.List;
 
-import br.com.kaio.catesys.domain.Aluno;
+import br.com.kaio.catesys.domain.Professor;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 
 @Stateless
-public class AlunoBss {
+public class ProfessorBss {
 
 	@PersistenceContext(unitName = "MeuPu")
 	private EntityManager em;
 
-	public List<Aluno> getAlunos() {
+	public List<Professor> getList() {
 
 		try {
-			String jpql = "select obj from Aluno obj";
-			TypedQuery<Aluno> query = em.createQuery(jpql, Aluno.class);
+			String jpql = "select obj from Professor obj";
+			TypedQuery<Professor> query = em.createQuery(jpql, Professor.class);
 			return query.getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -26,29 +26,29 @@ public class AlunoBss {
 		}
 	}
 
-	public void adicionar(Aluno aluno) throws Exception {
+	public void adicionar(Professor professor) throws Exception {
 
 		try {
-			em.persist(aluno);
+			em.persist(professor);
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao adicionar", e);
 		}
 	}
 
-	public void alterar(Aluno aluno) {
+	public void alterar(Professor professor) {
 
 		try {
-			em.merge(aluno);
+			em.merge(professor);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Erro ao atualizar", e);
 		}
 	}
 
-	public void remover(Aluno aluno) {
+	public void remover(Professor professor) {
 
 		try {
-			em.remove(em.find(Aluno.class, aluno.getMatricula()));
+			em.remove(em.find(Professor.class, professor.getMatricula()));
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao remover o fiel", e);
 		}
