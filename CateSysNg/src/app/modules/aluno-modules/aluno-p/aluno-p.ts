@@ -162,59 +162,5 @@ export class AlunoP implements OnChanges, OnInit {
   }
 
 
-  salvar() {
-    if (this.formulario.invalid) {
-      this.formulario.markAllAsTouched();
-      return;
-    }
-
-    const formValue = this.formulario.getRawValue();
-    const alunoFormatado: aluno = {
-      ...formValue,
-      telefone: this.removerMascaras(formValue.telefone),
-      telefoneResponsavel: this.removerMascaras(formValue.telefoneResponsavel)
-    };
-    alert("ola1"+ alunoFormatado.dataNascimento);
-    if (this.modo === 'creating') {
-      alert("ola2");
-      this.salvarNovo(alunoFormatado);
-      this.fecharModal();
-    } else {
-      this.atualizarFiel(alunoFormatado);
-    }
-    this.modo = 'initial';
-    this.atualizarEstadoUI();
-  }
-
-  private salvarNovo(alunoFormatado: aluno) {
-
-    this.AlunoService.salvar(alunoFormatado).subscribe({
-      next: () => this.finalizarComSucesso(),
-      error: (err) => console.error('Erro ao salvar:', err)
-    });
-  }
-
-  private atualizarFiel(alunoFormatado: aluno) {
-    if (!this.Selecionado) return;
-
-    const atualizado: aluno = { ...this.Selecionado, ...alunoFormatado };
-
-    this.AlunoService.editar(atualizado).subscribe({
-      next: (dados) => {
-        console.log(dados);
-        this.finalizarComSucesso();
-      },
-      error: (err) => console.error('Erro ao atualizar:', err)
-    });
-  }
-
-  apagar() {
-    if (!this.Selecionado?.matricula) return;
-
-    this.AlunoService.apagar(this.Selecionado).subscribe({
-      next: () => { this.finalizarComSucesso(); },
-      error: (err) => { this.finalizarComSucesso(); },
-    });
-  }
 
 }

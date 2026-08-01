@@ -64,19 +64,35 @@
         }
       </div>
 
-      <p-inputMask formControlName="dataNascimento" mask="9999-99-99" placeholder="aaaa-mm-dd">
-      </p-inputMask>
+      <!-- Data de Nascimento + Idade -->
+      <div class="campo-linha">
+        <div class="campo">
+          <label>Data nascimento</label>
+          <p-datepicker formControlName="dataNascimento" dateFormat="dd/mm/yy" placeholder="Data nascimento" />
+           <input pInputText formControlName="nome" placeholder="Nome"
+          [invalid]="formularioAluno.get('nome')?.invalid && formularioAluno.get('nome')?.touched" />
+        @if (formularioAluno.get('nome')?.invalid && formularioAluno.get('nome')?.touched) {
+        <p-message severity="error" variant="simple" size="small">O nome é obrigatório</p-message>
+        } 
+        </div>
+      </div>
 
+      <!-- Status (radio) -->
       <div class="campo">
         <label>Status</label>
+        <div class="flex align-items-center gap-2">
+          <p-radiobutton name="tipo" formControlName="tipo" inputId="statusAtivo" value="1">
+          </p-radiobutton>
 
-        <!-- Ativo -->
-        <p-radioButton name="status" [value]="1" formControlName="status" inputId="ativo" />
-        <label for="ativo">Ativo</label>
+          <label for="oferta">Ativo</label>
+        </div>
 
-        <!-- Inativo -->
-        <p-radioButton name="status" [value]="0" formControlName="status" inputId="inativo" />
-        <label for="inativo">Inativo</label>
+        <div class="flex align-items-center gap-2">
+          <p-radiobutton name="tipo" formControlName="tipo" inputId="statusInativo" value="2">
+          </p-radiobutton>
+
+          <label for="dizimo">Inativo</label>
+        </div>
       </div>
 
     </div>
