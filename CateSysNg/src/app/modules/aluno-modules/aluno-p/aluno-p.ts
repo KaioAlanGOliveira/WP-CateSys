@@ -33,6 +33,10 @@ import { DatePickerModule } from 'primeng/datepicker';
 })
 export class AlunoP implements OnChanges, OnInit {
 
+  salvar() {
+    throw new Error('Method not implemented.');
+  }
+
   aluno: aluno[] = [];
 
   formulario!: FormGroup;
@@ -161,6 +165,14 @@ export class AlunoP implements OnChanges, OnInit {
     this.atualizarEstadoUI();
   }
 
+  apagar() {
+    if (!this.Selecionado?.matricula) return;
+
+    this.AlunoService.apagar(this.Selecionado).subscribe({
+      next: () => { this.finalizarComSucesso(); },
+      error: (err) => { this.finalizarComSucesso(); },
+    });
+  }
 
 
 }

@@ -20,6 +20,7 @@ import { ProfessorP } from '../professor-p/professor-p';
 
 export class Professor implements OnInit {
 
+
   private professorServece = inject(ProfessorService);
   private loginService = inject(LoginService);
   private cdr = inject(ChangeDetectorRef);
@@ -41,13 +42,17 @@ export class Professor implements OnInit {
   }
 
   carregarDados() {
-    const dado = this.form.getRawValue() as professor;
-    this.professorServece.listarTodos().subscribe({
+    const filtro = {
+      nome: this.form.value.nome?.trim() || null,
+      matricula: this.form.value.matricula ?? null
+    };
+
+    this.professorServece.listFiltrados(filtro).subscribe({
       next: (dados) => {
-        console.log('Dados recebidos:', dados);
 
         this.listprofessors = dados || [];
         this.professorsFiltrados = dados || [];
+        console.log('Dados recebidos:', dados);
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -66,14 +71,11 @@ export class Professor implements OnInit {
       this.professorsFiltrados = [...this.listprofessors];
       return;
     }
-
-    const buscaNome = termoNome ? termoNome.toLocaleLowerCase().trim() : '';
-    const buscaMatricula = termoMatricula ? termoMatricula.trim() : '';
-
-    this.professorsFiltrados = this.listprofessors.filter(a =>
-      (buscaNome && a.nome && a.nome.toLocaleLowerCase().includes(buscaNome.toLocaleLowerCase().trim())) ||
-      (buscaMatricula && a.matricula && String(a.matricula).includes(buscaMatricula.trim()))
-    );
+    this.form.patchValue({
+      nome: termoNome,
+      matricula: termoMatricula ? Number(termoMatricula) : null
+    });
+    this.carregarDados();
   }
   abrirMeuPopup() {
     this.exibirModalPrincipal = true;

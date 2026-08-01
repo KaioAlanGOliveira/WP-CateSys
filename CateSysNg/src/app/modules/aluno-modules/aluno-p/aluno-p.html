@@ -70,8 +70,8 @@
           <label>Data nascimento</label>
           <p-datepicker formControlName="dataNascimento" dateFormat="dd/mm/yy" placeholder="Data nascimento" />
            <input pInputText formControlName="nome" placeholder="Nome"
-          [invalid]="formularioAluno.get('nome')?.invalid && formularioAluno.get('nome')?.touched" />
-        @if (formularioAluno.get('nome')?.invalid && formularioAluno.get('nome')?.touched) {
+          [invalid]="formulario.get('nome')?.invalid && formulario.get('nome')?.touched" />
+        @if (formulario.get('nome')?.invalid && formulario.get('nome')?.touched) {
         <p-message severity="error" variant="simple" size="small">O nome é obrigatório</p-message>
         } 
         </div>

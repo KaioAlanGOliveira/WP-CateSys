@@ -26,8 +26,14 @@ public class ProfessorEp {
 	private ProfessorBss professorBss;
 
 	@GET
-	public List<Professor> getAlunos() {
+	public List<Professor> getProfessores() {
 		return professorBss.getList();
+	}
+	
+	@POST
+	@Path("/filtrar")
+	public List<Professor> getList(String nome, Integer termo) {
+		return professorBss.getListFiltrado(nome, termo);
 	}
 
 	@POST

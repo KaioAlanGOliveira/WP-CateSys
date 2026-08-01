@@ -1,223 +1,195 @@
-/* Página */
-:host {
-  display: block;
-  padding: 24px;
-  background: #f5f7fb;
-  min-height: 100%;
-}
+/* ===== Página de Alunos - Estilo Dashboard ===== */
 
-
-/* Cabeçalho */
+/* Cabeçalho da página */
 .page-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+  background: #1e88e5;
+  color: #ffffff;
+  padding: 12px 20px;
+  margin-bottom: 0;
+  border-radius: 4px 4px 0 0;
 }
 
 .page-header h2 {
   margin: 0;
-  color: #1e293b;
-  font-size: 24px;
+  font-size: 1.15rem;
   font-weight: 600;
+  letter-spacing: 0.3px;
 }
-
 
 /* Card principal */
 .alunos-card {
   background: #ffffff;
-  border-radius: 10px;
-  padding: 24px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
+  border: 1px solid #e0e0e0;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
 }
 
-
-/* Formulário */
+/* ===== Filtros ===== */
 .filtros {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-end;
-  gap: 20px;
-  padding-bottom: 24px;
+  gap: 16px;
+  padding: 16px 20px;
+  background: #fafafa;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-
-/* Campo */
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-}
-
-
-/* Largura do campo nome */
-.form-field:first-child {
+  gap: 6px;
+  min-width: 180px;
   flex: 1;
 }
 
-
-/* Largura matrícula */
-.form-field:nth-child(2) {
-  width: 220px;
-}
-
-
-/* Label */
 .form-field label {
-  font-size: 13px;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: #374151;
+  color: #424242;
+  text-transform: none;
 }
 
-
-/* Input */
 .input-field {
-  height: 40px;
   width: 100%;
-  padding: 0 12px;
-
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-
+  padding: 8px 12px;
+  border: 1px solid #cfd8dc;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  color: #333;
   background: #ffffff;
-  color: #1f2937;
-
-  font-size: 14px;
-
+  transition: border-color 0.2s, box-shadow 0.2s;
   outline: none;
-
-  transition: 0.2s;
-  box-sizing: border-box;
 }
 
+.input-field:hover {
+  border-color: #90caf9;
+}
 
-/* Input quando selecionado */
 .input-field:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+  border-color: #1e88e5;
+  box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.18);
 }
 
-
-/* Placeholder */
 .input-field::placeholder {
-  color: #9ca3af;
+  color: #9e9e9e;
 }
 
-
-/* Botão */
+/* Botões de ação dos filtros */
 .form-action {
   display: flex;
+  align-items: flex-end;
 }
-
 
 .btn-primary {
-  height: 40px;
-  padding: 0 24px;
-
-  border: none;
-  border-radius: 6px;
-
-  background: #3b82f6;
-  color: white;
-
-  font-size: 14px;
-  font-weight: 600;
-
+  background: #1e88e5;
+  color: #ffffff;
+  border: 1px solid #1e88e5;
+  border-radius: 3px;
+  padding: 8px 18px;
+  font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
-
-  transition: background 0.2s, transform 0.1s;
+  transition: background 0.2s, border-color 0.2s;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
 }
-
 
 .btn-primary:hover {
-  background: #2563eb;
+  background: #1565c0;
+  border-color: #1565c0;
 }
-
 
 .btn-primary:active {
-  transform: scale(0.98);
+  background: #0d47a1;
 }
 
+/* Botão de adicionar (+) mais compacto */
+.form-action:last-child .btn-primary {
+  width: 40px;
+  padding: 8px 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
 
-/* Container da tabela */
+/* ===== Tabela ===== */
 .tabela-container {
-  width: 100%;
+  padding: 0;
   overflow-x: auto;
 }
 
-
-/* Tabela */
+/* Estilo da p-table para ficar igual à imagem */
 :host ::ng-deep .p-datatable {
-  width: 100%;
+  border: none;
 }
 
-
-/* Cabeçalho da tabela */
-:host ::ng-deep .p-datatable-thead > tr > th {
-  background: #f8fafc;
-  color: #374151;
-
-  font-size: 13px;
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background: #f5f7fa;
+  color: #424242;
   font-weight: 600;
-
-  padding: 12px 16px;
-
-  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.85rem;
+  padding: 10px 14px;
+  border-bottom: 1px solid #e0e0e0;
+  border-top: none;
+  white-space: nowrap;
 }
 
-
-/* Linhas */
-:host ::ng-deep .p-datatable-tbody > tr > td {
-  padding: 12px 16px;
-
-  font-size: 14px;
-  color: #4b5563;
-
-  border-bottom: 1px solid #f1f5f9;
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr {
+  transition: background 0.15s;
 }
 
-
-/* Hover da linha */
-:host ::ng-deep .p-datatable-tbody > tr:hover {
-  background: #f8fafc;
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
 }
 
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  background: #f5f9ff !important;
+  cursor: pointer;
+}
 
-/* Rodapé */
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr:nth-child(even) {
+  background: #fafafa;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr:nth-child(even):hover {
+  background: #f5f9ff !important;
+}
+
+/* ===== Rodapé ===== */
 .table-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  padding: 16px 0 0;
-
-  border-top: 1px solid #e5e7eb;
-
-  color: #6b7280;
-  font-size: 13px;
+  padding: 10px 16px;
+  background: #f5f7fa;
+  border-top: 1px solid #e0e0e0;
+  font-size: 0.85rem;
+  color: #616161;
 }
 
-
 .table-footer strong {
-  color: #1f2937;
+  color: #212121;
   font-weight: 600;
 }
 
-
-/* Responsividade */
+/* ===== Responsivo ===== */
 @media (max-width: 768px) {
-
-  :host {
-    padding: 16px;
-  }
-
   .filtros {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .form-field:first-child,
-  .form-field:nth-child(2) {
-    width: 100%;
+  .form-field {
+    min-width: 100%;
   }
 
   .form-action {
@@ -228,9 +200,13 @@
     width: 100%;
   }
 
+  .form-action:last-child .btn-primary {
+    width: 100%;
+  }
+
   .table-footer {
     flex-direction: column;
+    gap: 6px;
     align-items: flex-start;
-    gap: 8px;
   }
 }

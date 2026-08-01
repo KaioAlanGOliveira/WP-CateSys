@@ -26,6 +26,26 @@ public class ProfessorBss {
 		}
 	}
 
+	public List<Professor> getListFiltrado(String nome, Integer matricula) {
+		try {
+			String jpql = """
+				 SELECT p FROM Professor p
+					WHERE (:nome IS NULL OR :nome = '' OR LOWER(p.nome) LIKE LOWER(CONCAT('%', :nome, '%')))
+					  AND p.matricula = :matricula
+						    	        """;
+
+			TypedQuery<Professor> query = em.createQuery(jpql, Professor.class);
+			query.setParameter("nome", nome);
+			query.setParameter("matricula", matricula);
+			System.out.println(query.getResultList());
+
+			return query.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao listar", e);
+		}
+	}
+
 	public void adicionar(Professor professor) throws Exception {
 
 		try {

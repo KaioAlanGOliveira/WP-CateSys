@@ -7,7 +7,6 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumber } from "primeng/inputnumber";
-import { aluno } from '../../../domain/aluno.model';
 import { ProfessorService } from '../../../service/professor.service';
 import { professor } from '../../../domain/professor.model';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -33,7 +32,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 })
 export class ProfessorP implements OnChanges, OnInit {
 
-  aluno: aluno[] = [];
+  professores: professor[] = [];
 
   formulario!: FormGroup;
 
@@ -41,13 +40,13 @@ export class ProfessorP implements OnChanges, OnInit {
 
   private modo: 'initial' | 'creating' | 'editing' = 'creating';
 
-  @Input() Selecionado: aluno | null = null;
+  @Input() Selecionado: professor | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
   private fb = inject(FormBuilder);
   private professService = inject(ProfessorService);
 
-  private originalAluno: aluno | null = null;
+  private originalprofessor: professor | null = null;
 
   ngOnInit() {
     this.initForm();
@@ -60,7 +59,7 @@ export class ProfessorP implements OnChanges, OnInit {
     }
 
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
-      this.originalAluno = { ...this.Selecionado };
+      this.originalprofessor = { ...this.Selecionado };
       this.formulario.patchValue(this.Selecionado);
     }
   }
@@ -74,8 +73,16 @@ export class ProfessorP implements OnChanges, OnInit {
     });
   }
 
-  carregarProfessores() {
-    this.ProfessorService.
+ carregarProfessores() {
+    this.professService.listarTodos().subscribe({
+      next: (dados) => {
+        console.log('Dados recebidos:', dados);
+        this.professores = dados || [];
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
   }
 
   // ==================== CONTROLE CENTRALIZADO ====================
@@ -98,17 +105,17 @@ export class ProfessorP implements OnChanges, OnInit {
   get cancelarHabilitado() { return this.modo !== 'initial'; }
 
   // ==================== AÇÕES ====================
-  novoAluno() {
+  novoprofessor() {
     this.modo = 'creating';
     this.formulario.reset();
-    this.originalAluno = null;
+    this.originalprofessor = null;
     this.atualizarEstadoUI();
   }
 
   editar() {
     if (!this.Selecionado) return;
     this.modo = 'editing';
-    this.originalAluno = { ...this.Selecionado };
+    this.originalprofessor = { ...this.Selecionado };
     this.formulario.patchValue(this.Selecionado);
     this.atualizarEstadoUI();
   }
@@ -121,8 +128,8 @@ export class ProfessorP implements OnChanges, OnInit {
   cancelar() {
     if (this.modo === 'creating') {
       this.fecharModal();
-    } else if (this.modo === 'editing' && this.originalAluno) {
-      this.formulario.patchValue(this.originalAluno);
+    } else if (this.modo === 'editing' && this.originalprofessor) {
+      this.formulario.patchValue(this.originalprofessor);
       this.modo = 'initial';
       this.atualizarEstadoUI();
     }
@@ -135,7 +142,7 @@ export class ProfessorP implements OnChanges, OnInit {
 
   fecharModal() {
     this.modo = 'initial';
-    this.originalAluno = null;
+    this.originalprofessor = null;
     this.formulario.reset();
     this.visivel = false;
     this.visivelChange.emit(false);
@@ -147,7 +154,7 @@ export class ProfessorP implements OnChanges, OnInit {
 
   private resetToInitialState() {
     this.modo = 'initial';
-    this.originalAluno = null;
+    this.originalprofessor = null;
     if (this.Selecionado) {
       this.formulario.patchValue(this.Selecionado);
     }
@@ -162,34 +169,35 @@ export class ProfessorP implements OnChanges, OnInit {
     }
 
     const formValue = this.formulario.getRawValue();
-    const alunoFormatado: aluno = {
+    const professorFormatado: professor = {
       ...formValue,
       telefone: this.removerMascaras(formValue.telefone),
     };
-    alert("ola1"+ alunoFormatado.dataNascimento);
+    alert("ola1");
     if (this.modo === 'creating') {
       alert("ola2");
-      this.salvarNovo(alunoFormatado);
+      this.salvarNovo(professorFormatado);
       this.fecharModal();
     } else {
-      this.atualizarFiel(alunoFormatado);
+      alert("ola3");
+      this.atualizar(professorFormatado);
     }
     this.modo = 'initial';
     this.atualizarEstadoUI();
   }
 
-  private salvarNovo(alunoFormatado: aluno) {
+  private salvarNovo(professorFormatado: professor) {
 
-    this.professService.salvar(alunoFormatado).subscribe({
+    this.professService.salvar(professorFormatado).subscribe({
       next: () => this.finalizarComSucesso(),
       error: (err) => console.error('Erro ao salvar:', err)
     });
   }
 
-  private atualizarFiel(alunoFormatado: aluno) {
+  private atualizar(professorFormatado: professor) {
     if (!this.Selecionado) return;
 
-    const atualizado: aluno = { ...this.Selecionado, ...alunoFormatado };
+    const atualizado: professor = { ...this.Selecionado, ...professorFormatado };
 
     this.professService.editar(atualizado).subscribe({
       next: (dados) => {
