@@ -22,7 +22,6 @@ public class Turma {
 	@Column(name = "status")
 	private Integer status;
 
-	private Professor professor;
 
 	public Integer getCodigo() {
 		return codigo;
@@ -46,13 +45,5 @@ public class Turma {
 
 	public void setStatus(Integer status) {
 		this.status = status;
-	}
-
-	public Professor getProfessor() {
-		return professor;
-	}
-
-	public void setProfessor(Professor professor) {
-		this.professor = professor;
 	}
 }

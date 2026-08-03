@@ -16,7 +16,7 @@
       <!-- Matrícula -->
       <div class="campo">
         <label>Matrícula</label>
-        <input pInputText formControlName="matricula" placeholder="Matrícula"
+        <p-inputtext pInputText formControlName="matricula" placeholder="Matrícula"
           [invalid]="formulario.get('matricula')?.invalid && formulario.get('matricula')?.touched" />
         @if (formulario.get('matricula')?.invalid && formulario.get('matricula')?.touched) {
         <p-message severity="error" variant="simple" size="small">A matrícula é obrigatória</p-message>

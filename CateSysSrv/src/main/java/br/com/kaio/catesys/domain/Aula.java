@@ -16,7 +16,6 @@ public class Aula {
 	private Integer codigo;
 	
 	private LocalDate data;
-	private Turma turma;
 	private Integer presencas;
 
 	public Integer getCodigo() {
@@ -35,13 +34,6 @@ public class Aula {
 		this.data = data;
 	}
 
-	public Turma getTurma() {
-		return turma;
-	}
-
-	public void setTurma(Turma turma) {
-		this.turma = turma;
-	}
 	public Integer getPresencas() {
 		return presencas;
 	}

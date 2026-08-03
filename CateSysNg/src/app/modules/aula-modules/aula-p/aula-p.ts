@@ -11,6 +11,7 @@ import { ProfessorService } from '../../../service/professor.service';
 import { AulaDoain } from '../../../domain/aula.model';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
+import { AulaService } from '../../../service/aula.service';
 
 @Component({
   selector: 'app-pops',
@@ -44,7 +45,7 @@ export class AulaP implements OnChanges, OnInit {
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
   private fb = inject(FormBuilder);
-  private professService = inject(ProfessorService);
+  private aulaService = inject(AulaService);
 
   private originalprofessor: AulaDoain | null = null;
 
@@ -74,7 +75,7 @@ export class AulaP implements OnChanges, OnInit {
   }
  
  carregarAula() {
-    this.professService.listarTodos().subscribe({
+    this.aulaService.listarTodos().subscribe({
       next: (dados) => {
         console.log('Dados recebidos:', dados);
         this.aula = dados || [];
@@ -137,7 +138,7 @@ export class AulaP implements OnChanges, OnInit {
 
   private finalizarComSucesso() {
     this.fecharModal();
-    this.carregaraula();
+    this.carregarAula();
   }
 
   fecharModal() {
@@ -188,7 +189,7 @@ export class AulaP implements OnChanges, OnInit {
 
   private salvarNovo(aulaFormatado: AulaDoain) {
 
-    this.professService.salvar(aulaFormatado).subscribe({
+    this.aulaService.salvar(aulaFormatado).subscribe({
       next: () => this.finalizarComSucesso(),
       error: (err) => console.error('Erro ao salvar:', err)
     });
@@ -199,7 +200,7 @@ export class AulaP implements OnChanges, OnInit {
 
     const atualizado: AulaDoain = { ...this.Selecionado, ...aulaFormatado };
 
-    this.professService.editar(atualizado).subscribe({
+    this.aulaService.editar(atualizado).subscribe({
       next: (dados) => {
         console.log(dados);
         this.finalizarComSucesso();
@@ -211,7 +212,7 @@ export class AulaP implements OnChanges, OnInit {
   apagar() {
     if (!this.Selecionado?.codigo) return;
 
-    this.professService.apagar(this.Selecionado).subscribe({
+    this.aulaService.apagar(this.Selecionado).subscribe({
       next: () => { this.finalizarComSucesso(); },
       error: (err) => { this.finalizarComSucesso(); },
     });
