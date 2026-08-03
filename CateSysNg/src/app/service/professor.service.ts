@@ -24,7 +24,7 @@ export class ProfessorService {
     return this.http.get<professor[]>(this.apiUrl);
   }
 
-  listFiltrados(filtro: { nome?: string | null, matricula?: number | null }): Observable<professor[]> {
+  listFiltrados(filtro: professor): Observable<professor[]> {
     return this.http.post<professor[]>(`${this.apiUrl}/filtrar`, filtro);
   }
 

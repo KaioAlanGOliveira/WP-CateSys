@@ -55,6 +55,7 @@ export class AlunoP implements OnChanges, OnInit {
 
   ngOnInit() {
     this.initForm();
+    this.calcularIdade(this.formulario.get('dataNascimento')?.value);
     // this.carregarAlunos();
   }
 
@@ -69,6 +70,17 @@ export class AlunoP implements OnChanges, OnInit {
     }
   }
 
+  calcularIdade(dataNascimento: Date): number {
+    const hoje = new Date();
+    const nascimento = new Date(dataNascimento);
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const mes = hoje.getMonth() - nascimento.getMonth();
+    if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+      idade--;
+    }
+    return idade;
+  }
+
   private initForm(): void {
     this.formulario = this.fb.group({
       matricula: [{ value: '', disabled: true }, [Validators.required]],
@@ -77,7 +89,7 @@ export class AlunoP implements OnChanges, OnInit {
       nomeResponsavel: [{ value: '', disabled: true }, [Validators.required]],
       telefoneResponsavel: [{ value: '', disabled: true }],
       dataNascimento: [{ value: null, disabled: true }, [Validators.required]],
-      idade: [{ value: null, disabled: true }],
+      idadeAtual: [{ value: null, disabled: true }],
       status: [{ value: 1, disabled: true }, [Validators.required]]
     });
   }
