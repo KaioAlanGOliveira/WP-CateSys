@@ -52,7 +52,7 @@ public class AlunoBss {
 		try {
 			em.remove(em.find(Aluno.class, aluno.getMatricula()));
 		} catch (Exception e) {
-			throw new RuntimeException("Erro ao remover o fiel", e);
+			throw new RuntimeException("Erro ao remover", e);
 		}
 	}
 }

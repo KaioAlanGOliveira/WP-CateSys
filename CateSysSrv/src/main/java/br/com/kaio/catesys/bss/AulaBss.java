@@ -2,23 +2,23 @@ package br.com.kaio.catesys.bss;
 
 import java.util.List;
 
-import br.com.kaio.catesys.domain.Professor;
+import br.com.kaio.catesys.domain.Aula;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 
 @Stateless
-public class ProfessorBss {
+public class AulaBss {
 
 	@PersistenceContext(unitName = "MeuPu")
 	private EntityManager em;
 
-	public List<Professor> getList() {
+	public List<Aula> getList() {
 
 		try {
-			String jpql = "select obj from Professor obj";
-			TypedQuery<Professor> query = em.createQuery(jpql, Professor.class);
+			String jpql = "select obj from Aula obj";
+			TypedQuery<Aula> query = em.createQuery(jpql, Aula.class);
 			return query.getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -26,47 +26,47 @@ public class ProfessorBss {
 		}
 	}
 
-	public List<Professor> getListFiltrado(Professor pf) {
+	public List<Aula> getListFiltrado(Aula aula) {
 
 	    String jpql = """
 	        SELECT p
-	        FROM Professor p
+	        FROM Aula p
 	        WHERE (:nome IS NULL OR :nome = '' OR
 	               LOWER(p.nome) LIKE LOWER(CONCAT('%', :nome, '%')))
 	          AND (:matricula IS NULL OR p.matricula = :matricula)
 	        """;
 
-	    TypedQuery<Professor> query = em.createQuery(jpql, Professor.class);
+	    TypedQuery<Aula> query = em.createQuery(jpql, Aula.class);
 
-	    query.setParameter("nome", pf.getNome());
-	    query.setParameter("matricula", pf.getMatricula());
+	    //query.setParameter("nome", aula.getNome());
+	   // query.setParameter("matricula", aula.getMatricula());
 
 	    return query.getResultList();
 	}
 
-	public void adicionar(Professor professor) throws Exception {
+	public void adicionar(Aula aula) throws Exception {
 
 		try {
-			em.persist(professor);
+			em.persist(aula);
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao adicionar", e);
 		}
 	}
 
-	public void alterar(Professor professor) {
+	public void alterar(Aula aula) {
 
 		try {
-			em.merge(professor);
+			em.merge(aula);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Erro ao atualizar", e);
 		}
 	}
 
-	public void remover(Professor professor) {
+	public void remover(Aula aula) {
 
 		try {
-			em.remove(em.find(Professor.class, professor.getMatricula()));
+			em.remove(em.find(Aula.class, aula.getCodigo()));
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao remover", e);
 		}

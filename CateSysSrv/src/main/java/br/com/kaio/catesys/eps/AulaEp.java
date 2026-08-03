@@ -3,8 +3,8 @@ package br.com.kaio.catesys.eps;
 import java.util.List;
 import java.util.Map;
 
-import br.com.kaio.catesys.bss.ProfessorBss;
-import br.com.kaio.catesys.domain.Professor;
+import br.com.kaio.catesys.bss.AulaBss;
+import br.com.kaio.catesys.domain.Aula;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -17,30 +17,30 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path(value = "/professor")
+@Path(value = "/aula")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
-public class ProfessorEp {
+public class AulaEp {
 	@Inject
-	private ProfessorBss professorBss;
+	private AulaBss aulaBss;
 
 	@GET
-	public List<Professor> getProfessores() {
-		return professorBss.getList();
+	public List<Aula> getAula() {
+		return aulaBss.getList();
 	}
-	
+
 	@POST
 	@Path("/filtrar")
-	public List<Professor> getList(Professor pf) {
-		return professorBss.getListFiltrado(pf);
+	public List<Aula> getList(Aula aula) {
+		return aulaBss.getListFiltrado(aula);
 	}
 
 	@POST
-	public String adicionar(Professor professor) {
+	public String adicionar(Aula aula) {
 
 		try {
-			professorBss.adicionar(professor);
+			aulaBss.adicionar(aula);
 			return "Novo cadastrado no banco";
 		} catch (Exception e) {
 			return e.getMessage();
@@ -48,10 +48,10 @@ public class ProfessorEp {
 	}
 
 	@DELETE
-	public Response remover(Professor professor) {
+	public Response remover(Aula aula) {
 
 		try {
-			professorBss.remover(professor);
+			aulaBss.remover(aula);
 			return Response.ok(Map.of("mensagem", " apagado com sucesso")).build();
 		} catch (Exception e) {
 			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
@@ -59,10 +59,10 @@ public class ProfessorEp {
 	}
 
 	@PUT
-	public Response editar(Professor professor) {
+	public Response editar(Aula aula) {
 
 		try {
-			professorBss.alterar(professor);
+			aulaBss.alterar(aula);
 			return Response.ok(Map.of("mensagem", "Alterado com sucesso")).build();
 		} catch (Exception e) {
 			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
