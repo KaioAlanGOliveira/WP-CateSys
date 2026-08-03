@@ -32,8 +32,8 @@ public class ProfessorEp {
 	
 	@POST
 	@Path("/filtrar")
-	public List<Professor> getList(String nome, Integer termo) {
-		return professorBss.getListFiltrado(nome, termo);
+	public List<Professor> getList(Professor pf) {
+		return professorBss.getListFiltrado(pf);
 	}
 
 	@POST
