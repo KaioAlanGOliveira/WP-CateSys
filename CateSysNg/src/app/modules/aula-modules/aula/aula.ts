@@ -2,39 +2,41 @@ import { ChangeDetectorRef, Component, inject, OnChanges, OnInit, SimpleChanges 
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
 import { LoginService } from '../../../service/login.service';
-import { ProfessorService } from '../../../service/professor.service';
+import { AulaService } from '../../../service/aula.service';
 import { TableModule } from 'primeng/table';
-import { professor } from '../../../domain/professor.model';
+import { AulaDoain } from '../../../domain/aula.model';
 import { log } from 'node:console';
-import { ProfessorP } from '../professor-p/professor-p';
+import { AulaP } from '../aula-p/aula-p';
+import { turma } from '../../../domain/turma.model';
 
 
 
 @Component({
-  selector: 'app-professor',
-  imports: [ReactiveFormsModule, TableModule, ProfessorP],
+  selector: 'app-aula',
+  imports: [ReactiveFormsModule, TableModule, AulaP],
   standalone: true,
   templateUrl: './aula.html',
   styleUrl: './aula.css',
 })
 
-export class Professor implements OnInit {
+export class Aula implements OnInit {
 
 
-  private professorServece = inject(ProfessorService);
-  private loginService = inject(LoginService);
+  private aulaServece = inject(AulaService);
   private cdr = inject(ChangeDetectorRef);
   private router = inject(Router);
   exibirModalPrincipal: boolean = false;
-  professorSelecionado!: any;
-  formprofessor!: professor;
-  listprofessors: professor[] = [];
-  professorsFiltrados: any[] = [];
+  aulaSelecionado!: any;
+  formaula!: AulaDoain;
+  listaulas: AulaDoain[] = [];
+  aulasFiltrados: any[] = [];
 
   alterar: boolean = false;
   form = new FormGroup({
-    matricula: new FormControl<number | null>(null),
-    nome: new FormControl<string | "">("", Validators.required)
+    codigo: new FormControl<number | null>(null),
+    turma: new FormControl<turma | "">("", Validators.required),
+    data: new FormControl<Date | "">("", Validators.required),
+    presencas: new FormControl<number | null>(null),
   });
 
   ngOnInit() {
@@ -42,12 +44,12 @@ export class Professor implements OnInit {
   }
 
   carregarDados() {
-    const filtro = this.form.value as professor;
-    this.professorServece.listFiltrados(filtro).subscribe({
+    const filtro = this.form.value as AulaDoain;
+    this.aulaServece.listFiltrados(filtro).subscribe({
       next: (dados) => {
 
-        this.listprofessors = dados || [];
-        this.professorsFiltrados = dados || [];
+        this.listaulas = dados || [];
+        this.aulasFiltrados = dados || [];
         console.log('Dados recebidos:', dados);
         this.cdr.detectChanges();
       },
@@ -64,12 +66,12 @@ export class Professor implements OnInit {
   pesquisar(termoNome: string, termoMatricula: string) {
 
     if (!termoNome && !termoMatricula) {
-      this.professorsFiltrados = [...this.listprofessors];
+      this.aulasFiltrados = [...this.listaulas];
       return;
     }
     this.form.patchValue({
-      nome: termoNome,
-      matricula: termoMatricula ? Number(termoMatricula) : null
+      //nome: termoNome,
+      //matricula: termoMatricula ? Number(termoMatricula) : null
     });
     this.carregarDados();
   }
@@ -88,10 +90,10 @@ export class Professor implements OnInit {
       this.carregarDados();
     }
   }
-  selecionado(professor: professor) {
+  selecionado(aula: AulaDoain) {
     this.alterar = true;
-    this.professorSelecionado = professor;
-    this.form.patchValue(professor);
+    this.aulaSelecionado = aula;
+    this.form.patchValue(aula);
     this.abrirMeuPopup();
   }
 }

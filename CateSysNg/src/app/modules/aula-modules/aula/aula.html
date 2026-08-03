@@ -1,10 +1,10 @@
 <!-- Cabeçalho -->
 <div class="page-header">
-  <h2>Professor</h2>
+  <h2>Aula</h2>
 </div>
 
 <!-- Card principal -->
-<div class="Aluno-card">
+<div class="aula-card">
 
   <!-- Filtros -->
   <form class="filtros" [formGroup]="form" (ngSubmit)="carregarDados()">
@@ -40,7 +40,7 @@
   <!-- Tabela -->
   <div class="tabela-container">
 
-    <p-table [value]="professorsFiltrados" [tableStyle]="{ 'min-width': '50rem' }">
+    <p-table [value]="AulasFiltrados" [tableStyle]="{ 'min-width': '50rem' }">
 
       <ng-template pTemplate="header">
         <tr>
@@ -50,11 +50,11 @@
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-aluno>
-        <tr (dblclick)="selecionado(aluno)">
-          <td>{{ aluno.matricula }}</td>
-          <td>{{ aluno.nome }}</td>
-          <td>{{ aluno.status }}</td>
+      <ng-template pTemplate="body" let-aula>
+        <tr (dblclick)="selecionado(aula)">
+          <td>{{ aula.matricula }}</td>
+          <td>{{ aula.nome }}</td>
+          <td>{{ aula.status }}</td>
         </tr>
       </ng-template>
 
@@ -68,17 +68,17 @@
 
     <span>
       Total de registros encontrados:
-      <strong>{{ listprofessors.length }}</strong>
+      <strong>{{ listaulas.length }}</strong>
     </span>
 
     <span>
       Máx. de linhas:
-      <strong>{{ listprofessors.length }}</strong>
+      <strong>{{ listaulas.length }}</strong>
     </span>
 
   </div>
 
 </div>
-<app-pops [(visivel)]="exibirModalPrincipal" (visivelChange)="retornoPopUp($event)"  [Selecionado]="professorSelecionado">
+<app-pops [(visivel)]="exibirModalPrincipal" (visivelChange)="retornoPopUp($event)"  [Selecionado]="AulaSelecionado">
 
 </app-pops>

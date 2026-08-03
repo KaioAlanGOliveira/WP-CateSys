@@ -8,7 +8,7 @@ import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumber } from "primeng/inputnumber";
 import { ProfessorService } from '../../../service/professor.service';
-import { professor } from '../../../domain/professor.model';
+import { AulaDoain } from '../../../domain/aula.model';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
 
@@ -30,9 +30,9 @@ import { DatePickerModule } from 'primeng/datepicker';
   templateUrl: './aula-p.html',
   styleUrl: './aula-p.css'
 })
-export class ProfessorP implements OnChanges, OnInit {
+export class AulaP implements OnChanges, OnInit {
 
-  professores: professor[] = [];
+  aula: AulaDoain[] = [];
 
   formulario!: FormGroup;
 
@@ -40,17 +40,17 @@ export class ProfessorP implements OnChanges, OnInit {
 
   private modo: 'initial' | 'creating' | 'editing' = 'creating';
 
-  @Input() Selecionado: professor | null = null;
+  @Input() Selecionado: AulaDoain | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
   private fb = inject(FormBuilder);
   private professService = inject(ProfessorService);
 
-  private originalprofessor: professor | null = null;
+  private originalprofessor: AulaDoain | null = null;
 
   ngOnInit() {
     this.initForm();
-    // this.carregarProfessores();
+    // this.carregaraula();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -66,18 +66,18 @@ export class ProfessorP implements OnChanges, OnInit {
 
   private initForm(): void {
     this.formulario = this.fb.group({
-      matricula: [{ value: '', disabled: true }, [Validators.required]],
-      nome: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]],
-      telefone: [{ value: '', disabled: true }],
-      status: [{ value: 1, disabled: true }, [Validators.required]]
+      codigo: [{ value: '', disabled: true }, [Validators.required]],
+      turma: [{ value: '', disabled: true }, [Validators.required]],
+      data: [{ value: '', disabled: true }, [Validators.required]],
+      presencas: [{ value: '', disabled: true }, [Validators.required]]
     });
   }
-
- carregarProfessores() {
+ 
+ carregarAula() {
     this.professService.listarTodos().subscribe({
       next: (dados) => {
         console.log('Dados recebidos:', dados);
-        this.professores = dados || [];
+        this.aula = dados || [];
       },
       error: (err) => {
         console.log(err);
@@ -137,7 +137,7 @@ export class ProfessorP implements OnChanges, OnInit {
 
   private finalizarComSucesso() {
     this.fecharModal();
-    this.carregarProfessores();
+    this.carregaraula();
   }
 
   fecharModal() {
@@ -169,35 +169,35 @@ export class ProfessorP implements OnChanges, OnInit {
     }
 
     const formValue = this.formulario.getRawValue();
-    const professorFormatado: professor = {
+    const aulaFormatado: AulaDoain = {
       ...formValue,
       telefone: this.removerMascaras(formValue.telefone),
     };
     alert("ola1");
     if (this.modo === 'creating') {
       alert("ola2");
-      this.salvarNovo(professorFormatado);
+      this.salvarNovo(aulaFormatado);
       this.fecharModal();
     } else {
       alert("ola3");
-      this.atualizar(professorFormatado);
+      this.atualizar(aulaFormatado);
     }
     this.modo = 'initial';
     this.atualizarEstadoUI();
   }
 
-  private salvarNovo(professorFormatado: professor) {
+  private salvarNovo(aulaFormatado: AulaDoain) {
 
-    this.professService.salvar(professorFormatado).subscribe({
+    this.professService.salvar(aulaFormatado).subscribe({
       next: () => this.finalizarComSucesso(),
       error: (err) => console.error('Erro ao salvar:', err)
     });
   }
 
-  private atualizar(professorFormatado: professor) {
+  private atualizar(aulaFormatado: AulaDoain) {
     if (!this.Selecionado) return;
 
-    const atualizado: professor = { ...this.Selecionado, ...professorFormatado };
+    const atualizado: AulaDoain = { ...this.Selecionado, ...aulaFormatado };
 
     this.professService.editar(atualizado).subscribe({
       next: (dados) => {
@@ -209,7 +209,7 @@ export class ProfessorP implements OnChanges, OnInit {
   }
 
   apagar() {
-    if (!this.Selecionado?.matricula) return;
+    if (!this.Selecionado?.codigo) return;
 
     this.professService.apagar(this.Selecionado).subscribe({
       next: () => { this.finalizarComSucesso(); },

@@ -1,6 +1,6 @@
 import { turma } from "./turma.model";
 
-export class aula {
+export class AulaDoain {
     codigo?: number;
 	turma?: turma;
 	presencas?: number;
