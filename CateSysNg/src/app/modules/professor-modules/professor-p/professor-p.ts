@@ -42,6 +42,7 @@ export class ProfessorP implements OnChanges, OnInit {
 
   @Input() Selecionado: professor | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
+  @Input() alterar: boolean = false
   @Input() visivel = false;
   private fb = inject(FormBuilder);
   private professService = inject(ProfessorService);
@@ -73,14 +74,12 @@ export class ProfessorP implements OnChanges, OnInit {
     });
   }
 
- carregarProfessores() {
+  carregarProfessores() {
     this.professService.listarTodos().subscribe({
       next: (dados) => {
-        console.log('Dados recebidos:', dados);
         this.professores = dados || [];
       },
       error: (err) => {
-        console.log(err);
       }
     });
   }
@@ -113,6 +112,7 @@ export class ProfessorP implements OnChanges, OnInit {
   }
 
   editar() {
+    this.formulario.get('matricula')?.disable();
     if (!this.Selecionado) return;
     this.modo = 'editing';
     this.originalprofessor = { ...this.Selecionado };
@@ -136,14 +136,13 @@ export class ProfessorP implements OnChanges, OnInit {
   }
 
   private finalizarComSucesso() {
-    this.fecharModal();
     this.carregarProfessores();
   }
 
   fecharModal() {
+    this.formulario.reset();
     this.modo = 'initial';
     this.originalprofessor = null;
-    this.formulario.reset();
     this.visivel = false;
     this.visivelChange.emit(false);
   }
@@ -173,13 +172,10 @@ export class ProfessorP implements OnChanges, OnInit {
       ...formValue,
       telefone: this.removerMascaras(formValue.telefone),
     };
-    alert("ola1");
     if (this.modo === 'creating') {
-      alert("ola2");
       this.salvarNovo(professorFormatado);
       this.fecharModal();
     } else {
-      alert("ola3");
       this.atualizar(professorFormatado);
     }
     this.modo = 'initial';
@@ -201,7 +197,6 @@ export class ProfessorP implements OnChanges, OnInit {
 
     this.professService.editar(atualizado).subscribe({
       next: (dados) => {
-        console.log(dados);
         this.finalizarComSucesso();
       },
       error: (err) => console.error('Erro ao atualizar:', err)
@@ -209,12 +204,17 @@ export class ProfessorP implements OnChanges, OnInit {
   }
 
   apagar() {
-    if (!this.Selecionado?.matricula) return;
+    const respota = window.confirm('Deseja realmente apagar o selecionado?');
+    if (respota) {
+      if (!this.Selecionado?.matricula) return;
 
-    this.professService.apagar(this.Selecionado).subscribe({
-      next: () => { this.finalizarComSucesso(); },
-      error: (err) => { this.finalizarComSucesso(); },
-    });
+      this.professService.apagar(this.Selecionado).subscribe({
+        next: () => { this.finalizarComSucesso(); },
+        error: (err) => { this.finalizarComSucesso(); },
+      });
+      this.fecharModal();
+    }
+
   }
 
 }

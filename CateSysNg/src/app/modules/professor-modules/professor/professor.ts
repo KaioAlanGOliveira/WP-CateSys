@@ -5,7 +5,6 @@ import { LoginService } from '../../../service/login.service';
 import { ProfessorService } from '../../../service/professor.service';
 import { TableModule } from 'primeng/table';
 import { professor } from '../../../domain/professor.model';
-import { log } from 'node:console';
 import { ProfessorP } from '../professor-p/professor-p';
 
 
@@ -20,18 +19,16 @@ import { ProfessorP } from '../professor-p/professor-p';
 
 export class Professor implements OnInit {
 
-
   private professorServece = inject(ProfessorService);
-  private loginService = inject(LoginService);
   private cdr = inject(ChangeDetectorRef);
-  private router = inject(Router);
+
   exibirModalPrincipal: boolean = false;
+  editar: boolean = false;
   professorSelecionado!: any;
   formprofessor!: professor;
   listprofessors: professor[] = [];
   professorsFiltrados: any[] = [];
 
-  alterar: boolean = false;
   form = new FormGroup({
     matricula: new FormControl<number | null>(null),
     nome: new FormControl<string | "">("", Validators.required)
@@ -48,17 +45,15 @@ export class Professor implements OnInit {
 
         this.listprofessors = dados || [];
         this.professorsFiltrados = dados || [];
-        console.log('Dados recebidos:', dados);
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.log(err);
+        console.error('Erro ao carregar os professores:', err);
       }
     });
   }
-  novoPagamento() {
-    this.alterar = false;
-    this.exibirModalPrincipal = true;
+  novo() {
+    this.form.reset();
     this.abrirMeuPopup();
   }
   pesquisar(termoNome: string, termoMatricula: string) {
@@ -75,10 +70,9 @@ export class Professor implements OnInit {
   }
   abrirMeuPopup() {
     this.exibirModalPrincipal = true;
-    this.alterar = true;
   }
   add() {
-    this.alterar = false;
+    this.editar = false;
     this.form.reset();
     this.abrirMeuPopup();
   }
@@ -89,9 +83,9 @@ export class Professor implements OnInit {
     }
   }
   selecionado(professor: professor) {
-    this.alterar = true;
+    //this.form.patchValue(professor);
     this.professorSelecionado = professor;
-    this.form.patchValue(professor);
+    this.editar = true;
     this.abrirMeuPopup();
   }
 }
