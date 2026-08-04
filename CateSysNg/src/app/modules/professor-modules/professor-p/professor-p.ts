@@ -11,6 +11,7 @@ import { ProfessorService } from '../../../service/professor.service';
 import { professor } from '../../../domain/professor.model';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
+import { log } from 'console';
 
 @Component({
   selector: 'app-pops',
@@ -33,17 +34,15 @@ import { DatePickerModule } from 'primeng/datepicker';
 export class ProfessorP implements OnChanges, OnInit {
 
   professores: professor[] = [];
-
   formulario!: FormGroup;
-
   tipoPagamento: any;
 
   private modo: 'initial' | 'creating' | 'editing' = 'creating';
 
   @Input() Selecionado: professor | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
-  @Input() alterar: boolean = false
   @Input() visivel = false;
+
   private fb = inject(FormBuilder);
   private professService = inject(ProfessorService);
 
@@ -51,7 +50,7 @@ export class ProfessorP implements OnChanges, OnInit {
 
   ngOnInit() {
     this.initForm();
-    // this.carregarProfessores();
+    // this.formulario.disable();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -60,9 +59,16 @@ export class ProfessorP implements OnChanges, OnInit {
     }
 
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
-      this.originalprofessor = { ...this.Selecionado };
+      this.modo = 'editing';
       this.formulario.patchValue(this.Selecionado);
+      this.originalprofessor = { ...this.Selecionado };
+      this.formulario.disable();
+    } else {
+      this.modo = 'creating';
+      this.formulario.enable();
     }
+
+    this.atualizarEstadoUI();
   }
 
   private initForm(): void {
@@ -78,8 +84,6 @@ export class ProfessorP implements OnChanges, OnInit {
     this.professService.listarTodos().subscribe({
       next: (dados) => {
         this.professores = dados || [];
-      },
-      error: (err) => {
       }
     });
   }
@@ -87,13 +91,15 @@ export class ProfessorP implements OnChanges, OnInit {
   // ==================== CONTROLE CENTRALIZADO ====================
   private atualizarEstadoUI(): void {
     if (!this.formulario) return;
-    const isInitial = this.modo === 'initial';
 
-    if (isInitial) {
-      this.formulario.disable();
-    } else {
-      this.formulario.enable();
+
+    if (this.modo === 'editing') {
+      this.formulario.get('matricula')?.disable();
     }
+    if (this.modo === 'creating') {
+      this.habilitarCampos(this.formulario, true);
+    }
+
   }
 
   get novoHabilitado() { return this.modo === 'initial'; }
@@ -105,18 +111,20 @@ export class ProfessorP implements OnChanges, OnInit {
 
   // ==================== AÇÕES ====================
   novoprofessor() {
-    this.modo = 'creating';
     this.formulario.reset();
+    this.modo = 'creating';
     this.originalprofessor = null;
-    this.atualizarEstadoUI();
+    this.formulario.enable();
+    // this.atualizarEstadoUI();
   }
 
   editar() {
-    this.formulario.get('matricula')?.disable();
     if (!this.Selecionado) return;
+
     this.modo = 'editing';
-    this.originalprofessor = { ...this.Selecionado };
     this.formulario.patchValue(this.Selecionado);
+    this.originalprofessor = { ...this.Selecionado };
+    this.formulario.enable();
     this.atualizarEstadoUI();
   }
 
@@ -133,10 +141,6 @@ export class ProfessorP implements OnChanges, OnInit {
       this.modo = 'initial';
       this.atualizarEstadoUI();
     }
-  }
-
-  private finalizarComSucesso() {
-    this.carregarProfessores();
   }
 
   fecharModal() {
@@ -217,4 +221,20 @@ export class ProfessorP implements OnChanges, OnInit {
 
   }
 
+  private finalizarComSucesso() {
+    this.carregarProfessores();
+  }
+
+  habilitarCampos(formulario: FormGroup, habilitar: boolean) {
+    Object.keys(formulario.controls).forEach((campo) => {
+      const controle = formulario.get(campo);
+      if (controle) {
+        if (habilitar) {
+          controle.enable();
+        } else {
+          controle.disable();
+        }
+      }
+    }); 
+  }
 }

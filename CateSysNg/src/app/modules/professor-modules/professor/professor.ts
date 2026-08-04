@@ -23,7 +23,6 @@ export class Professor implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   exibirModalPrincipal: boolean = false;
-  editar: boolean = false;
   professorSelecionado!: any;
   formprofessor!: professor;
   listprofessors: professor[] = [];
@@ -72,7 +71,6 @@ export class Professor implements OnInit {
     this.exibirModalPrincipal = true;
   }
   add() {
-    this.editar = false;
     this.form.reset();
     this.abrirMeuPopup();
   }
@@ -85,7 +83,6 @@ export class Professor implements OnInit {
   selecionado(professor: professor) {
     //this.form.patchValue(professor);
     this.professorSelecionado = professor;
-    this.editar = true;
     this.abrirMeuPopup();
   }
 }
