@@ -6,15 +6,14 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { InputMaskModule } from 'primeng/inputmask';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputNumber } from "primeng/inputnumber";
-import { ProfessorService } from '../../../service/professor.service';
-import { AulaDoain } from '../../../domain/aula.model';
+import { TurmaService } from '../../../service/turma.service';
+import { professor } from '../../../domain/professor.model';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
-import { AulaService } from '../../../service/aula.service';
+import { TurmaDomain } from '../../../domain/turma.model';
 
 @Component({
-  selector: 'app-pops',
+  selector: 'app-turma-p',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -28,30 +27,29 @@ import { AulaService } from '../../../service/aula.service';
     RadioButtonModule,
     DatePickerModule,
   ],
-  templateUrl: './aula-p.html',
-  styleUrl: './aula-p.css'
+  templateUrl: './turma-p.html',
+  styleUrl: './turma-p.css'
 })
-export class AulaP implements OnChanges, OnInit {
+export class TurmaP implements OnChanges, OnInit {
 
-  aula: AulaDoain[] = [];
-
+  turmas: TurmaDomain[] = [];
   formulario!: FormGroup;
-
   tipoPagamento: any;
 
-  private modo: 'initial' | 'creating' | 'editing' = 'creating';
+  private modo: 'initial' | 'creating' | 'editing' = 'initial';
 
-  @Input() Selecionado: AulaDoain | null = null;
+  @Input() Selecionado: TurmaDomain | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
-  private fb = inject(FormBuilder);
-  private aulaService = inject(AulaService);
 
-  private originalprofessor: AulaDoain | null = null;
+  private fb = inject(FormBuilder);
+  private turmaService = inject(TurmaService);
+
+  private originalturma: TurmaDomain | null = null;
 
   ngOnInit() {
     this.initForm();
-    // this.carregaraula();
+    // this.formulario.disable();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -60,28 +58,30 @@ export class AulaP implements OnChanges, OnInit {
     }
 
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
-      this.originalprofessor = { ...this.Selecionado };
+      this.modo = 'initial';
       this.formulario.patchValue(this.Selecionado);
+      this.originalturma = { ...this.Selecionado };
+    } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
+      this.modo = 'creating';
+      this.formulario.reset();
     }
+
+    this.atualizarEstadoUI();
   }
 
   private initForm(): void {
     this.formulario = this.fb.group({
-      codigo: [{ value: '', disabled: true }, [Validators.required]],
-      turma: [{ value: '', disabled: true }, [Validators.required]],
-      data: [{ value: '', disabled: true }, [Validators.required]],
-      presencas: [{ value: '', disabled: true }, [Validators.required]]
+      matricula: [{ value: '', disabled: true }, [Validators.required]],
+      nome: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]],
+      telefone: [{ value: '', disabled: true }],
+      status: [{ value: 1, disabled: true }, [Validators.required]]
     });
   }
- 
- carregarAula() {
-    this.aulaService.listarTodos().subscribe({
+
+  carregarTurmas() {
+    this.turmaService.listarTodos().subscribe({
       next: (dados) => {
-        console.log('Dados recebidos:', dados);
-        this.aula = dados || [];
-      },
-      error: (err) => {
-        console.log(err);
+        this.turmas = dados || [];
       }
     });
   }
@@ -89,35 +89,46 @@ export class AulaP implements OnChanges, OnInit {
   // ==================== CONTROLE CENTRALIZADO ====================
   private atualizarEstadoUI(): void {
     if (!this.formulario) return;
-    const isInitial = this.modo === 'initial';
 
-    if (isInitial) {
+    if (this.modo === 'initial') {
       this.formulario.disable();
+    } else if (this.modo === 'editing') {
+      this.formulario.enable();
+      this.formulario.get('matricula')?.disable();
     } else {
       this.formulario.enable();
+      this.formulario.get('matricula')?.enable();
     }
   }
 
   get novoHabilitado() { return this.modo === 'initial'; }
   get alterarHabilitado() { return this.modo === 'initial' && !!this.Selecionado; }
   get apagarHabilitado() { return this.modo === 'initial' && !!this.Selecionado; }
-  get fecharHabilitado() { return this.modo === 'initial'; }
   get salvarHabilitado() { return this.modo !== 'initial'; }
   get cancelarHabilitado() { return this.modo !== 'initial'; }
+  get fecharHabilitado() { return true; }
 
   // ==================== AÇÕES ====================
-  novoprofessor() {
+  novo() {
     this.modo = 'creating';
+    this.originalturma = null;
     this.formulario.reset();
-    this.originalprofessor = null;
+    this.formulario.markAllAsDirty();
+    this.formulario.markAllAsTouched();
+    this.formulario.updateValueAndValidity();
+    this.formulario.enable();
     this.atualizarEstadoUI();
   }
 
   editar() {
     if (!this.Selecionado) return;
     this.modo = 'editing';
-    this.originalprofessor = { ...this.Selecionado };
     this.formulario.patchValue(this.Selecionado);
+    this.originalturma = { ...this.Selecionado };
+    this.formulario.enable();
+    this.formulario.markAllAsDirty();
+    this.formulario.markAllAsTouched();
+    this.formulario.updateValueAndValidity();
     this.atualizarEstadoUI();
   }
 
@@ -128,25 +139,21 @@ export class AulaP implements OnChanges, OnInit {
 
   cancelar() {
     if (this.modo === 'creating') {
+      this.formulario.reset();
       this.fecharModal();
-    } else if (this.modo === 'editing' && this.originalprofessor) {
-      this.formulario.patchValue(this.originalprofessor);
+    } else if (this.modo === 'editing' && this.originalturma) {
+      this.formulario.patchValue(this.originalturma);
       this.modo = 'initial';
       this.atualizarEstadoUI();
     }
   }
 
-  private finalizarComSucesso() {
-    this.fecharModal();
-    this.carregarAula();
-  }
-
   fecharModal() {
     this.modo = 'initial';
-    this.originalprofessor = null;
-    this.formulario.reset();
     this.visivel = false;
+    this.originalturma = null;
     this.visivelChange.emit(false);
+    this.formulario.reset();
   }
 
   recarregarPaginaInteira() {
@@ -155,7 +162,7 @@ export class AulaP implements OnChanges, OnInit {
 
   private resetToInitialState() {
     this.modo = 'initial';
-    this.originalprofessor = null;
+    this.originalturma = null;
     if (this.Selecionado) {
       this.formulario.patchValue(this.Selecionado);
     }
@@ -170,39 +177,35 @@ export class AulaP implements OnChanges, OnInit {
     }
 
     const formValue = this.formulario.getRawValue();
-    const aulaFormatado: AulaDoain = {
+    const turmaFormatada: TurmaDomain = {
       ...formValue,
       telefone: this.removerMascaras(formValue.telefone),
     };
-    alert("ola1");
     if (this.modo === 'creating') {
-      alert("ola2");
-      this.salvarNovo(aulaFormatado);
+      this.salvarNova(turmaFormatada);
       this.fecharModal();
     } else {
-      alert("ola3");
-      this.atualizar(aulaFormatado);
+      this.atualizar(turmaFormatada);
     }
     this.modo = 'initial';
     this.atualizarEstadoUI();
   }
 
-  private salvarNovo(aulaFormatado: AulaDoain) {
+  private salvarNova(turmaFormatada: TurmaDomain) {
 
-    this.aulaService.salvar(aulaFormatado).subscribe({
+    this.turmaService.salvar(turmaFormatada).subscribe({
       next: () => this.finalizarComSucesso(),
-      error: (err) => console.error('Erro ao salvar:', err)
+      error: (err) => { alert('Erro ao salvar a turma. A turma já existe.'); console.error('Erro ao salvar:', err); }
     });
   }
 
-  private atualizar(aulaFormatado: AulaDoain) {
+  private atualizar(turmaFormatada: TurmaDomain) {
     if (!this.Selecionado) return;
 
-    const atualizado: AulaDoain = { ...this.Selecionado, ...aulaFormatado };
+    const atualizado: TurmaDomain = { ...this.Selecionado, ...turmaFormatada };
 
-    this.aulaService.editar(atualizado).subscribe({
+    this.turmaService.editar(atualizado).subscribe({
       next: (dados) => {
-        console.log(dados);
         this.finalizarComSucesso();
       },
       error: (err) => console.error('Erro ao atualizar:', err)
@@ -210,12 +213,33 @@ export class AulaP implements OnChanges, OnInit {
   }
 
   apagar() {
-    if (!this.Selecionado?.codigo) return;
+    const respota = window.confirm('Deseja realmente apagar o selecionado?');
+    if (respota) {
+      if (!this.Selecionado?.codigo) return;
 
-    this.aulaService.apagar(this.Selecionado).subscribe({
-      next: () => { this.finalizarComSucesso(); },
-      error: (err) => { this.finalizarComSucesso(); },
-    });
+      this.turmaService.apagar(this.Selecionado).subscribe({
+        next: () => { this.finalizarComSucesso(); },
+        error: (err) => { alert('Erro ao apagar a turma.'); this.finalizarComSucesso(); },
+      });
+      this.fecharModal();
+    }
+
   }
 
+  private finalizarComSucesso() {
+    this.carregarTurmas();
+  }
+
+  habilitarCampos(formulario: FormGroup, habilitar: boolean) {
+    Object.keys(formulario.controls).forEach((campo) => {
+      const controle = formulario.get(campo);
+      if (controle) {
+        if (habilitar) {
+          controle.enable();
+        } else {
+          controle.disable();
+        }
+      }
+    });
+  }
 }

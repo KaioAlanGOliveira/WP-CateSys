@@ -181,6 +181,35 @@
   font-weight: 600;
 }
 
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.campo > label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.radio-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.radio-option label {
+    margin: 0;
+    line-height: 18px;
+}
 /* ===== Responsivo ===== */
 @media (max-width: 768px) {
   .filtros {

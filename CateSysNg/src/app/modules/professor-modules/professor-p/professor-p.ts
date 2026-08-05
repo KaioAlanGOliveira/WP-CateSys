@@ -196,7 +196,7 @@ export class ProfessorP implements OnChanges, OnInit {
 
     this.professService.salvar(professorFormatado).subscribe({
       next: () => this.finalizarComSucesso(),
-      error: (err) => { alert('Erro ao salvar o professor. O professor já existe.'); console.error('Erro ao salvar:', err); }
+      error: (err) => { alert('Erro ao salvar o professor. Matricula já existe.'); console.error('Erro ao salvar:', err); }
     });
   }
 

@@ -14,7 +14,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
-  selector: 'app-pops',
+  selector: 'app-aluno-p',
   standalone: true,
   imports: [
     ReactiveFormsModule,

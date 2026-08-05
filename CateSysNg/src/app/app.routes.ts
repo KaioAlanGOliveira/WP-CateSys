@@ -3,6 +3,7 @@ import { Login } from './modules/login-modules/login';
 import { Aluno } from './modules/aluno-modules/aluno/aluno';
 import { Professor } from './modules/professor-modules/professor/professor';
 import { MenuLateral } from './shared/menu-lateral/menu-lateral';
+import { Turma } from './modules/turma-modules/turma/turma';
 export const routes: Routes = [
 
     { path: '', component: Login, pathMatch: 'full' },
@@ -12,7 +13,8 @@ export const routes: Routes = [
         component: MenuLateral,
         children: [
             { path: 'aluno', component: Aluno },
-            { path: 'professor', component: Professor }
+            { path: 'professor', component: Professor },
+            { path: 'turma', component: Turma }
         ]
     },
 

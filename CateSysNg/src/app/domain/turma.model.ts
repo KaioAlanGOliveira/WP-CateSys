@@ -1,6 +1,5 @@
-export class turma {
+export class TurmaDomain {
     codigo?: number;
-	turma?: turma;
 	nome?: string;
 	status?: number;
 }
