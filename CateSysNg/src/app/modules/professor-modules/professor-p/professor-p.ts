@@ -37,7 +37,7 @@ export class ProfessorP implements OnChanges, OnInit {
   formulario!: FormGroup;
   tipoPagamento: any;
 
-  private modo: 'initial' | 'creating' | 'editing' = 'creating';
+  private modo: 'initial' | 'creating' | 'editing' = 'initial';
 
   @Input() Selecionado: professor | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
@@ -59,13 +59,12 @@ export class ProfessorP implements OnChanges, OnInit {
     }
 
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
-      this.modo = 'editing';
+      this.modo = 'initial';
       this.formulario.patchValue(this.Selecionado);
       this.originalprofessor = { ...this.Selecionado };
-      this.formulario.disable();
-    } else {
+    } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
       this.modo = 'creating';
-      this.formulario.enable();
+      this.formulario.reset();
     }
 
     this.atualizarEstadoUI();
@@ -92,39 +91,45 @@ export class ProfessorP implements OnChanges, OnInit {
   private atualizarEstadoUI(): void {
     if (!this.formulario) return;
 
-
-    if (this.modo === 'editing') {
+    if (this.modo === 'initial') {
+      this.formulario.disable();
+    } else if (this.modo === 'editing') {
+      this.formulario.enable();
       this.formulario.get('matricula')?.disable();
+    } else {
+      this.formulario.enable();
+      this.formulario.get('matricula')?.enable();
     }
-    if (this.modo === 'creating') {
-      this.habilitarCampos(this.formulario, true);
-    }
-
   }
 
   get novoHabilitado() { return this.modo === 'initial'; }
   get alterarHabilitado() { return this.modo === 'initial' && !!this.Selecionado; }
   get apagarHabilitado() { return this.modo === 'initial' && !!this.Selecionado; }
-  get fecharHabilitado() { return this.modo === 'initial'; }
   get salvarHabilitado() { return this.modo !== 'initial'; }
   get cancelarHabilitado() { return this.modo !== 'initial'; }
+  get fecharHabilitado() { return true; }
 
   // ==================== AÇÕES ====================
   novoprofessor() {
-    this.formulario.reset();
     this.modo = 'creating';
     this.originalprofessor = null;
+    this.formulario.reset();
+    this.formulario.markAllAsDirty();
+    this.formulario.markAllAsTouched();
+    this.formulario.updateValueAndValidity();
     this.formulario.enable();
-    // this.atualizarEstadoUI();
+    this.atualizarEstadoUI();
   }
 
   editar() {
     if (!this.Selecionado) return;
-
     this.modo = 'editing';
     this.formulario.patchValue(this.Selecionado);
     this.originalprofessor = { ...this.Selecionado };
     this.formulario.enable();
+    this.formulario.markAllAsDirty();
+    this.formulario.markAllAsTouched();
+    this.formulario.updateValueAndValidity();
     this.atualizarEstadoUI();
   }
 
@@ -135,6 +140,7 @@ export class ProfessorP implements OnChanges, OnInit {
 
   cancelar() {
     if (this.modo === 'creating') {
+      this.formulario.reset();
       this.fecharModal();
     } else if (this.modo === 'editing' && this.originalprofessor) {
       this.formulario.patchValue(this.originalprofessor);
@@ -144,11 +150,11 @@ export class ProfessorP implements OnChanges, OnInit {
   }
 
   fecharModal() {
-    this.formulario.reset();
     this.modo = 'initial';
-    this.originalprofessor = null;
     this.visivel = false;
+    this.originalprofessor = null;
     this.visivelChange.emit(false);
+    this.formulario.reset();
   }
 
   recarregarPaginaInteira() {
@@ -190,7 +196,7 @@ export class ProfessorP implements OnChanges, OnInit {
 
     this.professService.salvar(professorFormatado).subscribe({
       next: () => this.finalizarComSucesso(),
-      error: (err) => console.error('Erro ao salvar:', err)
+      error: (err) => { alert('Erro ao salvar o professor. O professor já existe.'); console.error('Erro ao salvar:', err); }
     });
   }
 
@@ -214,7 +220,7 @@ export class ProfessorP implements OnChanges, OnInit {
 
       this.professService.apagar(this.Selecionado).subscribe({
         next: () => { this.finalizarComSucesso(); },
-        error: (err) => { this.finalizarComSucesso(); },
+        error: (err) => { alert('Erro ao apagar o professor.'); this.finalizarComSucesso(); },
       });
       this.fecharModal();
     }
@@ -235,6 +241,6 @@ export class ProfessorP implements OnChanges, OnInit {
           controle.disable();
         }
       }
-    }); 
+    });
   }
 }

@@ -53,6 +53,7 @@ export class Professor implements OnInit {
   }
   novo() {
     this.form.reset();
+    this.professorSelecionado = null;
     this.abrirMeuPopup();
   }
   pesquisar(termoNome: string, termoMatricula: string) {
@@ -72,6 +73,7 @@ export class Professor implements OnInit {
   }
   add() {
     this.form.reset();
+    this.professorSelecionado = null;
     this.abrirMeuPopup();
   }
   retornoPopUp(exib: boolean) {

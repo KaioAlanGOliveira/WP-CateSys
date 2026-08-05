@@ -31,14 +31,17 @@ public class AlunoEp {
 	}
 
 	@POST
-	public String adicionar(Aluno aluno) {
+	public Response adicionar(Aluno aluno) {
 
 		try {
-			alunoBss.adicionar(aluno);
-			return "Novo cadastrado no banco";
+			if (aluno != null) {
+				alunoBss.adicionar(aluno);
+				return Response.ok(Map.of("mensagem", " apagado com sucesso")).build();
+			} 
 		} catch (Exception e) {
-			return e.getMessage();
+			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
 		}
+		return null;
 	}
 
 	@DELETE

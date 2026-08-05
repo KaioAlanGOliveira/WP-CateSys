@@ -61,12 +61,12 @@
 
     <!-- BLOCO DA DIREITA: BOTÕES (180px) -->
     <div class="acoes">
-      <p-button label="Novo" [disabled]="novoHabilitado" (onClick)="novoprofessor()"></p-button>
-      <p-button label="Alterar" [disabled]="alterarHabilitado" (onClick)="editar()"></p-button>
-      <p-button label="Apagar" [disabled]="apagarHabilitado" (onClick)="apagar()"></p-button>
-      <p-button label="Salvar" [disabled]="salvarHabilitado" (onClick)="salvar()"></p-button>
-      <p-button label="Cancelar" [disabled]="cancelarHabilitado" (onClick)="cancelar()"></p-button>
-      <p-button label="Fechar" [disabled]="fecharHabilitado" (onClick)="fecharModal()"></p-button>
+      <p-button label="Novo" [disabled]="!novoHabilitado" (onClick)="novoprofessor()"></p-button>
+      <p-button label="Alterar" [disabled]="!alterarHabilitado" (onClick)="editar()"></p-button>
+      <p-button label="Apagar" [disabled]="!apagarHabilitado" (onClick)="apagar()"></p-button>
+      <p-button label="Salvar" [disabled]="!salvarHabilitado" (onClick)="salvar()"></p-button>
+      <p-button label="Cancelar" [disabled]="!cancelarHabilitado" (onClick)="cancelar()"></p-button>
+      <p-button label="Fechar" [disabled]="!fecharHabilitado" (onClick)="fecharModal()"></p-button>
     </div>
 
   </form>
