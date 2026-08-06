@@ -27,7 +27,8 @@ import { DatePickerModule } from 'primeng/datepicker';
     FormsModule,
     RadioButtonModule,
     DatePickerModule,
-  ],
+    InputNumber
+],
   templateUrl: './aluno-p.html',
   styleUrl: './aluno-p.css'
 })

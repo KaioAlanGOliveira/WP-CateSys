@@ -1,0 +1,123 @@
+<p-dialog header="Cadastro das Turmas" [(visible)]="visivel" (onHide)="fecharModal()" [modal]="true"
+  [style]="{ width: '900px', height: '60vh' }">
+  <form [formGroup]="formulario">
+
+    <div class="campos">
+
+      <div class="mensagem">
+        @if (formulario.invalid && formulario.touched) {
+        <p-message severity="error" icon="pi pi-times-circle" styleClass="mb-2">
+          A validação falhou!
+        </p-message>
+        }
+      </div>
+
+      <!-- Código -->
+      <div class="campo">
+        <label>Código</label>
+        <input pInputText formControlName="codigo" placeholder="Código"
+          [invalid]="formulario.get('codigo')?.invalid && formulario.get('codigo')?.touched" />
+        @if (formulario.get('codigo')?.invalid && formulario.get('codigo')?.touched) {
+        <p-message severity="error" variant="simple" size="small">O código é obrigatório</p-message>
+        }
+      </div>
+
+      <!-- Nome -->
+      <div class="campo">
+        <label>Nome</label>
+        <input pInputText formControlName="nome" placeholder="Nome"
+          [invalid]="formulario.get('nome')?.invalid && formulario.get('nome')?.touched" />
+        @if (formulario.get('nome')?.invalid && formulario.get('nome')?.touched) {
+        <p-message severity="error" variant="simple" size="small">O nome é obrigatório</p-message>
+        }
+      </div>
+
+      <!-- Professor -->
+      <div class="campo">
+        <label>Professor</label>
+        <input pInputText formControlName="professor" placeholder="Professor"
+          [invalid]="formulario.get('professor')?.invalid && formulario.get('professor')?.touched" />
+        @if (formulario.get('professor')?.invalid && formulario.get('professor')?.touched) {
+        <p-message severity="error" variant="simple" size="small">Professor inválido</p-message>
+        }
+      </div>
+
+      <div class="campo">
+        <label>Status</label>
+
+        <!-- Ativo -->
+        <p-radioButton name="status" [value]="1" formControlName="status" inputId="ativo" />
+        <label for="ativo">Ativo</label>
+
+        <!-- Inativo -->
+        <p-radioButton name="status" [value]="0" formControlName="status" inputId="inativo" />
+        <label for="inativo">Inativo</label>
+      </div>
+
+      <!-- Aluno CMP -->
+      <div class="campo">
+        <label>Aluno</label>
+        <p-inputmask mask="(99) 99999-9999" formControlName="aluno" placeholder="Aluno"
+          [invalid]="formulario.get('aluno')?.invalid && formulario.get('aluno')?.touched" />
+        @if (formulario.get('aluno')?.invalid && formulario.get('aluno')?.touched) {
+        <p-message severity="error" variant="simple" size="small">Aluno inválido</p-message>
+        }
+      </div>
+
+    <!-- Tabela Alunos -->
+    <div class="tabela-container">
+
+    <p-table [value]="alunosFiltrados" [tableStyle]="{ 'min-width': '50rem' }">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Matrícula</th>
+          <th>Nome</th>
+          <th>Status</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-aluno>
+        <tr (dblclick)="selecionado(aluno)">
+          <td>{{ aluno.matricula }}</td>
+          <td>{{ aluno.nome }}</td>
+          <td>{{ aluno.status }}</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+
+    </div>
+      <!-- Rodapé -->
+    <div class="table-footer">
+
+    <span>
+      Total de registros encontrados:
+      <strong>{{ listAlunos.length }}</strong>
+    </span>
+
+    <span>
+      Máx. de linhas:
+      <strong>{{ listAlunos.length }}</strong>
+    </span>
+
+   </div>
+  </div>
+
+
+
+    <!-- BLOCO DA DIREITA: BOTÕES (180px) -->
+    <div class="acoes">
+      <p-button label="Novo" [disabled]="!novoHabilitado" (onClick)="novo()"></p-button>
+      <p-button label="Alterar" [disabled]="!alterarHabilitado" (onClick)="editar()"></p-button>
+      <br>
+      <p-button label="Apagar" [disabled]="!apagarHabilitado" (onClick)="apagar()"></p-button>
+      <p-button label="Salvar" [disabled]="!salvarHabilitado" (onClick)="salvar()"></p-button>
+      <br>
+      <p-button label="Cancelar" [disabled]="!cancelarHabilitado" (onClick)="cancelar()"></p-button>
+      <p-button label="Fechar" [disabled]="!fecharHabilitado" (onClick)="fecharModal()"></p-button>
+    </div>
+
+  </form>
+</p-dialog>
+

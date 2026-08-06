@@ -8,12 +8,13 @@ import { TurmaDomain } from '../../../domain/turma.model';
 import { TurmaP } from '../turma-p/turma-p';
 import { RadioButton } from "primeng/radiobutton";
 import { professor } from '../../../domain/professor.model';
+import { TurmaCmpAluno } from "../turma-cmp-aluno/turma-cmp-aluno";
 
 
 
 @Component({
   selector: 'app-turma',
-  imports: [ReactiveFormsModule, TableModule, TurmaP, RadioButton],
+  imports: [ReactiveFormsModule, TableModule, TurmaP, RadioButton, TurmaCmpAluno],
   standalone: true,
   templateUrl: './turma.html',
   styleUrl: './turma.css',
