@@ -14,7 +14,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { log } from 'console';
 
 @Component({
-  selector: 'app-pops',
+  selector: 'app-professor-p',
   standalone: true,
   imports: [
     ReactiveFormsModule,

@@ -118,7 +118,7 @@ form {
   padding: 16px 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
   border-left: 1px solid #e0e0e0;
 }
 

@@ -1,5 +1,5 @@
 <p-dialog header="Cadastro das Turmas" [(visible)]="visivel" (onHide)="fecharModal()" [modal]="true"
-  [style]="{ width: '800px', height: '60vh' }">
+  [style]="{ width: '900px', height: '60vh' }">
   <form [formGroup]="formulario">
 
     <div class="campos">
@@ -64,8 +64,8 @@
         }
       </div>
 
- <!-- Tabela -->
-  <div class="tabela-container">
+    <!-- Tabela Alunos -->
+    <div class="tabela-container">
 
     <p-table [value]="alunosFiltrados" [tableStyle]="{ 'min-width': '50rem' }">
 
@@ -87,11 +87,9 @@
 
     </p-table>
 
-  </div>
-
-
-  <!-- Rodapé -->
-  <div class="table-footer">
+    </div>
+      <!-- Rodapé -->
+    <div class="table-footer">
 
     <span>
       Total de registros encontrados:
@@ -103,8 +101,8 @@
       <strong>{{ listAlunos.length }}</strong>
     </span>
 
+   </div>
   </div>
-    </div>
 
 
 
@@ -112,8 +110,10 @@
     <div class="acoes">
       <p-button label="Novo" [disabled]="!novoHabilitado" (onClick)="novo()"></p-button>
       <p-button label="Alterar" [disabled]="!alterarHabilitado" (onClick)="editar()"></p-button>
+      <br>
       <p-button label="Apagar" [disabled]="!apagarHabilitado" (onClick)="apagar()"></p-button>
       <p-button label="Salvar" [disabled]="!salvarHabilitado" (onClick)="salvar()"></p-button>
+      <br>
       <p-button label="Cancelar" [disabled]="!cancelarHabilitado" (onClick)="cancelar()"></p-button>
       <p-button label="Fechar" [disabled]="!fecharHabilitado" (onClick)="fecharModal()"></p-button>
     </div>

@@ -278,8 +278,8 @@ export class TurmaP implements OnChanges, OnInit {
     }
 
   selecionado(aluno: aluno) {
+    // this.formAlunos.patchValue(aluno);
     this.alunoSelecionado = aluno;
-    this.formAlunos.patchValue(aluno);
     this.visivel=true;
   }
 }
