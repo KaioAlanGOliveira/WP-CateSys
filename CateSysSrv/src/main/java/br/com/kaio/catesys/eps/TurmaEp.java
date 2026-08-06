@@ -32,13 +32,12 @@ public class TurmaEp {
 
 	@POST
 	@Path("/filtrar")
-	public List<Turma> getListFiltrada(Turma pf) {
-		return TurmaBss.getListFiltrado(pf);
+	public List<Turma> getListFiltrada(Turma domain) {
+		return TurmaBss.getListFiltrado(domain);
 	}
 
 	@POST
 	public String adicionar(Turma domain) {
-
 		try {
 			TurmaBss.adicionar(domain);
 			return "Novo cadastrado no banco";

@@ -74,7 +74,8 @@ export class TurmaP implements OnChanges, OnInit {
       matricula: [{ value: '', disabled: true }, [Validators.required]],
       nome: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]],
       telefone: [{ value: '', disabled: true }],
-      status: [{ value: 1, disabled: true }, [Validators.required]]
+      status: [{ value: 1, disabled: true }, [Validators.required]],
+      professorMatricula: [{ value: null, disabled: true }]
     });
   }
 

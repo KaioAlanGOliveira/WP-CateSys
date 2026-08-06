@@ -22,6 +22,16 @@ public class Turma {
 	@Column(name = "status")
 	private Integer status;
 
+	@Column(name = "professor_matricula")
+	private Integer professorMatricula;
+
+	public Integer getProfessorMatricula() {
+		return professorMatricula;
+	}
+
+	public void setProfessorMatricula(Integer professor_matricula) {
+		this.professorMatricula = professor_matricula;
+	}
 
 	public Integer getCodigo() {
 		return codigo;

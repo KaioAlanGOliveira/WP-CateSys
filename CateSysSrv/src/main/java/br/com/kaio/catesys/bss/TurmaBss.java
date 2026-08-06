@@ -33,14 +33,18 @@ public class TurmaBss {
 				FROM Turma p
 				WHERE (:nome IS NULL OR :nome = '' OR
 				       LOWER(p.nome) LIKE LOWER(CONCAT('%', :nome, '%')))
-				  AND (:matricula IS NULL OR p.matricula = :matricula)
-				""";
+				 AND (:codigo IS NULL OR p.codigo = :codigo)
+				 AND (:status IS NULL OR p.status = :status)
+				 AND (:professorMatricula IS NULL OR p.professorMatricula = :professorMatricula)
+					   """;
 
 		TypedQuery<Turma> query = em.createQuery(jpql, Turma.class);
 
 		query.setParameter("nome", domain.getNome());
-		query.setParameter("matricula", domain.getCodigo());
-
+		query.setParameter("codigo", domain.getCodigo());
+		query.setParameter("status", domain.getStatus());
+		query.setParameter("professorMatricula", domain.getProfessorMatricula());
+		
 		return query.getResultList();
 	}
 

@@ -7,6 +7,7 @@ import { TableModule } from 'primeng/table';
 import { TurmaDomain } from '../../../domain/turma.model';
 import { TurmaP } from '../turma-p/turma-p';
 import { RadioButton } from "primeng/radiobutton";
+import { professor } from '../../../domain/professor.model';
 
 
 
@@ -27,11 +28,13 @@ export class Turma implements OnInit {
   turmaSelecionado!: any;
   formturma!: TurmaDomain;
   listTurmas: TurmaDomain[] = [];
-  turmasFiltrados: any[] = [];
+  turmasFiltradas: TurmaDomain[] = [];
 
   form = new FormGroup({
-    matricula: new FormControl<number | null>(null),
-    nome: new FormControl<string | "">("", Validators.required)
+    codigo: new FormControl<number | null>(null),
+    nome: new FormControl<string | "">("", Validators.required),
+    status: new FormControl<number>({ value: 1, disabled: false }, [Validators.required]),
+    professorMatricula: new FormControl<number | null>(null)
   });
 
   ngOnInit() {
@@ -40,27 +43,21 @@ export class Turma implements OnInit {
 
   carregarDados() {
     const filtro = this.form.value as TurmaDomain;
-    // this.turmaServece.listFiltrados(filtro).subscribe({
-    //   next: (dados) => {
-
-    //     this.listTurmas = dados || [];
-    //     this.turmasFiltrados = dados || [];
-    //     this.cdr.detectChanges();
-    //   },
-    //   error: (err) => {
-    //     console.error('Erro ao carregar os turmaes:', err);
-    //   }
-    // });
-
-    this.turmaServece.listarTodos().subscribe({
+   
+    this.turmaServece.listFiltrados(filtro).subscribe({
       next: (dados) => {
-        this.listTurmas = dados || [];
-        this.turmasFiltrados = dados || [];
-        this.cdr.detectChanges();
+        const normalized = (dados || []).map((item: any) => ({
+          ...item,
+          professorMatricula: item.professorMatricula ?? item.professor_matricula ?? null
+        }));
+        this.listTurmas = normalized;
+        this.turmasFiltradas = normalized;
+        this.cdr.detectChanges();        
       },
       error: (err) => {
-        console.error('Erro ao carregar os turmaes:', err);
+        console.error('Erro ao carregar os dados:', err);
       }
+      
     });
   }
   novo() {
@@ -68,16 +65,19 @@ export class Turma implements OnInit {
     this.turmaSelecionado = null;
     this.abrirMeuPopup();
   }
-  pesquisar(termoNome: string, termoMatricula: string) {
-
-    if (!termoNome && !termoMatricula) {
-      this.turmasFiltrados = [...this.listTurmas];
+  pesquisar() {
+    const { nome, codigo, status, professorMatricula } = this.form.value;
+    if (!nome && !codigo && !status && !professorMatricula) {
+      this.turmasFiltradas = [...this.listTurmas];
       return;
     }
     this.form.patchValue({
-      nome: termoNome,
-      matricula: termoMatricula ? Number(termoMatricula) : null
+      nome: nome,
+      codigo: codigo ? Number(codigo) : null,
+      status: status,
+      professorMatricula: professorMatricula ? Number(professorMatricula) : null,
     });
+
     this.carregarDados();
   }
   abrirMeuPopup() {

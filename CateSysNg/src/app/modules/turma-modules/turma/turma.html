@@ -28,7 +28,7 @@
     <div class="form-field">
       <label for="professor">Professor</label>
 
-      <input id="professor" class="input-field" type="text" formControlName="professor" placeholder="Digite o professor"
+      <input id="professor" class="input-field" type="text" formControlName="professorMatricula" placeholder="Digite o professor"
         #inputProfessor>
     </div>
 
@@ -38,7 +38,7 @@
 
       <div class="radio-group">
         <div class="radio-option">
-          <p-radioButton name="status" [value]="1" formControlName="status" inputId="ativo"></p-radioButton>
+          <p-radioButton name="status" [value]="1" formControlName="status" inputId="ativo" ></p-radioButton>
           <label for="ativo">Ativo</label>
         </div>
 
@@ -50,7 +50,7 @@
     </div>
 
     <div class="form-action">
-      <button id="btn" class="btn-primary" type="submit" (click)="pesquisar(inputNome.value, inputCodigo.value)">
+      <button id="btn" class="btn-primary" type="submit" (click)="pesquisar()">
         Pesquisar
       </button>
     </div>
@@ -67,7 +67,7 @@
   <!-- Tabela -->
   <div class="tabela-container">
 
-    <p-table [value]="turmasFiltrados" [tableStyle]="{ 'min-width': '50rem' }">
+    <p-table [value]="turmasFiltradas" [tableStyle]="{ 'min-width': '50rem' }">
 
       <ng-template pTemplate="header">
         <tr>
@@ -83,7 +83,7 @@
           <td>{{ turma.codigo }}</td>
           <td>{{ turma.nome }}</td>
           <td>{{ turma.status === 1 ? 'Ativo' : 'Inativo' }}</td>
-          <td>{{ turma.professor }}</td>
+          <td>{{ turma.professorMatricula === null || turma.professorMatricula === undefined || turma.professorMatricula === "" ? 'Não atribuído' : turma.professorMatricula }}</td>
         </tr>
       </ng-template>
 
