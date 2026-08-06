@@ -31,13 +31,19 @@ public class AlunoEp {
 	}
 
 	@POST
+	@Path("/filtrar")
+	public List<Aluno> getList(Aluno domain) {
+		return alunoBss.getListFiltrado(domain);
+	}
+
+	@POST
 	public Response adicionar(Aluno aluno) {
 
 		try {
 			if (aluno != null) {
 				alunoBss.adicionar(aluno);
 				return Response.ok(Map.of("mensagem", " apagado com sucesso")).build();
-			} 
+			}
 		} catch (Exception e) {
 			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
 		}

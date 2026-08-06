@@ -24,6 +24,10 @@ export class AlunoService {
     return this.http.get<aluno[]>(this.apiUrl);
   }
 
+  listarTodosFiltrados(filtro: aluno): Observable<aluno[]> {
+    return this.http.post<aluno[]>(`${this.apiUrl}/filtrar`,  filtro);
+  }
+
   editar(aluno: aluno) {
     return this.http.put(this.apiUrl, aluno);
   }

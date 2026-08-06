@@ -55,7 +55,7 @@ export class AlunoP implements OnChanges, OnInit {
 
   ngOnInit() {
     this.initForm();
-    this.calcularIdade(this.formulario.get('dataNascimento')?.value);
+    this.calcularIdadeAtual();
     // this.carregarAlunos();
   }
 
@@ -70,17 +70,6 @@ export class AlunoP implements OnChanges, OnInit {
     }
   }
 
-  calcularIdade(dataNascimento: Date): number {
-    const hoje = new Date();
-    const nascimento = new Date(dataNascimento);
-    let idade = hoje.getFullYear() - nascimento.getFullYear();
-    const mes = hoje.getMonth() - nascimento.getMonth();
-    if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
-      idade--;
-    }
-    return idade;
-  }
-
   private initForm(): void {
     this.formulario = this.fb.group({
       matricula: [{ value: '', disabled: true }, [Validators.required]],
@@ -91,6 +80,10 @@ export class AlunoP implements OnChanges, OnInit {
       dataNascimento: [{ value: null, disabled: true }, [Validators.required]],
       idadeAtual: [{ value: null, disabled: true }],
       status: [{ value: 1, disabled: true }, [Validators.required]]
+    });
+
+    this.formulario.get('dataNascimento')?.valueChanges.subscribe(() => {
+      this.calcularIdadeAtual();
     });
   }
 
@@ -186,5 +179,36 @@ export class AlunoP implements OnChanges, OnInit {
     });
   }
 
+  calcularIdadeAtual() {
+
+    const dataNascimento = this.formulario.get('dataNascimento')?.value;
+    if (dataNascimento) {
+      const idade = this.calcularIdade(dataNascimento);
+      this.formulario.get('idadeAtual')?.setValue(idade);
+    } else {
+      this.formulario.get('idadeAtual')?.setValue(null);
+    }
+  }
+
+  private calcularIdade(dataNascimento: any): number | null {
+    if (!dataNascimento) {
+      return null;
+    }
+
+    const nascimento = dataNascimento instanceof Date ? dataNascimento : new Date(dataNascimento);
+    if (Number.isNaN(nascimento.getTime())) {
+      return null;
+    }
+
+    const hoje = new Date();
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const mesDiff = hoje.getMonth() - nascimento.getMonth();
+
+    if (mesDiff < 0 || (mesDiff === 0 && hoje.getDate() < nascimento.getDate())) {
+      idade--;
+    }
+
+    return idade;
+  }
 
 }

@@ -55,4 +55,18 @@ public class AlunoBss {
 			throw new RuntimeException("Erro ao remover", e);
 		}
 	}
+
+
+
+	public List<Aluno> getListFiltrado(Aluno domain) {
+		
+		try {
+			String jpql = "select obj from Aluno obj";
+			TypedQuery<Aluno> tQuery = em.createQuery(jpql, Aluno.class);
+			return tQuery.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

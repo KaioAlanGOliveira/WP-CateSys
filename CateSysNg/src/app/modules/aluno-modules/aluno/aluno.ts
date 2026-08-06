@@ -21,16 +21,16 @@ import { AlunoP } from "../aluno-p/aluno-p";
 export class Aluno implements OnInit {
 
   private alunoServece = inject(AlunoService);
-  private loginService = inject(LoginService);
   private cdr = inject(ChangeDetectorRef);
-  private router = inject(Router);
-  exibirModalPrincipal: boolean = false;
-  alunoSelecionado!: any;
-  formAluno!: Aluno;
+  
   listAlunos: aluno[] = [];
   alunosFiltrados: any[] = [];
 
+  exibirModalPrincipal: boolean = false;
   alterar: boolean = false;
+  alunoSelecionado!: any;
+  formAluno!: Aluno;
+
   form = new FormGroup({
     matricula: new FormControl<number | null>(null),
     nome: new FormControl<string | "">("", Validators.required)
@@ -44,8 +44,6 @@ export class Aluno implements OnInit {
     const dado = this.form.getRawValue() as aluno;
     this.alunoServece.listarTodos().subscribe({
       next: (dados) => {
-        console.log('Dados recebidos:', dados);
-
         this.listAlunos = dados || [];
         this.alunosFiltrados = dados || [];
         this.cdr.detectChanges();

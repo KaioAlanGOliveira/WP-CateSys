@@ -1,6 +1,5 @@
-<p-dialog header="Cadastro dos Professores" [(visible)]="visivel" (onHide)="fecharModal()" [modal]="true"
+<p-dialog header="Cadastro das Turmas" [(visible)]="visivel" (onHide)="fecharModal()" [modal]="true"
   [style]="{ width: '800px', height: '60vh' }">
-  <!-- Formulário envolve o container do grid -->
   <form [formGroup]="formulario">
 
     <div class="campos">
@@ -13,13 +12,13 @@
         }
       </div>
 
-      <!-- Matrícula -->
+      <!-- Código -->
       <div class="campo">
-        <label>Matrícula</label>
-        <input pInputText formControlName="matricula" placeholder="Matrícula"
-          [invalid]="formulario.get('matricula')?.invalid && formulario.get('matricula')?.touched" />
-        @if (formulario.get('matricula')?.invalid && formulario.get('matricula')?.touched) {
-        <p-message severity="error" variant="simple" size="small">A matrícula é obrigatória</p-message>
+        <label>Código</label>
+        <input pInputText formControlName="codigo" placeholder="Código"
+          [invalid]="formulario.get('codigo')?.invalid && formulario.get('codigo')?.touched" />
+        @if (formulario.get('codigo')?.invalid && formulario.get('codigo')?.touched) {
+        <p-message severity="error" variant="simple" size="small">O código é obrigatório</p-message>
         }
       </div>
 
@@ -33,13 +32,13 @@
         }
       </div>
 
-      <!-- Telefone -->
+      <!-- Professor -->
       <div class="campo">
-        <label>Telefone</label>
-        <p-inputmask mask="(99) 99999-9999" formControlName="telefone" placeholder="Telefone"
-          [invalid]="formulario.get('telefone')?.invalid && formulario.get('telefone')?.touched" />
-        @if (formulario.get('telefone')?.invalid && formulario.get('telefone')?.touched) {
-        <p-message severity="error" variant="simple" size="small">Telefone inválido</p-message>
+        <label>Professor</label>
+        <input pInputText formControlName="professor" placeholder="Professor"
+          [invalid]="formulario.get('professor')?.invalid && formulario.get('professor')?.touched" />
+        @if (formulario.get('professor')?.invalid && formulario.get('professor')?.touched) {
+        <p-message severity="error" variant="simple" size="small">Professor inválido</p-message>
         }
       </div>
 
@@ -55,6 +54,56 @@
         <label for="inativo">Inativo</label>
       </div>
 
+      <!-- Aluno CMP -->
+      <div class="campo">
+        <label>Aluno</label>
+        <p-inputmask mask="(99) 99999-9999" formControlName="aluno" placeholder="Aluno"
+          [invalid]="formulario.get('aluno')?.invalid && formulario.get('aluno')?.touched" />
+        @if (formulario.get('aluno')?.invalid && formulario.get('aluno')?.touched) {
+        <p-message severity="error" variant="simple" size="small">Aluno inválido</p-message>
+        }
+      </div>
+
+ <!-- Tabela -->
+  <div class="tabela-container">
+
+    <p-table [value]="alunosFiltrados" [tableStyle]="{ 'min-width': '50rem' }">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Matrícula</th>
+          <th>Nome</th>
+          <th>Status</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-aluno>
+        <tr (dblclick)="selecionado(aluno)">
+          <td>{{ aluno.matricula }}</td>
+          <td>{{ aluno.nome }}</td>
+          <td>{{ aluno.status }}</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+
+  </div>
+
+
+  <!-- Rodapé -->
+  <div class="table-footer">
+
+    <span>
+      Total de registros encontrados:
+      <strong>{{ listAlunos.length }}</strong>
+    </span>
+
+    <span>
+      Máx. de linhas:
+      <strong>{{ listAlunos.length }}</strong>
+    </span>
+
+  </div>
     </div>
 
 
@@ -71,3 +120,4 @@
 
   </form>
 </p-dialog>
+

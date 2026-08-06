@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, OnChanges, OnInit, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
@@ -11,6 +11,10 @@ import { professor } from '../../../domain/professor.model';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
 import { TurmaDomain } from '../../../domain/turma.model';
+import { Aluno } from '../../aluno-modules/aluno/aluno';
+import { aluno } from '../../../domain/aluno.model';
+import { AlunoService } from '../../../service/aluno.service';
+import { TableModule } from "primeng/table";
 
 @Component({
   selector: 'app-turma-p',
@@ -26,7 +30,8 @@ import { TurmaDomain } from '../../../domain/turma.model';
     FormsModule,
     RadioButtonModule,
     DatePickerModule,
-  ],
+    TableModule
+],
   templateUrl: './turma-p.html',
   styleUrl: './turma-p.css'
 })
@@ -35,8 +40,15 @@ export class TurmaP implements OnChanges, OnInit {
   turmas: TurmaDomain[] = [];
   formulario!: FormGroup;
   tipoPagamento: any;
+  formAlunos!: FormGroup ;
+  listAlunos: aluno[] = [];
+  alunosFiltrados: any[] = [];
+  alunoSelecionado!: any;
 
   private modo: 'initial' | 'creating' | 'editing' = 'initial';
+
+    private alunoServece = inject(AlunoService);
+    private cdr = inject(ChangeDetectorRef);
 
   @Input() Selecionado: TurmaDomain | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
@@ -45,10 +57,12 @@ export class TurmaP implements OnChanges, OnInit {
   private fb = inject(FormBuilder);
   private turmaService = inject(TurmaService);
 
-  private originalturma: TurmaDomain | null = null;
+  private originalTurma: TurmaDomain | null = null;
+  turmasFiltradas: any;
 
   ngOnInit() {
     this.initForm();
+    this.carregarDados();
     // this.formulario.disable();
   }
 
@@ -60,13 +74,13 @@ export class TurmaP implements OnChanges, OnInit {
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
       this.modo = 'initial';
       this.formulario.patchValue(this.Selecionado);
-      this.originalturma = { ...this.Selecionado };
+      this.originalTurma = { ...this.Selecionado };
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
       this.modo = 'creating';
       this.formulario.reset();
     }
 
-    this.atualizarEstadoUI();
+    this.alterarEstadoUI();
   }
 
   private initForm(): void {
@@ -77,6 +91,11 @@ export class TurmaP implements OnChanges, OnInit {
       status: [{ value: 1, disabled: true }, [Validators.required]],
       professorMatricula: [{ value: null, disabled: true }]
     });
+
+   this.formAlunos = this.fb.group({
+    matricula: new FormControl<number | null>(null),
+    nome: new FormControl<string | "">("", Validators.required)
+  });
   }
 
   carregarTurmas() {
@@ -88,7 +107,7 @@ export class TurmaP implements OnChanges, OnInit {
   }
 
   // ==================== CONTROLE CENTRALIZADO ====================
-  private atualizarEstadoUI(): void {
+  private alterarEstadoUI(): void {
     if (!this.formulario) return;
 
     if (this.modo === 'initial') {
@@ -112,25 +131,25 @@ export class TurmaP implements OnChanges, OnInit {
   // ==================== AÇÕES ====================
   novo() {
     this.modo = 'creating';
-    this.originalturma = null;
+    this.originalTurma = null;
     this.formulario.reset();
     this.formulario.markAllAsDirty();
     this.formulario.markAllAsTouched();
     this.formulario.updateValueAndValidity();
     this.formulario.enable();
-    this.atualizarEstadoUI();
+    this.alterarEstadoUI();
   }
 
   editar() {
     if (!this.Selecionado) return;
     this.modo = 'editing';
     this.formulario.patchValue(this.Selecionado);
-    this.originalturma = { ...this.Selecionado };
+    this.originalTurma = { ...this.Selecionado };
     this.formulario.enable();
     this.formulario.markAllAsDirty();
     this.formulario.markAllAsTouched();
     this.formulario.updateValueAndValidity();
-    this.atualizarEstadoUI();
+    this.alterarEstadoUI();
   }
 
   private removerMascaras(valor: any): string {
@@ -142,17 +161,17 @@ export class TurmaP implements OnChanges, OnInit {
     if (this.modo === 'creating') {
       this.formulario.reset();
       this.fecharModal();
-    } else if (this.modo === 'editing' && this.originalturma) {
-      this.formulario.patchValue(this.originalturma);
+    } else if (this.modo === 'editing' && this.originalTurma) {
+      this.formulario.patchValue(this.originalTurma);
       this.modo = 'initial';
-      this.atualizarEstadoUI();
+      this.alterarEstadoUI();
     }
   }
 
   fecharModal() {
     this.modo = 'initial';
     this.visivel = false;
-    this.originalturma = null;
+    this.originalTurma = null;
     this.visivelChange.emit(false);
     this.formulario.reset();
   }
@@ -163,11 +182,11 @@ export class TurmaP implements OnChanges, OnInit {
 
   private resetToInitialState() {
     this.modo = 'initial';
-    this.originalturma = null;
+    this.originalTurma = null;
     if (this.Selecionado) {
       this.formulario.patchValue(this.Selecionado);
     }
-    this.atualizarEstadoUI();
+    this.alterarEstadoUI();
   }
 
 
@@ -178,43 +197,41 @@ export class TurmaP implements OnChanges, OnInit {
     }
 
     const formValue = this.formulario.getRawValue();
-    const turmaFormatada: TurmaDomain = {
-      ...formValue,
-      telefone: this.removerMascaras(formValue.telefone),
-    };
+
     if (this.modo === 'creating') {
-      this.salvarNova(turmaFormatada);
+      this.salvarNova(formValue);
       this.fecharModal();
     } else {
-      this.atualizar(turmaFormatada);
+      this.alterar(formValue);
     }
     this.modo = 'initial';
-    this.atualizarEstadoUI();
+    this.alterarEstadoUI();
   }
 
-  private salvarNova(turmaFormatada: TurmaDomain) {
+  private salvarNova(formValue: TurmaDomain) {
 
-    this.turmaService.salvar(turmaFormatada).subscribe({
+    this.turmaService.salvar(formValue).subscribe({
       next: () => this.finalizarComSucesso(),
       error: (err) => { alert('Erro ao salvar a turma. A turma já existe.'); console.error('Erro ao salvar:', err); }
     });
   }
 
-  private atualizar(turmaFormatada: TurmaDomain) {
+  private alterar(formValue: TurmaDomain) {
     if (!this.Selecionado) return;
 
-    const atualizado: TurmaDomain = { ...this.Selecionado, ...turmaFormatada };
+    const atualizado: TurmaDomain = { ...this.Selecionado, ...formValue };
 
     this.turmaService.editar(atualizado).subscribe({
-      next: (dados) => {
+      next: () => {
+        alert('Turma atualizada com sucesso.');
         this.finalizarComSucesso();
       },
-      error: (err) => console.error('Erro ao atualizar:', err)
+      error: (err) => console.error('Erro ao alterar:', err)
     });
   }
 
   apagar() {
-    const respota = window.confirm('Deseja realmente apagar o selecionado?');
+    const respota = window.confirm('Deseja realmente apagar o elemento selecionado?');
     if (respota) {
       if (!this.Selecionado?.codigo) return;
 
@@ -242,5 +259,27 @@ export class TurmaP implements OnChanges, OnInit {
         }
       }
     });
+  }
+
+  carregarDados() {
+      const filtro = this.formAlunos.getRawValue() as aluno;
+      this.alunoServece.listarTodosFiltrados(filtro).subscribe({
+        next: (dados) => {
+          console.log('Dados recebidos:', dados);
+  
+          this.listAlunos = dados || [];
+          this.alunosFiltrados = dados || [];
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      });
+    }
+
+  selecionado(aluno: aluno) {
+    this.alunoSelecionado = aluno;
+    this.formAlunos.patchValue(aluno);
+    this.visivel=true;
   }
 }
