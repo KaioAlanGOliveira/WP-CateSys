@@ -15,7 +15,7 @@ import { Aluno } from '../../aluno-modules/aluno/aluno';
 import { aluno } from '../../../domain/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { TableModule } from "primeng/table";
-
+import { ComponenteAluno } from "../../../shared/componente/componente-pesq-aluno/componente-aluno";
 @Component({
   selector: 'app-turma-p',
   standalone: true,
@@ -30,7 +30,8 @@ import { TableModule } from "primeng/table";
     FormsModule,
     RadioButtonModule,
     DatePickerModule,
-    TableModule
+    TableModule,
+    ComponenteAluno
 ],
   templateUrl: './turma-p.html',
   styleUrl: './turma-p.css'

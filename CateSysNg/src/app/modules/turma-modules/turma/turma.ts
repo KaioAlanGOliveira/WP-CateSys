@@ -1,20 +1,14 @@
 import { ChangeDetectorRef, Component, inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterOutlet } from '@angular/router';
-import { LoginService } from '../../../service/login.service';
 import { TurmaService } from '../../../service/turma.service';
 import { TableModule } from 'primeng/table';
 import { TurmaDomain } from '../../../domain/turma.model';
 import { TurmaP } from '../turma-p/turma-p';
 import { RadioButton } from "primeng/radiobutton";
-import { professor } from '../../../domain/professor.model';
-import { TurmaCmpAluno } from "../turma-cmp-aluno/turma-cmp-aluno";
-
-
 
 @Component({
   selector: 'app-turma',
-  imports: [ReactiveFormsModule, TableModule, TurmaP, RadioButton, TurmaCmpAluno],
+  imports: [ReactiveFormsModule, TableModule, TurmaP, RadioButton],
   standalone: true,
   templateUrl: './turma.html',
   styleUrl: './turma.css',

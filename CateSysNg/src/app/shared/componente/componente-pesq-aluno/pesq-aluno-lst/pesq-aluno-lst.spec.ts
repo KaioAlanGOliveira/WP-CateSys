@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AlunoP } from './aluno-p';
+import { PesqAlunoLst } from './pesq-aluno-lst';
 
-describe('AlunoP', () => {
-  let component: AlunoP;
-  let fixture: ComponentFixture<AlunoP>;
+describe('PesqAlunoLst', () => {
+  let component: PesqAlunoLst;
+  let fixture: ComponentFixture<PesqAlunoLst>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AlunoP],
+      imports: [PesqAlunoLst],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AlunoP);
+    fixture = TestBed.createComponent(PesqAlunoLst);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

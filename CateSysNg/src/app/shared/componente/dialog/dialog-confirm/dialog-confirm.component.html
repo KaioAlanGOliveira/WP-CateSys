@@ -1,0 +1,7 @@
+<div class="flex flex-column align-items-center gap-3">
+    <div class="text-center font-medium line-height-2" [innerHTML]="mensagem?.replace('\n', '<br>')"></div>
+    <div class="flex flex-row gap-2">
+        <p-button label="Sim" (onClick)="ref.close(true)" styleClass="w-5rem"></p-button>
+        <p-button label="Não" styleClass="p-button-secondary w-5rem" (onClick)="ref.close(false)"></p-button>
+    </div>
+</div>

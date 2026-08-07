@@ -55,54 +55,51 @@
       </div>
 
       <!-- Aluno CMP -->
-      <div class="campo">
+      <div class="field flex-grow-1">
         <label>Aluno</label>
-        <p-inputmask mask="(99) 99999-9999" formControlName="aluno" placeholder="Aluno"
-          [invalid]="formulario.get('aluno')?.invalid && formulario.get('aluno')?.touched" />
-        @if (formulario.get('aluno')?.invalid && formulario.get('aluno')?.touched) {
-        <p-message severity="error" variant="simple" size="small">Aluno inválido</p-message>
-        }
+        <cmp-componente-aluno inputId="codAluno" cmpProximoCampo="btn-pesq" formControlName="codCliente">
+        </cmp-componente-aluno>
       </div>
 
-    <!-- Tabela Alunos -->
-    <div class="tabela-container">
+      <!-- Tabela Alunos -->
+      <div class="tabela-container">
 
-    <p-table [value]="alunosFiltrados" [tableStyle]="{ 'min-width': '50rem' }">
+        <p-table [value]="alunosFiltrados" [tableStyle]="{ 'min-width': '50rem' }">
 
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Matrícula</th>
-          <th>Nome</th>
-          <th>Status</th>
-        </tr>
-      </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Matrícula</th>
+              <th>Nome</th>
+              <th>Status</th>
+            </tr>
+          </ng-template>
 
-      <ng-template pTemplate="body" let-aluno>
-        <tr (dblclick)="selecionado(aluno)">
-          <td>{{ aluno.matricula }}</td>
-          <td>{{ aluno.nome }}</td>
-          <td>{{ aluno.status }}</td>
-        </tr>
-      </ng-template>
+          <ng-template pTemplate="body" let-aluno>
+            <tr (dblclick)="selecionado(aluno)">
+              <td>{{ aluno.matricula }}</td>
+              <td>{{ aluno.nome }}</td>
+              <td>{{ aluno.status }}</td>
+            </tr>
+          </ng-template>
 
-    </p-table>
+        </p-table>
 
-    </div>
+      </div>
       <!-- Rodapé -->
-    <div class="table-footer">
+      <div class="table-footer">
 
-    <span>
-      Total de registros encontrados:
-      <strong>{{ listAlunos.length }}</strong>
-    </span>
+        <span>
+          Total de registros encontrados:
+          <strong>{{ listAlunos.length }}</strong>
+        </span>
 
-    <span>
-      Máx. de linhas:
-      <strong>{{ listAlunos.length }}</strong>
-    </span>
+        <span>
+          Máx. de linhas:
+          <strong>{{ listAlunos.length }}</strong>
+        </span>
 
-   </div>
-  </div>
+      </div>
+    </div>
 
 
 
@@ -120,4 +117,3 @@
 
   </form>
 </p-dialog>
-
