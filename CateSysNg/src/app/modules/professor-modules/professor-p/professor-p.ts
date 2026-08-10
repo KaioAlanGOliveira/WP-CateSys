@@ -8,7 +8,7 @@ import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumber } from "primeng/inputnumber";
 import { ProfessorService } from '../../../service/professor.service';
-import { professor } from '../../../domain/professor.model';
+import { ProfessorD } from '../../../models/professor.model';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
 import { log } from 'console';
@@ -33,20 +33,20 @@ import { log } from 'console';
 })
 export class ProfessorP implements OnChanges, OnInit {
 
-  professores: professor[] = [];
+  professores: ProfessorD[] = [];
   formulario!: FormGroup;
   tipoPagamento: any;
 
   private modo: 'initial' | 'creating' | 'editing' = 'initial';
 
-  @Input() Selecionado: professor | null = null;
+  @Input() Selecionado: ProfessorD | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
 
   private fb = inject(FormBuilder);
   private professService = inject(ProfessorService);
 
-  private originalprofessor: professor | null = null;
+  private originalprofessor: ProfessorD | null = null;
 
   ngOnInit() {
     this.initForm();
@@ -178,7 +178,7 @@ export class ProfessorP implements OnChanges, OnInit {
     }
 
     const formValue = this.formulario.getRawValue();
-    const professorFormatado: professor = {
+    const professorFormatado: ProfessorD = {
       ...formValue,
       telefone: this.removerMascaras(formValue.telefone),
     };
@@ -192,7 +192,7 @@ export class ProfessorP implements OnChanges, OnInit {
     this.atualizarEstadoUI();
   }
 
-  private salvarNovo(professorFormatado: professor) {
+  private salvarNovo(professorFormatado: ProfessorD) {
 
     this.professService.salvar(professorFormatado).subscribe({
       next: () => this.finalizarComSucesso(),
@@ -200,10 +200,10 @@ export class ProfessorP implements OnChanges, OnInit {
     });
   }
 
-  private atualizar(professorFormatado: professor) {
+  private atualizar(professorFormatado: ProfessorD) {
     if (!this.Selecionado) return;
 
-    const atualizado: professor = { ...this.Selecionado, ...professorFormatado };
+    const atualizado: ProfessorD = { ...this.Selecionado, ...professorFormatado };
 
     this.professService.editar(atualizado).subscribe({
       next: (dados) => {

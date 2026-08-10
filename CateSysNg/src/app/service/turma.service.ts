@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TurmaDomain } from '../domain/turma.model';
+import { TurmaD } from '../models/turma.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,25 +12,25 @@ export class TurmaService {
 
   constructor(private http: HttpClient) { }
 
-  apagar(turma: TurmaDomain) {
+  apagar(turma: TurmaD) {
     return this.http.delete<{ mensagem: string }>(this.apiUrl, {
       body: turma
     });
   }
 
-  listarTodos(): Observable<TurmaDomain[]> {
-    return this.http.get<TurmaDomain[]>(this.apiUrl);
+  listarTodos(): Observable<TurmaD[]> {
+    return this.http.get<TurmaD[]>(this.apiUrl);
   }
 
-  listFiltrados(filtro: TurmaDomain): Observable<TurmaDomain[]> {
-    return this.http.post<TurmaDomain[]>(`${this.apiUrl}/filtrar`, filtro);
+  listFiltrados(filtro: TurmaD): Observable<TurmaD[]> {
+    return this.http.post<TurmaD[]>(`${this.apiUrl}/filtrar`, filtro);
   }
 
-  editar(turma: TurmaDomain): Observable<TurmaDomain> {
+  editar(turma: TurmaD): Observable<TurmaD> {
     return this.http.put(this.apiUrl, turma);
   }
 
-  salvar(turma: TurmaDomain): Observable<{ mensagem: string }> {
+  salvar(turma: TurmaD): Observable<{ mensagem: string }> {
     return this.http.post<{ mensagem: string }>(this.apiUrl,{
       body: turma
     });

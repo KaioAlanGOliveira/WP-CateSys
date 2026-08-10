@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnChanges, OnInit, SimpleChanges 
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TurmaService } from '../../../service/turma.service';
 import { TableModule } from 'primeng/table';
-import { TurmaDomain } from '../../../domain/turma.model';
+import { TurmaD } from '../../../models/turma.model';
 import { TurmaP } from '../turma-p/turma-p';
 import { RadioButton } from "primeng/radiobutton";
 
@@ -21,9 +21,9 @@ export class Turma implements OnInit {
 
   exibirModalPrincipal: boolean = false;
   turmaSelecionado!: any;
-  formturma!: TurmaDomain;
-  listTurmas: TurmaDomain[] = [];
-  turmasFiltradas: TurmaDomain[] = [];
+  formturma!: TurmaD;
+  listTurmas: TurmaD[] = [];
+  turmasFiltradas: TurmaD[] = [];
 
   form = new FormGroup({
     codigo: new FormControl<number | null>(null),
@@ -37,7 +37,7 @@ export class Turma implements OnInit {
   }
 
   carregarDados() {
-    const filtro = this.form.value as TurmaDomain;
+    const filtro = this.form.value as TurmaD;
    
     this.turmaServece.listFiltrados(filtro).subscribe({
       next: (dados) => {
@@ -89,8 +89,8 @@ export class Turma implements OnInit {
       this.carregarDados();
     }
   }
-  selecionado(turma: TurmaDomain) {
-    //this.form.patchValue(turma);
+  selecionado(turma: TurmaD) {
+
     this.turmaSelecionado = turma;
     this.abrirMeuPopup();
   }

@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { loginDto } from '../domain/login.model';
-import { log } from 'node:console';
+import { LoginDto } from '../models/login.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +12,7 @@ export class LoginService {
 
   constructor(private http: HttpClient) { }
 
-  logar(loginDto: loginDto): Observable<any> {
+  logar(loginDto: LoginDto): Observable<any> {
     return this.http.post(this.apiUrl, loginDto);
   }
 }

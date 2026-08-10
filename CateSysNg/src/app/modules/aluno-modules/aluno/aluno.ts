@@ -3,9 +3,9 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterOutlet } from '@angular/router';
 import { LoginService } from '../../../service/login.service';
 import { AlunoService } from '../../../service/aluno.service';
-import { loginDto } from '../../../domain/login.model';
+import { LoginDto } from '../../../models/login.model';
 import { TableModule } from 'primeng/table';
-import { aluno } from '../../../domain/aluno.model';
+import { AlunoD } from '../../../models/aluno.model';
 import { log } from 'node:console';
 import { AlunoP } from "../aluno-p/aluno-p";
 
@@ -23,7 +23,7 @@ export class Aluno implements OnInit {
   private alunoServece = inject(AlunoService);
   private cdr = inject(ChangeDetectorRef);
   
-  listAlunos: aluno[] = [];
+  listAlunos: AlunoD[] = [];
   alunosFiltrados: any[] = [];
 
   exibirModalPrincipal: boolean = false;
@@ -35,13 +35,15 @@ export class Aluno implements OnInit {
     matricula: new FormControl<number | null>(null),
     nome: new FormControl<string | "">("", Validators.required)
   });
+  matricula: any;
+  nomeRazaoSocial: any;
 
   ngOnInit() {
     this.carregarDados();
   }
 
   carregarDados() {
-    const dado = this.form.getRawValue() as aluno;
+    const dado = this.form.getRawValue() as AlunoD;
     this.alunoServece.listarTodos().subscribe({
       next: (dados) => {
         this.listAlunos = dados || [];
@@ -88,7 +90,7 @@ export class Aluno implements OnInit {
       this.carregarDados();
     }
   }
-  selecionado(aluno: aluno) {
+  selecionado(aluno: AlunoD) {
     this.alterar = true;
     this.alunoSelecionado = aluno;
     this.form.patchValue(aluno);

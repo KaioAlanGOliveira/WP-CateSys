@@ -1,4 +1,4 @@
-export class TurmaDomain {
+export class TurmaD {
 	professorMatricula?: number;
     codigo?: number;
 	nome?: string;

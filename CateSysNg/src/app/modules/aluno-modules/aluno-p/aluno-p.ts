@@ -7,7 +7,7 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumber } from "primeng/inputnumber";
-import { aluno } from '../../../domain/aluno.model';
+import { AlunoD } from '../../../models/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { Aluno } from '../aluno/aluno';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -38,7 +38,7 @@ export class AlunoP implements OnChanges, OnInit {
     throw new Error('Method not implemented.');
   }
 
-  aluno: aluno[] = [];
+  aluno: AlunoD[] = [];
 
   formulario!: FormGroup;
 
@@ -46,13 +46,13 @@ export class AlunoP implements OnChanges, OnInit {
 
   private modo: 'initial' | 'creating' | 'editing' = 'creating';
 
-  @Input() Selecionado: aluno | null = null;
+  @Input() Selecionado: AlunoD | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
   private fb = inject(FormBuilder);
   private AlunoService = inject(AlunoService);
 
-  private originalAluno: aluno | null = null;
+  private originalAluno: AlunoD | null = null;
 
   ngOnInit() {
     this.initForm();

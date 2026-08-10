@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { aluno } from '../domain/aluno.model';
+import { AlunoD } from '../models/aluno.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,25 +12,25 @@ export class AlunoService {
 
   constructor(private http: HttpClient) { }
 
-  apagar(aluno: aluno) {
+  apagar(aluno: AlunoD) {
     return this.http.delete<{ mensagem: string }>(this.apiUrl, {
       body: aluno
     });
   }
 
-  listarTodos(): Observable<aluno[]> {
-    return this.http.get<aluno[]>(this.apiUrl);
+  listarTodos(): Observable<AlunoD[]> {
+    return this.http.get<AlunoD[]>(this.apiUrl);
   }
 
-  listarTodosFiltrados(filtro: aluno): Observable<aluno[]> {
-    return this.http.post<aluno[]>(`${this.apiUrl}/filtrar`,  filtro);
+  listarTodosFiltrados(filtro: AlunoD): Observable<AlunoD[]> {
+    return this.http.post<AlunoD[]>(`${this.apiUrl}/filtrar`,  filtro);
   }
 
-  editar(aluno: aluno) {
+  editar(aluno: AlunoD) {
     return this.http.put(this.apiUrl, aluno);
   }
 
-  salvar(aluno: aluno): Observable<aluno> {
-    return this.http.post<aluno>(this.apiUrl, aluno);
+  salvar(aluno: AlunoD): Observable<AlunoD> {
+    return this.http.post<AlunoD>(this.apiUrl, aluno);
   }
 }

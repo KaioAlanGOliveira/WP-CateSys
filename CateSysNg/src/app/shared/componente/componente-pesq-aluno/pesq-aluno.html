@@ -1,0 +1,12 @@
+<div class="flex gap-3">
+    <form [formGroup]="form" class="p-inputgroup">
+        <p-inputNumber #input [inputId]="inputId" [useGrouping]="false" class="input-code" [maxlength]="14"
+            formControlName="matricula" (onKeyDown)="keydown($event)" (onInput)="limpar()"></p-inputNumber>
+
+        <input class="input-text" pInputText formControlName="nome" aria-hidden />
+
+        <button type="button" pButton pRipple [icon]="loading ? 'pi pi-spin pi-spinner':'pi pi-search'" (click)="show()"
+            [disabled]="disabled || loading" aria-hidden></button>
+            
+    </form>
+</div>

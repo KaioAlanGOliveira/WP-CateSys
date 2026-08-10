@@ -4,7 +4,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { LoginService } from '../../../service/login.service';
 import { ProfessorService } from '../../../service/professor.service';
 import { TableModule } from 'primeng/table';
-import { professor } from '../../../domain/professor.model';
+import { ProfessorD } from '../../../models/professor.model';
 import { ProfessorP } from '../professor-p/professor-p';
 
 
@@ -24,8 +24,8 @@ export class Professor implements OnInit {
 
   exibirModalPrincipal: boolean = false;
   professorSelecionado!: any;
-  formprofessor!: professor;
-  listprofessors: professor[] = [];
+  formprofessor!: ProfessorD;
+  listprofessors: ProfessorD[] = [];
   professorsFiltrados: any[] = [];
 
   form = new FormGroup({
@@ -38,7 +38,7 @@ export class Professor implements OnInit {
   }
 
   carregarDados() {
-    const filtro = this.form.value as professor;
+    const filtro = this.form.value as ProfessorD;
     this.professorServece.listFiltrados(filtro).subscribe({
       next: (dados) => {
 
@@ -82,7 +82,7 @@ export class Professor implements OnInit {
       this.carregarDados();
     }
   }
-  selecionado(professor: professor) {
+  selecionado(professor: ProfessorD) {
     //this.form.patchValue(professor);
     this.professorSelecionado = professor;
     this.abrirMeuPopup();

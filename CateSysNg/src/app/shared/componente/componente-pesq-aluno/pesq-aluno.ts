@@ -4,17 +4,20 @@ import { InputNumber } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { DialogService } from '../dialog/services/dialog.service';
-import { aluno } from '../../../domain/aluno.model';
+import { AlunoD } from '../../../models/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { UtilService } from '../../../service/util.service';
-import { PesqAlunoLst } from './pesq-aluno-lst/pesq-aluno-lst';
+import { PesqAlunoLst } from './pesq-aluno-frm/pesq-aluno-lst';
+import { DialogMensagemComponent } from '../dialog/dialog-mensagem/dialog-mensagem.component';
+import { DialogRef } from '../dialog/models/dialog-ref.model';
+import { proximoCampo } from '../../directives/proximo-campo/proximo-campo.directive';
 
 @Component({
   selector: 'cmp-componente-aluno',
-  templateUrl: './componente-aluno.html',
-  styleUrls: ['./componente-aluno.css'],
+  templateUrl: './pesq-aluno.html',
+  styleUrls: ['./pesq-aluno.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, InputNumber, InputTextModule, ButtonModule],
+  imports: [ReactiveFormsModule, InputTextModule, ButtonModule, InputNumber],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     multi: true,
@@ -25,7 +28,8 @@ export class ComponenteAluno implements ControlValueAccessor {
 
   @ViewChild("input") private input?: InputNumber;
 
-  @Output() public preenchido = new EventEmitter<any>();
+  @Output() public preenchido = new EventEmitter<AlunoD | null>();
+  @Output() public alunoSelecionado = new EventEmitter<AlunoD | null>();
 
   @Input() public inputId?: string;
   @Input() public disabled?: boolean;
@@ -37,12 +41,11 @@ export class ComponenteAluno implements ControlValueAccessor {
   private viaSet: boolean = false;
   public loading: boolean = false;
 
-  private _entity: aluno | null = null;
+  private _entity: AlunoD | null = null;
 
-  public form = new FormGroup({
+  form = new FormGroup({
     matricula: new FormControl<number | null>(null),
-    nome: new FormControl<string | null>(null),
-    celular: new FormControl<string | null>(null),
+    nome: new FormControl<string | null>(null)
   });
 
   public onChange = (matricula: number | null) => { };
@@ -50,9 +53,8 @@ export class ComponenteAluno implements ControlValueAccessor {
   constructor(private service: AlunoService, private util: UtilService, private dialogService: DialogService) {
   }
 
-  protected getEntity(matricula: number) {
+  protected getEntity(matricula: number | null) {
     this.form.controls.matricula.patchValue(matricula);
-
     if (matricula != null) {
       this.loading = true;
       const filtro: any = { matricula: matricula };
@@ -60,31 +62,32 @@ export class ComponenteAluno implements ControlValueAccessor {
         next: (lista) => {
           this.loading = false;
           const entity = (lista && lista.length) ? lista[0] : null;
+          
           if (!this.validaEntity(entity)) {
             return;
           }
-
+          
           this._entity = entity;
-          this.form.controls.nome.patchValue(entity?.nome ?? null);
-          this.form.controls.celular.patchValue(entity?.telefone ?? null);
+          this.form.controls.nome.patchValue((entity as any)?.nome ?? null);
           this.onChange(entity?.matricula ?? null);
-          this.preenchido.emit();
+          this.preenchido.emit(entity);
+          this.alunoSelecionado.emit(entity);
           if (!this.viaSet && this.proximoCampo) {
-           
+            proximoCampo(this.proximoCampo);
           }
         },
         error: () => { this.loading = false; }
       });
     }
   }
-  private validaEntity(entity: aluno | null) {
+  private validaEntity(entity: AlunoD | null) {
 
     if (!entity) {
       return false;
     }
     return true;
   }
-  public get entity(): aluno | null {
+  public get entity(): AlunoD | null {
     return this._entity;
   }
 
@@ -112,15 +115,8 @@ export class ComponenteAluno implements ControlValueAccessor {
 
   public keydown(event: KeyboardEvent) {
     if (event.key == 'Enter') {
-      const matricula = this.form.getRawValue().matricula;
-      if (matricula) {
-        this.viaSet = false;
-        this.getEntity(matricula);
-      } else {
-        if (this.proximoCampo) {
-
-        }
-      }
+      this.getEntity(this.form.getRawValue().matricula);
+      this.viaSet = false;
     } else if (event.key == '*') {
       this.show();
     }
@@ -129,7 +125,6 @@ export class ComponenteAluno implements ControlValueAccessor {
   public limpar() {
     this._entity = null;
     this.form.controls.nome.patchValue(null);
-    this.form.controls.celular.patchValue(null);
     this.loading = false;
     this.onChange(null);
   }
@@ -164,27 +159,25 @@ export class ComponenteAluno implements ControlValueAccessor {
     this.disabled = isDisabled
   }
 
+
+
+  public showErro(msg: string): DialogRef<DialogMensagemComponent> {
+
+    let ref = this.dialogService.open(DialogMensagemComponent, {
+      title: 'Erro!',
+      closeButton: true,
+      esc: true
+    });
+
+    return ref;
+  }
+  public showMensagem(msg: string): DialogRef<DialogMensagemComponent> {
+    let ref = this.dialogService.open(DialogMensagemComponent, {
+      title: 'Opa!',
+      closeButton: true,
+      esc: true
+    });
+
+    return ref;
+  }
 }
-//  public showErro(msg: string): DialogRef<DialogMensagemComponent> {
-//     let ref = this.dialogService.open(DialogMensagemComponent, {
-//       title: 'Erro!',
-//       closeButton: true,
-//       esc: true
-//     });
-
-//     ref.componentInstance.mensagem = msg;
-
-//     return ref;
-//   }
-
-//   public showMensagem(msg: string): DialogRef<DialogMensagemComponent> {
-//     let ref = this.dialogService.open(DialogMensagemComponent, {
-//       title: 'Opa!',
-//       closeButton: true,
-//       esc: true
-//     });
-
-//     ref.componentInstance.mensagem = msg;
-
-//     return ref;
-//   }

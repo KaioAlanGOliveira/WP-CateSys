@@ -1,4 +1,4 @@
-export class professor {
+export class ProfessorD {
     matricula?: number;
 	nome?: string;
 	telefone?: string;
