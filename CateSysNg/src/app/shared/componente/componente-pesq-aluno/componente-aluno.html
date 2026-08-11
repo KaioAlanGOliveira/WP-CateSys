@@ -3,7 +3,7 @@
         <p-inputNumber #input class="input-code" [maxlength]="14" formControlName="matricula" (keydown)="keydown($event)" (onInput)="limpar()" [useGrouping]="false">
         </p-inputNumber>
 
-        <input class="input-text" pInputText formControlName="nome" aria-hidden />
+        <input class="input-text" pInputText formControlName="nome" aria-hidden style="width: 150px;"/>
 
         <button type="button" pButton pRipple [icon]="loading ? 'pi pi-spin pi-spinner':'pi pi-search'" (click)="show()" [disabled]="disabled || loading" aria-hidden></button>
     </form>

@@ -34,10 +34,6 @@ import { DatePickerModule } from 'primeng/datepicker';
 })
 export class AlunoP implements OnChanges, OnInit {
 
-  salvar() {
-    throw new Error('Method not implemented.');
-  }
-
   aluno: aluno[] = [];
 
   formulario!: FormGroup;
@@ -163,11 +159,6 @@ export class AlunoP implements OnChanges, OnInit {
   }
 
   private resetToInitialState() {
-    this.modo = 'initial';
-    this.originalAluno = null;
-    if (this.Selecionado) {
-      this.formulario.patchValue(this.Selecionado);
-    }
     this.atualizarEstadoUI();
   }
 
@@ -212,4 +203,37 @@ export class AlunoP implements OnChanges, OnInit {
     return idade;
   }
 
+   salvar() {
+      if (this.formulario.invalid) {
+        this.formulario.markAllAsTouched();
+        return;
+      }
+  
+      const formValue = this.formulario.getRawValue();
+  
+      if (this.modo === 'creating') {
+        this.salvarNovo(formValue);
+        this.fecharModal();
+      } else {
+        this.alterar(formValue);
+      }
+      this.modo = 'initial';
+    }
+  
+    private salvarNovo(formValue: aluno) {
+  
+      this.AlunoService.salvar(formValue).subscribe({
+        next: () => this.finalizarComSucesso(),
+        error: (err) => { alert('Erro ao salvar a aluno. A aluno já existe.'); console.error('Erro ao salvar:', err); }
+      });
+    }
+
+     private alterar(formValue: aluno) {
+  
+      this.AlunoService.editar(formValue).subscribe({
+        next: () => this.finalizarComSucesso(),
+        error: (err) => { alert('Erro ao salvar a aluno. A aluno já existe.'); console.error('Erro ao salvar:', err); }
+      });
+    }
+  
 }

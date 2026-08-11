@@ -71,7 +71,6 @@ export class TurmaP implements OnChanges, OnInit {
 
   ngOnInit() {
     this.initForm();
-    this.carregarDados();
     // this.formulario.disable();
   }
 
@@ -264,24 +263,7 @@ export class TurmaP implements OnChanges, OnInit {
     });
   }
 
-  carregarDados() {
-    const filtro = this.formAlunos.getRawValue() as aluno;
-    this.alunoServece.listarTodosFiltrados(filtro).subscribe({
-      next: (dados) => {
-        console.log('Dados recebidos:', dados);
-
-        this.listAlunos = dados || [];
-        this.alunosFiltrados = dados || [];
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    });
-  }
-
   selecionado(aluno: aluno) {
-    // this.formAlunos.patchValue(aluno);
     this.alunoSelecionado = aluno;
     this.visivel = true;
   }
@@ -294,32 +276,22 @@ export class TurmaP implements OnChanges, OnInit {
     this.alunoSelecionado = null;
   }
 
-  protected add(aluno: aluno) {
-    if (!aluno) {
-      alert("Preencha o campo ");
-    } else if (this.listAlunos.find(c => c.matricula == aluno.matricula)) {
-      alert("Aluno já adicionado!");
-    } else {
-
-      this.alunoServece.listarTodosFiltrados(aluno as any).subscribe((msg) => {
-        if (msg) {
-          this.alunosFiltrados.push(aluno)
-        } else {
-          alert(msg);
-        }
-      });
-
-   
-    this.alunoServece.listarTodosFiltrados(aluno).subscribe({
-      next: (dados) => {
-        this.turmasFiltradas = dados;
-        this.cdr.detectChanges();        
-      },
-      error: (err) => {
-        console.error('Erro ao carregar os dados pada cadastrar:', err);
-      }
-      
-    });
+  add(aluno: aluno | null): void {
+    if (!aluno?.matricula) {
+      alert('Selecione um aluno antes de adicionar.');
+      return;
     }
+
+    const jaAdicionado = this.listAlunos.some(c => c.matricula === aluno.matricula);
+    if (jaAdicionado) {
+      alert('Aluno já adicionado!');
+      return;
+    }
+
+    this.listAlunos = [...this.listAlunos, aluno];
+    this.alunosFiltrados = [...this.listAlunos];
+    this.alunoSelecionado = aluno;
+    this.cdr.detectChanges();
   }
+
 }

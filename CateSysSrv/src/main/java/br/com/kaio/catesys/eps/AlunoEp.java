@@ -42,7 +42,7 @@ public class AlunoEp {
 		try {
 			if (aluno != null) {
 				alunoBss.adicionar(aluno);
-				return Response.ok(Map.of("mensagem", " apagado com sucesso")).build();
+				return Response.ok(Map.of("mensagem", " Adicionado com sucesso")).build();
 			}
 		} catch (Exception e) {
 			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
