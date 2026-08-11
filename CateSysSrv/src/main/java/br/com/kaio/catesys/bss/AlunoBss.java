@@ -26,8 +26,6 @@ public class AlunoBss {
 		}
 	}
 
-
-
 	public void adicionar(Aluno aluno) throws Exception {
 
 		try {
@@ -56,14 +54,23 @@ public class AlunoBss {
 		}
 	}
 
-
-
 	public List<Aluno> getListFiltrado(Aluno domain) {
-		
+
 		try {
-			String jpql = "select obj from Aluno obj";
-			TypedQuery<Aluno> tQuery = em.createQuery(jpql, Aluno.class);
-			return tQuery.getResultList();
+			String jpql = """
+					SELECT a
+					FROM Aluno a
+					WHERE (:nome IS NULL OR :nome = '' OR
+					       LOWER(a.nome) LIKE LOWER(CONCAT('%', :nome, '%')))
+					  AND (:matricula IS NULL OR a.matricula = :matricula)
+					""";
+
+			TypedQuery<Aluno> query = em.createQuery(jpql, Aluno.class);
+
+			query.setParameter("nome", domain.getNome());
+			query.setParameter("matricula", domain.getMatricula());
+
+			return query.getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

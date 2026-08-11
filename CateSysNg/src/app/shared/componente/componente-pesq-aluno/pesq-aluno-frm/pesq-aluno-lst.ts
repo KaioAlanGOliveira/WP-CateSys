@@ -13,7 +13,7 @@ import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-pesq-aluno-lst',
   standalone: true,
-  imports: [ReactiveFormsModule, DatePicker, InputNumber, TableModule, ButtonDirective, InputTextModule, ButtonModule],
+  imports: [ReactiveFormsModule, InputNumber, TableModule, ButtonDirective, InputTextModule, ButtonModule],
   templateUrl: './pesq-aluno-lst.html',
   styleUrls: ['./pesq-aluno-lst.css'],
 })
@@ -26,35 +26,24 @@ export class PesqAlunoLst {
   constructor(private service: AlunoService, public ref: DialogRef<PesqAlunoLst>, private util: UtilService) {
   }
 
-  public formAluno = new FormGroup({
-    matricula: new FormControl({ value: '', disabled: true }, [Validators.required]),
-    nome: new FormControl({ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]),
-    telefone: new FormControl({ value: '', disabled: true }),
-    nomeResponsavel: new FormControl({ value: '', disabled: true }, [Validators.required]),
-    telefoneResponsavel: new FormControl({ value: '', disabled: true }),
-    dataNascimento: new FormControl({ value: null, disabled: true }, [Validators.required]),
-    idadeAtual: new FormControl({ value: null, disabled: true }),
-    status: new FormControl({ value: 1, disabled: true }, [Validators.required])
+  formAluno = new FormGroup({
+    matricula: new FormControl({ value: '', disabled: false }, [Validators.required]),
+    nome: new FormControl({ value: '', disabled: false }, [Validators.required, Validators.minLength(3)]),
   })
-
-
-
 
   public pesquisar() {
     this.loading = true;
     const raw = this.formAluno.getRawValue();
     const filtro: any = {
       ...raw,
-      // convert matricula from string|null to number|undefined as expected by service
-      matricula: raw.matricula != null && raw.matricula !== '' ? Number(raw.matricula) : undefined,
-      // ensure status is number or undefined
-      status: raw.status != null ? Number(raw.status) : undefined
+      matricula: raw.matricula != null && raw.matricula !== '' ? Number(raw.matricula) : undefined
     };
-
+    
     this.service.listarTodosFiltrados(filtro).subscribe({
-      next: (lista) => {
-        this.lista = lista;
+      next: (dados) => {
         this.loading = false;
+        this.lista = dados || [];
+        this.selectedItem = null;
       },
       error: () => {
         this.loading = false;
@@ -64,8 +53,7 @@ export class PesqAlunoLst {
 
   public selecionar() {
     if (this.selectedItem) {
-      this.ref.close(this.selectedItem[0]);
-    } else {
+      this.ref.close(this.selectedItem.matricula);
     }
   }
 }
