@@ -7,12 +7,12 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { TurmaService } from '../../../service/turma.service';
-import { professor } from '../../../domain/professor.model';
+import { professor } from '../../../models/professor.model';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
-import { TurmaDomain } from '../../../domain/turma.model';
+import { TurmaDomain } from '../../../models/turma.model';
 import { Aluno } from '../../aluno-modules/aluno/aluno';
-import { aluno } from '../../../domain/aluno.model';
+import { aluno } from '../../../models/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { TableModule } from "primeng/table";
 import { ComponenteAluno } from "../../../shared/componente/componente-pesq-aluno/componente-aluno";
@@ -32,24 +32,32 @@ import { ComponenteAluno } from "../../../shared/componente/componente-pesq-alun
     DatePickerModule,
     TableModule,
     ComponenteAluno
-],
+  ],
   templateUrl: './turma-p.html',
   styleUrl: './turma-p.css'
 })
 export class TurmaP implements OnChanges, OnInit {
 
+  get novoHabilitado() { return this.modo === 'initial'; }
+  get alterarHabilitado() { return this.modo === 'initial' && !!this.Selecionado; }
+  get apagarHabilitado() { return this.modo === 'initial' && !!this.Selecionado; }
+  get salvarHabilitado() { return this.modo !== 'initial'; }
+  get cancelarHabilitado() { return this.modo !== 'initial'; }
+  get fecharHabilitado() { return true; }
+
   turmas: TurmaDomain[] = [];
   formulario!: FormGroup;
   tipoPagamento: any;
-  formAlunos!: FormGroup ;
+  formAlunos!: FormGroup;
   listAlunos: aluno[] = [];
   alunosFiltrados: any[] = [];
   alunoSelecionado!: any;
 
+
   private modo: 'initial' | 'creating' | 'editing' = 'initial';
 
-    private alunoServece = inject(AlunoService);
-    private cdr = inject(ChangeDetectorRef);
+  private alunoServece = inject(AlunoService);
+  private cdr = inject(ChangeDetectorRef);
 
   @Input() Selecionado: TurmaDomain | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
@@ -84,19 +92,19 @@ export class TurmaP implements OnChanges, OnInit {
     this.alterarEstadoUI();
   }
 
+
   private initForm(): void {
     this.formulario = this.fb.group({
-      matricula: [{ value: '', disabled: true }, [Validators.required]],
+      codigo: [{ value: '', disabled: true }, [Validators.required]],
       nome: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]],
-      telefone: [{ value: '', disabled: true }],
       status: [{ value: 1, disabled: true }, [Validators.required]],
-      professorMatricula: [{ value: null, disabled: true }]
+      professor: [{ value: "", disabled: true }]
     });
 
-   this.formAlunos = this.fb.group({
-    matricula: new FormControl<number | null>(null),
-    nome: new FormControl<string | "">("", Validators.required)
-  });
+    this.formAlunos = this.fb.group({
+      matricula: new FormControl<number | null>(null),
+      nome: new FormControl<string | "">("", Validators.required)
+    });
   }
 
   carregarTurmas() {
@@ -122,12 +130,6 @@ export class TurmaP implements OnChanges, OnInit {
     }
   }
 
-  get novoHabilitado() { return this.modo === 'initial'; }
-  get alterarHabilitado() { return this.modo === 'initial' && !!this.Selecionado; }
-  get apagarHabilitado() { return this.modo === 'initial' && !!this.Selecionado; }
-  get salvarHabilitado() { return this.modo !== 'initial'; }
-  get cancelarHabilitado() { return this.modo !== 'initial'; }
-  get fecharHabilitado() { return true; }
 
   // ==================== AÇÕES ====================
   novo() {
@@ -263,24 +265,61 @@ export class TurmaP implements OnChanges, OnInit {
   }
 
   carregarDados() {
-      const filtro = this.formAlunos.getRawValue() as aluno;
-      this.alunoServece.listarTodosFiltrados(filtro).subscribe({
-        next: (dados) => {
-          console.log('Dados recebidos:', dados);
-  
-          this.listAlunos = dados || [];
-          this.alunosFiltrados = dados || [];
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.log(err);
-        }
-      });
-    }
+    const filtro = this.formAlunos.getRawValue() as aluno;
+    this.alunoServece.listarTodosFiltrados(filtro).subscribe({
+      next: (dados) => {
+        console.log('Dados recebidos:', dados);
+
+        this.listAlunos = dados || [];
+        this.alunosFiltrados = dados || [];
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
 
   selecionado(aluno: aluno) {
     // this.formAlunos.patchValue(aluno);
     this.alunoSelecionado = aluno;
-    this.visivel=true;
+    this.visivel = true;
+  }
+
+  remover(): void {
+    const index = this.listAlunos.indexOf(this.alunoSelecionado);
+    if (index !== -1) {
+      this.listAlunos.splice(index, 1);
+    }
+    this.alunoSelecionado = null;
+  }
+
+  protected add(aluno: aluno) {
+    if (!aluno) {
+      alert("Preencha o campo ");
+    } else if (this.listAlunos.find(c => c.matricula == aluno.matricula)) {
+      alert("Aluno já adicionado!");
+    } else {
+
+      this.alunoServece.listarTodosFiltrados(aluno as any).subscribe((msg) => {
+        if (msg) {
+          this.alunosFiltrados.push(aluno)
+        } else {
+          alert(msg);
+        }
+      });
+
+   
+    this.alunoServece.listarTodosFiltrados(aluno).subscribe({
+      next: (dados) => {
+        this.turmasFiltradas = dados;
+        this.cdr.detectChanges();        
+      },
+      error: (err) => {
+        console.error('Erro ao carregar os dados pada cadastrar:', err);
+      }
+      
+    });
+    }
   }
 }

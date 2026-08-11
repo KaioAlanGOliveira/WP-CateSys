@@ -8,7 +8,7 @@ import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumber } from "primeng/inputnumber";
 import { ProfessorService } from '../../../service/professor.service';
-import { professor } from '../../../domain/professor.model';
+import { professor } from '../../../models/professor.model';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
 import { log } from 'console';

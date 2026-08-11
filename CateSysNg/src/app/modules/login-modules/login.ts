@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from '../../service/login.service';
-import { loginDto } from '../../domain/login.model';
+import { loginDto } from '../../models/login.model';
 
 class LoginResponse {
   status?: String;

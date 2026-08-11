@@ -1,5 +1,5 @@
 /* ===================================== RESET ==================================== */
-@use "primeicons/primeicons.css";
+@import "primeicons/primeicons.css";
 
 * {
     box-sizing: border-box;

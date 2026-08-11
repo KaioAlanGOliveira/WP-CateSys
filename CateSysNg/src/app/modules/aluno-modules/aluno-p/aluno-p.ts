@@ -7,7 +7,7 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumber } from "primeng/inputnumber";
-import { aluno } from '../../../domain/aluno.model';
+import { aluno } from '../../../models/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { Aluno } from '../aluno/aluno';
 import { RadioButtonModule } from 'primeng/radiobutton';

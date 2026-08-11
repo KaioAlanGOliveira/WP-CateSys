@@ -3,9 +3,9 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterOutlet } from '@angular/router';
 import { LoginService } from '../../../service/login.service';
 import { AlunoService } from '../../../service/aluno.service';
-import { loginDto } from '../../../domain/login.model';
+import { loginDto } from '../../../models/login.model';
 import { TableModule } from 'primeng/table';
-import { aluno } from '../../../domain/aluno.model';
+import { aluno } from '../../../models/aluno.model';
 import { log } from 'node:console';
 import { AlunoP } from "../aluno-p/aluno-p";
 

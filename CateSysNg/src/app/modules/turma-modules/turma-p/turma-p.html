@@ -59,6 +59,13 @@
         <label>Aluno</label>
         <cmp-componente-aluno inputId="codAluno" cmpProximoCampo="btn-pesq" formControlName="codCliente">
         </cmp-componente-aluno>
+        <div class="flex align-items-end gap-2 ">
+          <p-button icon="pi pi-minus" (onClick)="remover()"></p-button>
+
+          <p-button id="bt-add" icon="pi pi-plus"
+            (onClick)="add(alunoSelecionado.entity); alunoSelecionado.limparTudo()"></p-button>
+        </div>
+
       </div>
 
       <!-- Tabela Alunos -->

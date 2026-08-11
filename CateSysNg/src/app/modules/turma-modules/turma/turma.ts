@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnChanges, OnInit, SimpleChanges 
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TurmaService } from '../../../service/turma.service';
 import { TableModule } from 'primeng/table';
-import { TurmaDomain } from '../../../domain/turma.model';
+import { TurmaDomain } from '../../../models/turma.model';
 import { TurmaP } from '../turma-p/turma-p';
 import { RadioButton } from "primeng/radiobutton";
 

@@ -4,10 +4,10 @@ import { InputNumber } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { DialogService } from '../dialog/services/dialog.service';
-import { aluno } from '../../../domain/aluno.model';
+import { aluno } from '../../../models/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { UtilService } from '../../../service/util.service';
-import { PesqAlunoLst } from './pesq-aluno-lst/pesq-aluno-lst';
+import { PesqAlunoLst } from './pesq-aluno-frm/pesq-aluno-lst';
 
 @Component({
   selector: 'cmp-componente-aluno',

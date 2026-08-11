@@ -173,3 +173,28 @@ form {
     min-width: 110px;
   }
 }
+/* Container principal que engloba a label, o componente e os botões */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* Espaçamento vertical entre a label e os inputs */
+}
+
+/* Alinha o componente do aluno e a div dos botões na mesma linha */
+.field-row {
+  display: flex;
+  align-items: flex-end; /* Alinha os botões pela base do input */
+  gap: 0.75rem; /* Espaçamento horizontal entre o input e os botões */
+  width: 100%;
+}
+
+/* Garante que o seletor do aluno ocupe todo o espaço disponível */
+.field-row cmp-componente-aluno {
+  flex-grow: 1;
+}
+
+/* Agrupa os botões mais próximos um do outro */
+.button-group {
+  display: flex;
+  gap: 0.5rem; /* Espaçamento entre o botão de mais e menos */
+}

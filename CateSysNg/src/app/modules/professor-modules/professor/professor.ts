@@ -4,7 +4,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { LoginService } from '../../../service/login.service';
 import { ProfessorService } from '../../../service/professor.service';
 import { TableModule } from 'primeng/table';
-import { professor } from '../../../domain/professor.model';
+import { professor } from '../../../models/professor.model';
 import { ProfessorP } from '../professor-p/professor-p';
 
 

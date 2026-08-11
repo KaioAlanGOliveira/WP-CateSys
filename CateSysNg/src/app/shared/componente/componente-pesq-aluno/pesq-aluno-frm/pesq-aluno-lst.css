@@ -1,0 +1,72 @@
+:host {
+    display: block;
+    padding: 1rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-radius: 0.5rem;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-field label {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.875rem;
+}
+
+.form-field input,
+.form-field p-inputNumber {
+    width: 100%;
+}
+
+p-table {
+    margin: 1rem 0;
+}
+
+:deep(.p-datatable .p-datatable-thead > tr > th ){
+        background-color: #e5e7eb;
+        font-weight: 600;
+    }
+
+    :deep(.p-datatable .p-datatable-tbody > tr:hover) {
+        background-color: #f3f4f6;
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    .align-items-center {
+        align-items: center;
+    }
+
+    .justify-content-end {
+        justify-content: flex-end;
+    }
+
+    .justify-content-between {
+        justify-content: space-between;
+    }
+
+    .gap-4 {
+        gap: 1rem;
+    }
+
+    .font-medium {
+        font-weight: 500;
+    }
+
+    .font-italic {
+        font-style: italic;
+    }

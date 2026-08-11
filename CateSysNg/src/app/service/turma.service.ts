@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TurmaDomain } from '../domain/turma.model';
+import { TurmaDomain } from '../models/turma.model';
 
 @Injectable({
   providedIn: 'root'
