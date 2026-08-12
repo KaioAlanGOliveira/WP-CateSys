@@ -32,21 +32,21 @@
         }
       </div>
 
-      <!-- Professor -->
-      <div class="campo">
+      <!-- Professor cmp -->
+      <div class="field flex-grow-1">
         <label>Professor</label>
-        <input pInputText formControlName="professor" placeholder="Professor"
-          [invalid]="formulario.get('professor')?.invalid && formulario.get('professor')?.touched" />
-        @if (formulario.get('professor')?.invalid && formulario.get('professor')?.touched) {
-        <p-message severity="error" variant="simple" size="small">Professor inválido</p-message>
-        }
+
+        <!-- Container flex alinhado pela base com espaçamento correto -->
+          <cmp-componente-professor inputId="codProfessor" cmpProximoCampo="status" #pesqAluno formControlName="codProfessor">
+          </cmp-componente-professor>
       </div>
+
 
       <div class="campo">
         <label>Status</label>
 
         <!-- Ativo -->
-        <p-radioButton name="status" [value]="1" formControlName="status" inputId="ativo" />
+        <p-radioButton name="status" [value]="1" formControlName="status" id="status" inputId="ativo" />
         <label for="ativo">Ativo</label>
 
         <!-- Inativo -->

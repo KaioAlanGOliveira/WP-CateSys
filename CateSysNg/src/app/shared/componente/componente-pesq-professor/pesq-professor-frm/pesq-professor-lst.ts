@@ -15,8 +15,8 @@ import { json } from 'node:stream/consumers';
   selector: 'app-pesq-aluno-lst',
   standalone: true,
   imports: [ReactiveFormsModule, InputNumber, TableModule, ButtonDirective, InputTextModule, ButtonModule],
-  templateUrl: './pesq-aluno-lst.html',
-  styleUrls: ['./pesq-aluno-lst.css'],
+  templateUrl: './pesq-professor-lst.html',
+  styleUrls: ['./pesq-professor-lst.css'],
 })
 export class PesqAlunoLst {
 

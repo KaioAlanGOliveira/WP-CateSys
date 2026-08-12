@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TurmaDomain } from '../models/turma.model';
+import { HttpParamsObject } from '../core/http/http-params-object';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class TurmaService {
   }
 
   listFiltrados(filtro: TurmaDomain): Observable<TurmaDomain[]> {
-    return this.http.post<TurmaDomain[]>(`${this.apiUrl}/filtrar`, filtro);
+    return this.http.get<any[]>(`${this.apiUrl}`, { params: new HttpParamsObject(filtro) });
   }
 
   editar(turma: TurmaDomain): Observable<TurmaDomain> {

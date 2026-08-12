@@ -13,6 +13,7 @@ export class DialogRef<T> {
 
     public close(value?: any): void {
         this._modalRef?.close(value);
+
     }
 
     get onClose(): Observable<any> {

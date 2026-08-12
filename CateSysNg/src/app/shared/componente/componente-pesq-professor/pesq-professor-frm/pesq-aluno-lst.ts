@@ -9,14 +9,14 @@ import { TableModule } from "primeng/table";
 import { ButtonDirective } from "primeng/button";
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { json } from 'node:stream/consumers';
+import { ProfessorService } from '../../../../service/professor.service';
 
 @Component({
   selector: 'app-pesq-aluno-lst',
   standalone: true,
   imports: [ReactiveFormsModule, InputNumber, TableModule, ButtonDirective, InputTextModule, ButtonModule],
-  templateUrl: './pesq-aluno-lst.html',
-  styleUrls: ['./pesq-aluno-lst.css'],
+  templateUrl: './pesq-professor-lst.html',
+  styleUrls: ['./pesq-professor-lst.css'],
 })
 export class PesqAlunoLst {
 
@@ -25,7 +25,7 @@ export class PesqAlunoLst {
   public selectedItem: any;
   private cdr = inject(ChangeDetectorRef);
 
-  constructor(private service: AlunoService, public ref: DialogRef<PesqAlunoLst>, private util: UtilService) {
+  constructor(private service: ProfessorService, public ref: DialogRef<PesqAlunoLst>, private util: UtilService) {
   }
 
   formAluno = new FormGroup({
@@ -45,7 +45,7 @@ export class PesqAlunoLst {
       matricula: raw.matricula != null && raw.matricula !== '' ? Number(raw.matricula) : undefined
     };
 
-    this.service.listarTodosFiltrados(filtro).subscribe({
+    this.service.listFiltrados(filtro).subscribe({
       next: (dados) => {
         this.loading = false;
         this.lista = dados || [];

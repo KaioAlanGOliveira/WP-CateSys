@@ -14,38 +14,30 @@ public class TurmaBss {
 	@PersistenceContext(unitName = "MeuPu")
 	private EntityManager em;
 
-	public List<Turma> getList() {
+	public List<Turma> getList(String codigo, String nome, String codProfessor, String status) {
 
 		try {
-			String jpql = "select obj from Turma obj";
+			String jpql = """
+					SELECT p
+					FROM Turma p
+					WHERE (:nome IS NULL OR :nome = '' OR
+					       LOWER(p.nome) LIKE LOWER(CONCAT('%', :nome, '%')))
+					 AND (:codigo IS NULL OR p.codigo = :codigo)
+					 AND (:status IS NULL OR p.status = :status)
+					 AND (:professorMatricula IS NULL OR p.professorMatricula = :professorMatricula)
+						   """;
 			TypedQuery<Turma> query = em.createQuery(jpql, Turma.class);
+
+			query.setParameter("nome", nome);
+			query.setParameter("codigo", codigo.equals("null") ? null : codigo);
+			query.setParameter("status", status);
+			query.setParameter("professorMatricula", codProfessor);
+
 			return query.getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Erro ao listar", e);
 		}
-	}
-
-	public List<Turma> getListFiltrado(Turma domain) {
-
-		String jpql = """
-				SELECT p
-				FROM Turma p
-				WHERE (:nome IS NULL OR :nome = '' OR
-				       LOWER(p.nome) LIKE LOWER(CONCAT('%', :nome, '%')))
-				 AND (:codigo IS NULL OR p.codigo = :codigo)
-				 AND (:status IS NULL OR p.status = :status)
-				 AND (:professorMatricula IS NULL OR p.professorMatricula = :professorMatricula)
-					   """;
-
-		TypedQuery<Turma> query = em.createQuery(jpql, Turma.class);
-
-		query.setParameter("nome", domain.getNome());
-		query.setParameter("codigo", domain.getCodigo());
-		query.setParameter("status", domain.getStatus());
-		query.setParameter("professorMatricula", domain.getProfessorMatricula());
-		
-		return query.getResultList();
 	}
 
 	public void adicionar(Turma domain) throws Exception {

@@ -14,6 +14,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -22,18 +23,15 @@ import jakarta.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
 public class TurmaEp {
+
 	@Inject
 	private TurmaBss TurmaBss;
 
 	@GET
-	public List<Turma> getList() {
-		return TurmaBss.getList();
-	}
-
-	@POST
-	@Path("/filtrar")
-	public List<Turma> getListFiltrada(Turma domain) {
-		return TurmaBss.getListFiltrado(domain);
+	public List<Turma> getList(@QueryParam("codigo") String codigo, @QueryParam("nome") String nome,
+			@QueryParam("codProfessor") String codProfessor, @QueryParam("status") String status) {
+		
+		return TurmaBss.getList(codigo, nome, codProfessor, status);
 	}
 
 	@POST

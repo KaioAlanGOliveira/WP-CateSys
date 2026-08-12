@@ -16,6 +16,7 @@ import { aluno } from '../../../models/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { TableModule } from "primeng/table";
 import { ComponenteAluno } from "../../../shared/componente/componente-pesq-aluno/componente-aluno";
+import { ComponenteProfessor } from '../../../shared/componente/componente-pesq-professor/componente-professor';
 @Component({
   selector: 'app-turma-p',
   standalone: true,
@@ -31,8 +32,9 @@ import { ComponenteAluno } from "../../../shared/componente/componente-pesq-alun
     RadioButtonModule,
     DatePickerModule,
     TableModule,
-    ComponenteAluno
-  ],
+    ComponenteAluno,
+    ComponenteProfessor
+],
   templateUrl: './turma-p.html',
   styleUrl: './turma-p.css'
 })
@@ -83,7 +85,7 @@ export class TurmaP implements OnChanges, OnInit {
       this.modo = 'initial';
       this.formulario.patchValue(this.Selecionado);
       this.originalTurma = { ...this.Selecionado };
-      
+
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
       this.modo = 'creating';
       this.formulario.reset();
@@ -99,7 +101,8 @@ export class TurmaP implements OnChanges, OnInit {
       nome: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]],
       status: [{ value: 1, disabled: true }, [Validators.required]],
       professor: [{ value: "", disabled: true }],
-      codAluno: [{ value: null, disabled: true }]
+      codAluno: [{ value: null, disabled: true }],
+      codProfessor: [{ value: null, disabled: true }]
     });
 
     this.formAlunos = this.fb.group({
@@ -280,43 +283,41 @@ export class TurmaP implements OnChanges, OnInit {
 
   add(aluno: aluno | null): void {
     if (!aluno) {
-      alert('Selecione um aluno antes de adicionar.');
+       alert('Nenhum aluno selecionado!');
       return;
-    }
-
-    const jaAdicionado = this.listAlunos.some(c => c.matricula === aluno.matricula);
-    if (jaAdicionado) {
-      alert('Aluno já adicionado!');
+    } else if (this.listAlunos.find(c => c.matricula == aluno.matricula)) {
+      alert("Cliente já adicionado!");
       return;
-    }
+    } else {
 
-    const alunoPesquisa: aluno = {
-      matricula: aluno
-    } as aluno;
+      const alunoPesquisa: aluno = {
+        matricula: aluno
+      } as aluno;
 
-    this.alunoServece.listarTodosFiltrados(alunoPesquisa).subscribe({
-      next: (dados) => {
+      this.alunoServece.listarTodosFiltrados(alunoPesquisa).subscribe({
+        next: (dados) => {
 
-        if (!dados || dados.length === 0) {
-          alert('Aluno não encontrado.');
-          return;
+          if (!dados || dados.length === 0) {
+            alert('Aluno não encontrado.');
+            return;
+          }
+
+          const alunoEncontrado = dados[0];
+
+          this.listAlunos = [
+            ...this.listAlunos,
+            alunoEncontrado
+          ];
+
+          this.alunoSelecionado = alunoEncontrado;
+        },
+
+        error: (err) => {
+          console.error('Erro ao buscar aluno:', err);
+          alert('Erro ao buscar o aluno.');
         }
-
-        const alunoEncontrado = dados[0];
-
-        this.listAlunos = [
-          ...this.listAlunos,
-          alunoEncontrado
-        ];
-
-        this.alunoSelecionado = alunoEncontrado;
-      },
-
-      error: (err) => {
-        console.error('Erro ao buscar aluno:', err);
-        alert('Erro ao buscar o aluno.');
-      }
-    });
-    this.alunoSelecionado = aluno;
+      });
+      this.alunoSelecionado = aluno;
+    }
   }
 }
