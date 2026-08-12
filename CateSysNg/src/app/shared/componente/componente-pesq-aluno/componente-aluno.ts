@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, forwardRef, inject, Input, Output, ViewChild } from '@angular/core';
 import { FormGroup, ReactiveFormsModule, ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { InputNumber } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
@@ -8,13 +8,14 @@ import { aluno } from '../../../models/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { UtilService } from '../../../service/util.service';
 import { PesqAlunoLst } from './pesq-aluno-frm/pesq-aluno-lst';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'cmp-componente-aluno',
   templateUrl: './componente-aluno.html',
   styleUrls: ['./componente-aluno.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, InputNumber, InputTextModule, ButtonModule],
+  imports: [ReactiveFormsModule, CommonModule, InputNumber, InputTextModule, ButtonModule],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     multi: true,
@@ -22,6 +23,8 @@ import { PesqAlunoLst } from './pesq-aluno-frm/pesq-aluno-lst';
   }],
 })
 export class ComponenteAluno implements ControlValueAccessor {
+
+  private cdr = inject(ChangeDetectorRef);
 
   @ViewChild("input") private input?: InputNumber;
 
@@ -47,36 +50,47 @@ export class ComponenteAluno implements ControlValueAccessor {
 
   public onChange = (matricula: number | null) => { };
 
-  constructor(private service: AlunoService, private util: UtilService, private dialogService: DialogService) {
+  constructor(private service: AlunoService, private dialogService: DialogService) {
   }
 
   protected getEntity(matricula: number) {
-    this.form.controls.matricula.patchValue(matricula);
-
     if (matricula != null) {
-      this.loading = true;
+      this.form.controls.matricula.patchValue(matricula);
+
+      Promise.resolve().then(() => {
+        this.loading = true;
+        this.cdr.markForCheck();
+      });
+
       const filtro: any = { matricula: matricula };
+
       this.service.listarTodosFiltrados(filtro).subscribe({
         next: (lista) => {
           this.loading = false;
           const entity = (lista && lista.length) ? lista[0] : null;
+
           if (!this.validaEntity(entity)) {
+            this.cdr.markForCheck();
             return;
           }
 
           this._entity = entity;
           this.form.controls.nome.patchValue(entity?.nome ?? null);
-          this.form.controls.celular.patchValue(entity?.telefone ?? null);
+          this.cdr.markForCheck();
+
           this.onChange(entity?.matricula ?? null);
           this.preenchido.emit();
-          if (!this.viaSet && this.proximoCampo) {
-           
-          }
+
+          this.cdr.markForCheck();
         },
-        error: () => { this.loading = false; }
+        error: () => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }
       });
     }
   }
+
   private validaEntity(entity: aluno | null) {
 
     if (!entity) {
@@ -93,6 +107,7 @@ export class ComponenteAluno implements ControlValueAccessor {
   }
 
   public show() {
+
     let ref = this.dialogService.open(PesqAlunoLst, {
       title: 'Pesq. aluno',
       width: '550px',
@@ -116,10 +131,6 @@ export class ComponenteAluno implements ControlValueAccessor {
       if (matricula) {
         this.viaSet = false;
         this.getEntity(matricula);
-      } else {
-        if (this.proximoCampo) {
-
-        }
       }
     } else if (event.key == '*') {
       this.show();
@@ -158,10 +169,11 @@ export class ComponenteAluno implements ControlValueAccessor {
     this.onChange = fn;
   }
 
-  public registerOnTouched(fn: any): void { }
+  public registerOnTouched() {}
 
   public setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled
+    this.disabled = isDisabled;
+    this.cdr.markForCheck();
   }
 
 }

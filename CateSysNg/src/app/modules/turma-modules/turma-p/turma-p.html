@@ -57,20 +57,28 @@
       <!-- Aluno CMP -->
       <div class="field flex-grow-1">
         <label>Aluno</label>
-        <cmp-componente-aluno inputId="codAluno" cmpProximoCampo="btn-pesq"  #pesqCliente formControlName="codCliente">
-        </cmp-componente-aluno>
-        <div class="flex align-items-end gap-2 ">
-          <p-button icon="pi pi-minus" (onClick)="remover()" ></p-button>
 
-          <p-button id="bt-add" icon="pi pi-plus" (onClick)="add(pesqCliente.entity); pesqCliente.limparTudo()"></p-button>
+        <!-- Container flex alinhado pela base com espaçamento correto -->
+        <div class="field-row">
+          <cmp-componente-aluno inputId="codAluno" cmpProximoCampo="bt-add" #pesqAluno formControlName="codAluno">
+          </cmp-componente-aluno>
+
+          <!-- Grupo de botões agrupados de forma fixa à direita -->
+          <div class="button-group">
+            <p-button icon="pi pi-minus" (onClick)="remover()"></p-button>
+
+            <p-button id="bt-add" icon="pi pi-plus"
+              (onClick)="add(formulario.get('codAluno')?.value); pesqAluno.limparTudo()">
+            </p-button>
+          </div>
         </div>
-
       </div>
+
 
       <!-- Tabela Alunos -->
       <div class="tabela-container">
 
-        <p-table [value]="alunosFiltrados" [tableStyle]="{ 'min-width': '50rem' }">
+        <p-table [value]="listAlunos" [tableStyle]="{ 'min-width': '50rem' }">
 
           <ng-template pTemplate="header">
             <tr>

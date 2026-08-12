@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { DialogRef } from '../../dialog/models/dialog-ref.model';
 import { UtilService } from '../../../../service/util.service';
@@ -22,6 +22,7 @@ export class PesqAlunoLst {
   public lista: any[] = [];
   public loading: boolean = false;
   public selectedItem: any;
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(private service: AlunoService, public ref: DialogRef<PesqAlunoLst>, private util: UtilService) {
   }
@@ -32,21 +33,27 @@ export class PesqAlunoLst {
   })
 
   public pesquisar() {
+    Promise.resolve().then(() => {
+      this.loading = true;
+      this.cdr.markForCheck();
+    });
     this.loading = true;
     const raw = this.formAluno.getRawValue();
     const filtro: any = {
       ...raw,
       matricula: raw.matricula != null && raw.matricula !== '' ? Number(raw.matricula) : undefined
     };
-    
+
     this.service.listarTodosFiltrados(filtro).subscribe({
       next: (dados) => {
         this.loading = false;
         this.lista = dados || [];
         this.selectedItem = null;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }

@@ -83,6 +83,7 @@ export class TurmaP implements OnChanges, OnInit {
       this.modo = 'initial';
       this.formulario.patchValue(this.Selecionado);
       this.originalTurma = { ...this.Selecionado };
+      
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
       this.modo = 'creating';
       this.formulario.reset();
@@ -97,7 +98,8 @@ export class TurmaP implements OnChanges, OnInit {
       codigo: [{ value: '', disabled: true }, [Validators.required]],
       nome: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]],
       status: [{ value: 1, disabled: true }, [Validators.required]],
-      professor: [{ value: "", disabled: true }]
+      professor: [{ value: "", disabled: true }],
+      codAluno: [{ value: null, disabled: true }]
     });
 
     this.formAlunos = this.fb.group({
@@ -277,7 +279,7 @@ export class TurmaP implements OnChanges, OnInit {
   }
 
   add(aluno: aluno | null): void {
-    if (!aluno?.matricula) {
+    if (!aluno) {
       alert('Selecione um aluno antes de adicionar.');
       return;
     }
@@ -288,10 +290,33 @@ export class TurmaP implements OnChanges, OnInit {
       return;
     }
 
-    this.listAlunos = [...this.listAlunos, aluno];
-    this.alunosFiltrados = [...this.listAlunos];
-    this.alunoSelecionado = aluno;
-    this.cdr.detectChanges();
-  }
+    const alunoPesquisa: aluno = {
+      matricula: aluno
+    } as aluno;
 
+    this.alunoServece.listarTodosFiltrados(alunoPesquisa).subscribe({
+      next: (dados) => {
+
+        if (!dados || dados.length === 0) {
+          alert('Aluno não encontrado.');
+          return;
+        }
+
+        const alunoEncontrado = dados[0];
+
+        this.listAlunos = [
+          ...this.listAlunos,
+          alunoEncontrado
+        ];
+
+        this.alunoSelecionado = alunoEncontrado;
+      },
+
+      error: (err) => {
+        console.error('Erro ao buscar aluno:', err);
+        alert('Erro ao buscar o aluno.');
+      }
+    });
+    this.alunoSelecionado = aluno;
+  }
 }

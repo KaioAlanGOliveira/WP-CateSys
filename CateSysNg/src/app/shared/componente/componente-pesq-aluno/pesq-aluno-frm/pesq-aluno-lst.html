@@ -4,7 +4,7 @@
     <div class="form-field">
         <label for="matricula">Matrícula</label>
 
-        <p-inputNumber id="matricula" formControlName="matricula" >
+        <p-inputNumber id="matricula" formControlName="matricula">
         </p-inputNumber>
     </div>
 
@@ -13,7 +13,7 @@
     <div class="form-field">
         <label for="nome">Nome</label>
 
-       <input type="text" pInputText formControlName="nome" placeholder="Nome do aluno" >
+        <input type="text" pInputText formControlName="nome" placeholder="Nome do aluno">
     </div>
 
 
@@ -27,19 +27,20 @@
 </form>
 
 
-<p-table [value]="lista" [(selection)]="selectedItem" >
-    <ng-template pTemplate="header" [resizableColumns]="true" [rowHover]="true" [virtualScroll]="true">
+<p-table [value]="lista" [(selection)]="selectedItem" [resizableColumns]="true" [rowHover]="true"
+    [virtualScroll]="true">
+    <ng-template pTemplate="header">
         <tr>
             <th>
                 Matrícula
             </th>
 
             <th>
-                Nome 
+                Nome
             </th>
         </tr>
     </ng-template>
-    
+
     <ng-template pTemplate="body" let-aluno>
         <tr [pSelectableRow]="aluno" (dblclick)="ref.close(aluno.matricula)">
             <td>{{ aluno.matricula }}</td>
