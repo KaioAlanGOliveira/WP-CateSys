@@ -37,7 +37,7 @@
         <label>Professor</label>
 
         <!-- Container flex alinhado pela base com espaçamento correto -->
-          <cmp-componente-professor inputId="codProfessor" cmpProximoCampo="status" #pesqAluno formControlName="codProfessor">
+          <cmp-componente-professor inputId="professorMatricula" cmpProximoCampo="status" #pesqAluno formControlName="professorMatricula">
           </cmp-componente-professor>
       </div>
 
@@ -122,10 +122,10 @@
       <p-button label="Novo" [disabled]="!novoHabilitado" (onClick)="novo()"></p-button>
       <p-button label="Alterar" [disabled]="!alterarHabilitado" (onClick)="editar()"></p-button>
       <br>
-      <p-button label="Apagar" [disabled]="!apagarHabilitado" (onClick)="apagar()"></p-button>
       <p-button label="Salvar" [disabled]="!salvarHabilitado" (onClick)="salvar()"></p-button>
-      <br>
       <p-button label="Cancelar" [disabled]="!cancelarHabilitado" (onClick)="cancelar()"></p-button>
+      <br>
+      <p-button label="Apagar" [disabled]="!apagarHabilitado" (onClick)="apagar()"></p-button>
       <p-button label="Fechar" [disabled]="!fecharHabilitado" (onClick)="fecharModal()"></p-button>
     </div>
 

@@ -176,26 +176,3 @@ export class ComponenteProfessor implements ControlValueAccessor {
   }
 
 }
-//  public showErro(msg: string): DialogRef<DialogMensagemComponent> {
-//     let ref = this.dialogService.open(DialogMensagemComponent, {
-//       title: 'Erro!',
-//       closeButton: true,
-//       esc: true
-//     });
-
-//     ref.componentInstance.mensagem = msg;
-
-//     return ref;
-//   }
-
-//   public showMensagem(msg: string): DialogRef<DialogMensagemComponent> {
-//     let ref = this.dialogService.open(DialogMensagemComponent, {
-//       title: 'Opa!',
-//       closeButton: true,
-//       esc: true
-//     });
-
-//     ref.componentInstance.mensagem = msg;
-
-//     return ref;
-//   }

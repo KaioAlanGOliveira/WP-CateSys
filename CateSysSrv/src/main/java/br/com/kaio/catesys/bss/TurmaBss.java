@@ -29,11 +29,25 @@ public class TurmaBss {
 			TypedQuery<Turma> query = em.createQuery(jpql, Turma.class);
 
 			query.setParameter("nome", nome);
-			query.setParameter("codigo", codigo.equals("null") ? null : codigo);
+			query.setParameter("codigo", (codigo == null || codigo.equals("null")) ? null : codigo);
 			query.setParameter("status", status);
 			query.setParameter("professorMatricula", codProfessor);
 
 			return query.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao listar", e);
+		}
+	}
+	
+	public Turma getEntity(Integer codigo) {
+
+		try {
+			String jpql = "	SELECT p FROM Turma p WHERE p.codigo = :codigo";
+			TypedQuery<Turma> query = em.createQuery(jpql, Turma.class);
+			query.setParameter("codigo", codigo);
+
+			return query.getSingleResult();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Erro ao listar", e);

@@ -19,8 +19,9 @@ export class TurmaService {
     });
   }
 
-  listarTodos(): Observable<TurmaDomain[]> {
-    return this.http.get<TurmaDomain[]>(this.apiUrl);
+  getEntity(codTurma: number): Observable<TurmaDomain> {
+
+    return this.http.get<TurmaDomain>(`${this.apiUrl}/${codTurma}`);
   }
 
   listFiltrados(filtro: TurmaDomain): Observable<TurmaDomain[]> {

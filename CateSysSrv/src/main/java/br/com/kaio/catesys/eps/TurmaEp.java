@@ -13,6 +13,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
@@ -25,19 +26,26 @@ import jakarta.ws.rs.core.Response;
 public class TurmaEp {
 
 	@Inject
-	private TurmaBss TurmaBss;
+	private TurmaBss turmaBss;
 
 	@GET
 	public List<Turma> getList(@QueryParam("codigo") String codigo, @QueryParam("nome") String nome,
 			@QueryParam("codProfessor") String codProfessor, @QueryParam("status") String status) {
-		
-		return TurmaBss.getList(codigo, nome, codProfessor, status);
+
+		return turmaBss.getList(codigo, nome, codProfessor, status);
+	}
+
+	@GET
+	@Path("/{codigo}")
+	public Turma getEntity(@PathParam("codigo") Integer codigo) {
+
+		return turmaBss.getEntity(codigo);
 	}
 
 	@POST
 	public String adicionar(Turma domain) {
 		try {
-			TurmaBss.adicionar(domain);
+			turmaBss.adicionar(domain);
 			return "Novo cadastrado no banco";
 		} catch (Exception e) {
 			return e.getMessage();
@@ -48,7 +56,7 @@ public class TurmaEp {
 	public Response remover(Turma domain) {
 
 		try {
-			TurmaBss.remover(domain);
+			turmaBss.remover(domain);
 			return Response.ok(Map.of("mensagem", " apagado com sucesso")).build();
 		} catch (Exception e) {
 			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
@@ -59,7 +67,7 @@ public class TurmaEp {
 	public Response editar(Turma domain) {
 
 		try {
-			TurmaBss.alterar(domain);
+			turmaBss.alterar(domain);
 			return Response.ok(Map.of("mensagem", "Alterado com sucesso")).build();
 		} catch (Exception e) {
 			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();

@@ -5,6 +5,7 @@ import { TableModule } from 'primeng/table';
 import { TurmaDomain } from '../../../models/turma.model';
 import { TurmaP } from '../turma-p/turma-p';
 import { RadioButton } from "primeng/radiobutton";
+import { log } from 'console';
 
 @Component({
   selector: 'app-turma',
@@ -21,7 +22,7 @@ export class Turma implements OnInit {
 
   exibirModalPrincipal: boolean = false;
   turmaSelecionado!: any;
-  formturma!: TurmaDomain;
+  formTurma!: TurmaDomain;
   listTurmas: TurmaDomain[] = [];
   turmasFiltradas: TurmaDomain[] = [];
 
@@ -38,7 +39,7 @@ export class Turma implements OnInit {
 
   carregarDados() {
     const filtro = this.form.value as TurmaDomain;
-   
+
     this.turmaServece.listFiltrados(filtro).subscribe({
       next: (dados) => {
         const normalized = (dados || []).map((item: any) => ({
@@ -47,12 +48,12 @@ export class Turma implements OnInit {
         }));
         this.listTurmas = normalized;
         this.turmasFiltradas = normalized;
-        this.cdr.detectChanges();        
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Erro ao carregar os dados:', err);
       }
-      
+
     });
   }
   novo() {
@@ -89,8 +90,7 @@ export class Turma implements OnInit {
       this.carregarDados();
     }
   }
-  selecionado(turma: TurmaDomain) {
-    //this.form.patchValue(turma);
+  selecionado(turma: any) {
     this.turmaSelecionado = turma;
     this.abrirMeuPopup();
   }

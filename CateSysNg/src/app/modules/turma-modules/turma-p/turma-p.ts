@@ -34,7 +34,7 @@ import { ComponenteProfessor } from '../../../shared/componente/componente-pesq-
     TableModule,
     ComponenteAluno,
     ComponenteProfessor
-],
+  ],
   templateUrl: './turma-p.html',
   styleUrl: './turma-p.css'
 })
@@ -83,7 +83,8 @@ export class TurmaP implements OnChanges, OnInit {
 
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
       this.modo = 'initial';
-      this.formulario.patchValue(this.Selecionado);
+      this.carregarTurmaSelecionada();
+      this.carregarTurma();
       this.originalTurma = { ...this.Selecionado };
 
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
@@ -102,7 +103,7 @@ export class TurmaP implements OnChanges, OnInit {
       status: [{ value: 1, disabled: true }, [Validators.required]],
       professor: [{ value: "", disabled: true }],
       codAluno: [{ value: null, disabled: true }],
-      codProfessor: [{ value: null, disabled: true }]
+      professorMatricula: [{ value: null }]
     });
 
     this.formAlunos = this.fb.group({
@@ -111,10 +112,13 @@ export class TurmaP implements OnChanges, OnInit {
     });
   }
 
-  carregarTurmas() {
-    this.turmaService.listarTodos().subscribe({
+  carregarTurma() {
+    const codigo = this.Selecionado?.codigo;
+    if (!codigo) return;
+
+    this.turmaService.getEntity(codigo).subscribe({
       next: (dados) => {
-        this.turmas = dados || [];
+        this.formulario.patchValue(dados);
       }
     });
   }
@@ -252,7 +256,7 @@ export class TurmaP implements OnChanges, OnInit {
   }
 
   private finalizarComSucesso() {
-    this.carregarTurmas();
+    this.carregarTurma();
   }
 
   habilitarCampos(formulario: FormGroup, habilitar: boolean) {
@@ -283,7 +287,7 @@ export class TurmaP implements OnChanges, OnInit {
 
   add(aluno: aluno | null): void {
     if (!aluno) {
-       alert('Nenhum aluno selecionado!');
+      alert('Nenhum aluno selecionado!');
       return;
     } else if (this.listAlunos.find(c => c.matricula == aluno.matricula)) {
       alert("Cliente já adicionado!");
@@ -319,5 +323,38 @@ export class TurmaP implements OnChanges, OnInit {
       });
       this.alunoSelecionado = aluno;
     }
+  }
+  private carregarTurmaSelecionada(): void {
+    if (!this.Selecionado) {
+      return;
+    }
+
+    const filtro: TurmaDomain = {
+      codigo: this.Selecionado.codigo
+    } as TurmaDomain;
+
+    this.turmaService.listFiltrados(filtro).subscribe({
+      next: (dados) => {
+
+        if (!dados || dados.length === 0) {
+          alert('Turma não encontrada.');
+          return;
+        }
+
+        const turma = dados[0];
+
+        this.formulario.patchValue(turma);
+
+        this.originalTurma = { ...turma };
+
+        console.log('Turma carregada:', turma);
+      },
+
+      error: (err) => {
+        console.error('Erro ao buscar turma:', err);
+        alert('Erro ao buscar a turma.');
+      }
+    });
+    
   }
 }
