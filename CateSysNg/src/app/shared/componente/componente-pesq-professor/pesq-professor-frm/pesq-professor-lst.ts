@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { DialogRef } from '../../dialog/models/dialog-ref.model';
 import { UtilService } from '../../../../service/util.service';
@@ -12,20 +12,21 @@ import { ButtonModule } from 'primeng/button';
 import { json } from 'node:stream/consumers';
 
 @Component({
-  selector: 'app-pesq-aluno-lst',
+  selector: 'app-pesq-professor-lst',
   standalone: true,
   imports: [ReactiveFormsModule, InputNumber, TableModule, ButtonDirective, InputTextModule, ButtonModule],
   templateUrl: './pesq-professor-lst.html',
   styleUrls: ['./pesq-professor-lst.css'],
 })
-export class PesqAlunoLst {
+export class PesqProfessorLst {
 
   public lista: any[] = [];
   public loading: boolean = false;
   public selectedItem: any;
   private cdr = inject(ChangeDetectorRef);
+  @Input() cmpControleEnabled: Boolean = false;
 
-  constructor(private service: AlunoService, public ref: DialogRef<PesqAlunoLst>, private util: UtilService) {
+  constructor(private service: AlunoService, public ref: DialogRef<PesqProfessorLst>, private util: UtilService) {
   }
 
   formAluno = new FormGroup({

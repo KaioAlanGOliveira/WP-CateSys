@@ -5,6 +5,7 @@ import java.util.Map;
 
 import br.com.kaio.catesys.bss.TurmaBss;
 import br.com.kaio.catesys.domain.Turma;
+import br.com.kaio.catesys.domain.TurmaAluno;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -40,6 +41,20 @@ public class TurmaEp {
 	public Turma getEntity(@PathParam("codigo") Integer codigo) {
 
 		return turmaBss.getEntity(codigo);
+	}
+
+	@GET
+	@Path("/listTA")
+	public List<TurmaAluno> getList() {
+
+		return turmaBss.getTA();
+	}
+	
+	@GET
+	@Path("/ListAlunoT/{codigo}")
+	public  List<Object[]> getListAlunoT(@PathParam("codigo") Integer codigo) {
+
+		return turmaBss.getTurmaAluno(codigo);
 	}
 
 	@POST

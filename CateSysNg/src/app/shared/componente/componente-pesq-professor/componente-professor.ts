@@ -5,7 +5,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { DialogService } from '../dialog/services/dialog.service';
 import { aluno } from '../../../models/aluno.model';
-import { PesqAlunoLst } from './pesq-professor-frm/pesq-professor-lst';
+import { PesqProfessorLst } from './pesq-professor-frm/pesq-professor-lst';
 import { CommonModule } from '@angular/common';
 import { ProfessorService } from '../../../service/professor.service';
 
@@ -39,6 +39,7 @@ export class ComponenteProfessor implements ControlValueAccessor {
   private viaSet: boolean = false;
   public loading: boolean = false;
 
+  enableCmp: boolean = false;
   private _entity: aluno | null = null;
 
   public form = new FormGroup({
@@ -107,7 +108,7 @@ export class ComponenteProfessor implements ControlValueAccessor {
 
   public show() {
 
-    let ref = this.dialogService.open(PesqAlunoLst, {
+    let ref = this.dialogService.open(PesqProfessorLst, {
       title: 'Pesq. aluno',
       width: '550px',
       height: '400px',

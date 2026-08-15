@@ -3,6 +3,7 @@ package br.com.kaio.catesys.bss;
 import java.util.List;
 
 import br.com.kaio.catesys.domain.Turma;
+import br.com.kaio.catesys.domain.TurmaAluno;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -39,7 +40,7 @@ public class TurmaBss {
 			throw new RuntimeException("Erro ao listar", e);
 		}
 	}
-	
+
 	public Turma getEntity(Integer codigo) {
 
 		try {
@@ -52,6 +53,31 @@ public class TurmaBss {
 			e.printStackTrace();
 			throw new RuntimeException("Erro ao listar", e);
 		}
+	}
+
+	public List<Object[]> getTurmaAluno(Integer codigo) {
+
+	    try {
+	        String jpql = """
+	           SELECT a.matricula, a.nome, a.status
+	            FROM TurmaAluno ta
+	            LEFT JOIN Aluno a
+	                ON a.matricula = ta.id.alunoMatricula
+	            WHERE :codigo IS NULL
+	               OR ta.id.turmaCodigo = :codigo
+	            """;
+
+	        TypedQuery<Object[]> query =
+	                em.createQuery(jpql, Object[].class);
+
+	        query.setParameter("codigo", codigo);
+
+	        return query.getResultList();
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw new RuntimeException("Erro ao listar", e);
+	    }
 	}
 
 	public void adicionar(Turma domain) throws Exception {
@@ -79,6 +105,18 @@ public class TurmaBss {
 			em.remove(em.find(Turma.class, domain.getCodigo()));
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao remover", e);
+		}
+	}
+
+	public List<TurmaAluno> getTA() {
+		try {
+			String jpql = "	SELECT p FROM TurmaAluno p";
+			TypedQuery<TurmaAluno> query = em.createQuery(jpql, TurmaAluno.class);
+
+			return query.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao listar", e);
 		}
 	}
 }

@@ -14,9 +14,12 @@ import { TurmaDomain } from '../../../models/turma.model';
 import { Aluno } from '../../aluno-modules/aluno/aluno';
 import { aluno } from '../../../models/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
+import { TurmaAlunoService } from '../../../service/turmaAluno.service';
 import { TableModule } from "primeng/table";
 import { ComponenteAluno } from "../../../shared/componente/componente-pesq-aluno/componente-aluno";
 import { ComponenteProfessor } from '../../../shared/componente/componente-pesq-professor/componente-professor';
+import { TurmaAluno } from '../../../models/TurmaAluno.model';
+
 @Component({
   selector: 'app-turma-p',
   standalone: true,
@@ -51,10 +54,11 @@ export class TurmaP implements OnChanges, OnInit {
   formulario!: FormGroup;
   tipoPagamento: any;
   formAlunos!: FormGroup;
-  listAlunos: aluno[] = [];
+  listAlunos: any[] = [];
   alunosFiltrados: any[] = [];
   alunoSelecionado!: any;
-
+  listTAluno: object[] = [];
+  tAlunosFiltrados: TurmaAluno[] = [];
 
   private modo: 'initial' | 'creating' | 'editing' = 'initial';
 
@@ -67,6 +71,7 @@ export class TurmaP implements OnChanges, OnInit {
 
   private fb = inject(FormBuilder);
   private turmaService = inject(TurmaService);
+  private turmaAlunoService = inject(TurmaAlunoService);
 
   private originalTurma: TurmaDomain | null = null;
   turmasFiltradas: any;
@@ -99,7 +104,7 @@ export class TurmaP implements OnChanges, OnInit {
   private initForm(): void {
     this.formulario = this.fb.group({
       codigo: [{ value: '', disabled: true }, [Validators.required]],
-      nome: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]],
+      nome: [{ value: '', disabled: true }, [Validators.required]],
       status: [{ value: 1, disabled: true }, [Validators.required]],
       professor: [{ value: "", disabled: true }],
       codAluno: [{ value: null, disabled: true }],
@@ -273,6 +278,7 @@ export class TurmaP implements OnChanges, OnInit {
   }
 
   selecionado(aluno: aluno) {
+
     this.alunoSelecionado = aluno;
     this.visivel = true;
   }
@@ -333,6 +339,7 @@ export class TurmaP implements OnChanges, OnInit {
       codigo: this.Selecionado.codigo
     } as TurmaDomain;
 
+    // carregar turma
     this.turmaService.listFiltrados(filtro).subscribe({
       next: (dados) => {
 
@@ -347,14 +354,29 @@ export class TurmaP implements OnChanges, OnInit {
 
         this.originalTurma = { ...turma };
 
-        console.log('Turma carregada:', turma);
-      },
+        //  carregar aluno
 
-      error: (err) => {
-        console.error('Erro ao buscar turma:', err);
-        alert('Erro ao buscar a turma.');
+        this.turmaAlunoService.getListAT(turma.codigo).subscribe({
+          next: (dados) => {
+
+            this.listTAluno = dados.map((item: any) => ({
+              matricula: item[0],
+              nome: item[1],
+              status: item[2]
+            }));
+
+            this.tAlunosFiltrados = [...this.listTAluno];
+
+            console.log(this.listTAluno);
+
+            this.cdr.detectChanges();
+          },
+
+          error: (err) => {
+            console.error(err);
+          }
+        });
       }
-    });
-    
+    })
   }
 }

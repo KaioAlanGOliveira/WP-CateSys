@@ -37,8 +37,9 @@
         <label>Professor</label>
 
         <!-- Container flex alinhado pela base com espaçamento correto -->
-          <cmp-componente-professor inputId="professorMatricula" cmpProximoCampo="status" #pesqAluno formControlName="professorMatricula">
-          </cmp-componente-professor>
+        <cmp-componente-professor inputId="professorMatricula" cmpProximoCampo="status" #pesqAluno
+          formControlName="professorMatricula">
+        </cmp-componente-professor>
       </div>
 
 
@@ -78,7 +79,7 @@
       <!-- Tabela Alunos -->
       <div class="tabela-container">
 
-        <p-table [value]="listAlunos" [tableStyle]="{ 'min-width': '50rem' }">
+        <p-table [value]="listTAluno" [tableStyle]="{ 'min-width': '50rem' }">
 
           <ng-template pTemplate="header">
             <tr>
@@ -104,12 +105,12 @@
 
         <span>
           Total de registros encontrados:
-          <strong>{{ listAlunos.length }}</strong>
+          <strong>{{ listTAluno.length }}</strong>
         </span>
 
         <span>
           Máx. de linhas:
-          <strong>{{ listAlunos.length }}</strong>
+          <strong>{{ listTAluno.length }}</strong>
         </span>
 
       </div>

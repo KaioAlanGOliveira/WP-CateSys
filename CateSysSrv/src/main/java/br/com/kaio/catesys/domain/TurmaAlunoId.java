@@ -3,6 +3,7 @@ package br.com.kaio.catesys.domain;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
@@ -13,9 +14,11 @@ public class TurmaAlunoId implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Integer turmaCodigo;
-
+	@Column(name = "aluno_matricula")
 	private Integer alunoMatricula;
+
+	@Column(name = "turma_codigo")
+	private Integer turmaCodigo;
 
 	public TurmaAlunoId() {
 	}
