@@ -1,9 +1,9 @@
 <div class="flex gap-3">
     <form [formGroup]="form" class="p-inputgroup">
-        <p-inputNumber #input class="input-code"  formControlName="matricula" (keydown)="keydown($event)" (onInput)="limpar()" [useGrouping]="false">
+        <p-inputNumber #input class="input-code" [disabled]="disabled ?? false"  formControlName="matricula" (keydown)="keydown($event)" (onInput)="limpar()" [useGrouping]="false">
         </p-inputNumber>
 
-        <input class="input-text" pInputText formControlName="nome" aria-hidden style="width: 150px;" readonly />
+        <input class="input-text"  [disabled]="disabled ?? false" pInputText formControlName="nome" aria-hidden style="width: 150px;" readonly />
 
         <button type="button" pButton pRipple [icon]="loading ? 'pi pi-spin pi-spinner':'pi pi-search'" (click)="show()" aria-hidden></button>
     </form>

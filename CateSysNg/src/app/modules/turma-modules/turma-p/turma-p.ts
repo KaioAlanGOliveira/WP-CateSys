@@ -295,7 +295,7 @@ export class TurmaP implements OnChanges, OnInit {
     if (!aluno) {
       alert('Nenhum aluno selecionado!');
       return;
-    } else if (this.listAlunos.find(c => c.matricula == aluno.matricula)) {
+    } else if (this.listTAluno.find((c: any) => c.matricula == (aluno as any).matricula)) {
       alert("Cliente já adicionado!");
       return;
     } else {
@@ -314,14 +314,19 @@ export class TurmaP implements OnChanges, OnInit {
 
           const alunoEncontrado = dados[0];
 
-          this.listAlunos = [
-            ...this.listAlunos,
-            alunoEncontrado
+          // mapeia pro mesmo formato que a tabela espera
+          this.listTAluno = [
+            ...this.listTAluno,
+            {
+              matricula: alunoEncontrado.matricula,
+              nome: alunoEncontrado.nome,
+              status: alunoEncontrado.status
+            }
           ];
 
           this.alunoSelecionado = alunoEncontrado;
+          this.cdr.detectChanges(); // se necessário, igual você já faz em outro lugar
         },
-
         error: (err) => {
           console.error('Erro ao buscar aluno:', err);
           alert('Erro ao buscar o aluno.');

@@ -58,8 +58,6 @@
       <!-- Aluno CMP -->
       <div class="field flex-grow-1">
         <label>Aluno</label>
-
-        <!-- Container flex alinhado pela base com espaçamento correto -->
         <div class="field-row">
           <cmp-componente-aluno inputId="codAluno" cmpProximoCampo="bt-add" #pesqAluno formControlName="codAluno">
           </cmp-componente-aluno>
@@ -69,7 +67,7 @@
             <p-button icon="pi pi-minus" (onClick)="remover()"></p-button>
 
             <p-button id="bt-add" icon="pi pi-plus"
-              (onClick)="add(formulario.get('codAluno')?.value); pesqAluno.limparTudo()">
+              (onClick)="add(formulario.get('codAluno')?.value)">
             </p-button>
           </div>
         </div>
