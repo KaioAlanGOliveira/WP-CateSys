@@ -2,8 +2,11 @@ package br.com.kaio.catesys.bss;
 
 import java.util.List;
 
+import br.com.kaio.catesys.domain.Aluno;
 import br.com.kaio.catesys.domain.Turma;
 import br.com.kaio.catesys.domain.TurmaAluno;
+import br.com.kaio.catesys.domain.TurmaAlunoId;
+import br.com.kaio.catesys.eps.dto.TurmaDto;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -80,13 +83,32 @@ public class TurmaBss {
 	    }
 	}
 
-	public void adicionar(Turma domain) throws Exception {
+	public void adicionar(TurmaDto dto) throws Exception {
 
-		try {
-			em.persist(domain);
-		} catch (Exception e) {
-			throw new RuntimeException("Erro ao adicionar", e);
-		}
+	    try {
+
+	        TurmaAlunoId id = new TurmaAlunoId();
+	        Turma turma = new Turma();
+
+	        turma.setCodigo(dto.getTurma().getCodigo());
+	        turma.setNome(dto.getTurma().getNome());
+	        turma.setProfessorMatricula(dto.getTurma().getProfessorMatricula());
+	        turma.setStatus(dto.getTurma().getStatus());
+	        	        
+			id.setTurmaCodigo(dto.getTurma().getCodigo());
+	        id.setAlunoMatricula(dto.getAluno().getMatricula());
+
+	        TurmaAluno turmaAluno = new TurmaAluno();
+	        turmaAluno.setId(id);
+	        
+	        em.persist(turmaAluno);
+
+	    } catch (Exception e) {
+
+	        throw new RuntimeException(
+	            "Erro ao adicionar aluno na turma", e
+	        );
+	    }
 	}
 
 	public void alterar(Turma domain) {

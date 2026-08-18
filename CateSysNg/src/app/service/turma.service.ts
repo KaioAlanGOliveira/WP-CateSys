@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TurmaDomain } from '../models/turma.model';
 import { HttpParamsObject } from '../core/http/http-params-object';
+import { TurmaDto } from '../models/turmaDto.model';
 
 @Injectable({
   providedIn: 'root'
@@ -32,9 +33,8 @@ export class TurmaService {
     return this.http.put(this.apiUrl, turma);
   }
 
-  salvar(turma: TurmaDomain): Observable<{ mensagem: string }> {
-    return this.http.post<{ mensagem: string }>(this.apiUrl,{
-      body: turma
-    });
+  salvar(turma: TurmaDto): Observable<{ mensagem: string }> {
+    return this.http.post<{ mensagem: string }>(this.apiUrl, turma);
   }
+
 }

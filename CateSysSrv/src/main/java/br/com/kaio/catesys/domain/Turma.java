@@ -25,6 +25,28 @@ public class Turma {
 	@Column(name = "professor_matricula")
 	private Integer professorMatricula;
 
+	@Column(name = "aluno_matricula")
+	private Integer alunoMatricula;
+
+	@Column(name = "turma_codigo")
+	private Integer turmaCodigo;
+
+	public Integer getAlunoMatricula() {
+		return alunoMatricula;
+	}
+
+	public void setAlunoMatricula(Integer alunoMatricula) {
+		this.alunoMatricula = alunoMatricula;
+	}
+
+	public Integer getTurmaCodigo() {
+		return turmaCodigo;
+	}
+
+	public void setTurmaCodigo(Integer turmaCodigo) {
+		this.turmaCodigo = turmaCodigo;
+	}
+
 	public Integer getProfessorMatricula() {
 		return professorMatricula;
 	}

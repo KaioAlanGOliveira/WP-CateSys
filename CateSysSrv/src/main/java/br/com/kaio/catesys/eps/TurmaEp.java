@@ -6,6 +6,7 @@ import java.util.Map;
 import br.com.kaio.catesys.bss.TurmaBss;
 import br.com.kaio.catesys.domain.Turma;
 import br.com.kaio.catesys.domain.TurmaAluno;
+import br.com.kaio.catesys.eps.dto.TurmaDto;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -49,16 +50,16 @@ public class TurmaEp {
 
 		return turmaBss.getTA();
 	}
-	
+
 	@GET
 	@Path("/ListAlunoT/{codigo}")
-	public  List<Object[]> getListAlunoT(@PathParam("codigo") Integer codigo) {
+	public List<Object[]> getListAlunoT(@PathParam("codigo") Integer codigo) {
 
 		return turmaBss.getTurmaAluno(codigo);
 	}
 
 	@POST
-	public String adicionar(Turma domain) {
+	public String create(TurmaDto domain) {
 		try {
 			turmaBss.adicionar(domain);
 			return "Novo cadastrado no banco";

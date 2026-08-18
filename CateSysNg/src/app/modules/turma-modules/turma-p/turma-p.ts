@@ -11,6 +11,7 @@ import { professor } from '../../../models/professor.model';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
 import { TurmaDomain } from '../../../models/turma.model';
+import { TurmaDto } from '../../../models/turmaDto.model';
 import { Aluno } from '../../aluno-modules/aluno/aluno';
 import { aluno } from '../../../models/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
@@ -54,10 +55,9 @@ export class TurmaP implements OnChanges, OnInit {
   formulario!: FormGroup;
   tipoPagamento: any;
   formAlunos!: FormGroup;
-  listAlunos: any[] = [];
+  listTAluno: any[] = [];
   alunosFiltrados: any[] = [];
   alunoSelecionado!: any;
-  listTAluno: object[] = [];
   tAlunosFiltrados: TurmaAluno[] = [];
 
   private modo: 'initial' | 'creating' | 'editing' = 'initial';
@@ -213,9 +213,14 @@ export class TurmaP implements OnChanges, OnInit {
     }
 
     const formValue = this.formulario.getRawValue();
+    const formTADto = {
+      ...this.listTAluno,
+      ...formValue
+    }
+    
 
     if (this.modo === 'creating') {
-      this.salvarNova(formValue);
+      this.create(formTADto);
       this.fecharModal();
     } else {
       this.alterar(formValue);
@@ -224,9 +229,8 @@ export class TurmaP implements OnChanges, OnInit {
     this.alterarEstadoUI();
   }
 
-  private salvarNova(formValue: TurmaDomain) {
-
-    this.turmaService.salvar(formValue).subscribe({
+  private create(formTADto: TurmaDto) {
+    this.turmaService.salvar(formTADto).subscribe({
       next: () => this.finalizarComSucesso(),
       error: (err) => { alert('Erro ao salvar a turma. A turma já existe.'); console.error('Erro ao salvar:', err); }
     });
@@ -284,9 +288,9 @@ export class TurmaP implements OnChanges, OnInit {
   }
 
   remover(): void {
-    const index = this.listAlunos.indexOf(this.alunoSelecionado);
+    const index = this.listTAluno.indexOf(this.alunoSelecionado);
     if (index !== -1) {
-      this.listAlunos.splice(index, 1);
+      this.listTAluno.splice(index, 1);
     }
     this.alunoSelecionado = null;
   }
@@ -295,7 +299,7 @@ export class TurmaP implements OnChanges, OnInit {
     if (!aluno) {
       alert('Nenhum aluno selecionado!');
       return;
-    } else if (this.listAlunos.find(c => c.matricula == aluno.matricula)) {
+    } else if (this.listTAluno.find(c => c.matricula == aluno)) {
       alert("Cliente já adicionado!");
       return;
     } else {
@@ -314,9 +318,14 @@ export class TurmaP implements OnChanges, OnInit {
 
           const alunoEncontrado = dados[0];
 
-          this.listAlunos = [
-            ...this.listAlunos,
+          this.listTAluno = [
+            ...this.listTAluno,
             alunoEncontrado
+          ];
+
+          this.cdr.detectChanges();
+          this.tAlunosFiltrados = [
+            ...this.listTAluno
           ];
 
           this.alunoSelecionado = alunoEncontrado;
@@ -327,7 +336,6 @@ export class TurmaP implements OnChanges, OnInit {
           alert('Erro ao buscar o aluno.');
         }
       });
-      this.alunoSelecionado = aluno;
     }
   }
   private carregarTurmaSelecionada(): void {
