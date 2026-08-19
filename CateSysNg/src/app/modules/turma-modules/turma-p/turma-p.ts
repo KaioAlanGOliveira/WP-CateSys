@@ -57,7 +57,7 @@ export class TurmaP implements OnChanges, OnInit {
   listAlunos: any[] = [];
   alunosFiltrados: any[] = [];
   alunoSelecionado!: any;
-  listTAluno: object[] = [];
+  listTAluno: any[] = [];
   tAlunosFiltrados: TurmaAluno[] = [];
 
   private modo: 'initial' | 'creating' | 'editing' = 'initial';
@@ -228,7 +228,7 @@ export class TurmaP implements OnChanges, OnInit {
 
     this.turmaService.salvar(formValue).subscribe({
       next: () => this.finalizarComSucesso(),
-      error: (err) => { alert('Erro ao salvar a turma. A turma já existe.'); console.error('Erro ao salvar:', err); }
+      error: (err) => { alert('Erro ao salvar. Já existe.'); console.error('Erro ao salvar:', err); }
     });
   }
 
@@ -295,7 +295,7 @@ export class TurmaP implements OnChanges, OnInit {
     if (!aluno) {
       alert('Nenhum aluno selecionado!');
       return;
-    } else if (this.listTAluno.find((c: any) => c.matricula == (aluno as any).matricula)) {
+    } else if (this.listTAluno.find(c => c.matricula == aluno)) {
       alert("Cliente já adicionado!");
       return;
     } else {
@@ -314,7 +314,6 @@ export class TurmaP implements OnChanges, OnInit {
 
           const alunoEncontrado = dados[0];
 
-          // mapeia pro mesmo formato que a tabela espera
           this.listTAluno = [
             ...this.listTAluno,
             {
@@ -325,7 +324,7 @@ export class TurmaP implements OnChanges, OnInit {
           ];
 
           this.alunoSelecionado = alunoEncontrado;
-          this.cdr.detectChanges(); // se necessário, igual você já faz em outro lugar
+          this.cdr.detectChanges(); 
         },
         error: (err) => {
           console.error('Erro ao buscar aluno:', err);
