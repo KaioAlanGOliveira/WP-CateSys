@@ -6,6 +6,7 @@ import java.util.Map;
 import br.com.kaio.catesys.bss.TurmaBss;
 import br.com.kaio.catesys.domain.Turma;
 import br.com.kaio.catesys.domain.TurmaAluno;
+import br.com.kaio.catesys.eps.dto.TurmaDto;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -58,7 +59,7 @@ public class TurmaEp {
 	}
 
 	@POST
-	public String adicionar(Turma domain) {
+	public String adicionar(TurmaDto domain) {
 		try {
 			turmaBss.adicionar(domain);
 			return "Novo cadastrado no banco";

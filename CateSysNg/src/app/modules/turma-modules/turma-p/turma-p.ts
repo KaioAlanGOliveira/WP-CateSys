@@ -19,6 +19,8 @@ import { TableModule } from "primeng/table";
 import { ComponenteAluno } from "../../../shared/componente/componente-pesq-aluno/componente-aluno";
 import { ComponenteProfessor } from '../../../shared/componente/componente-pesq-professor/componente-professor';
 import { TurmaAluno } from '../../../models/TurmaAluno.model';
+import { TurmaDto } from '../../../models/turmaDto.model';
+import { log } from 'console';
 
 @Component({
   selector: 'app-turma-p',
@@ -213,9 +215,14 @@ export class TurmaP implements OnChanges, OnInit {
     }
 
     const formValue = this.formulario.getRawValue();
+    
+    const dto: TurmaDto = {
+      turma: formValue,
+      aluno: this.listTAluno
+    };    
 
     if (this.modo === 'creating') {
-      this.salvarNova(formValue);
+      this.salvarNova(dto);
       this.fecharModal();
     } else {
       this.alterar(formValue);
@@ -224,9 +231,9 @@ export class TurmaP implements OnChanges, OnInit {
     this.alterarEstadoUI();
   }
 
-  private salvarNova(formValue: TurmaDomain) {
+  private salvarNova(dto: TurmaDto) {
 
-    this.turmaService.salvar(formValue).subscribe({
+    this.turmaService.salvar(dto).subscribe({
       next: () => this.finalizarComSucesso(),
       error: (err) => { alert('Erro ao salvar. Já existe.'); console.error('Erro ao salvar:', err); }
     });
@@ -324,7 +331,7 @@ export class TurmaP implements OnChanges, OnInit {
           ];
 
           this.alunoSelecionado = alunoEncontrado;
-          this.cdr.detectChanges(); 
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Erro ao buscar aluno:', err);

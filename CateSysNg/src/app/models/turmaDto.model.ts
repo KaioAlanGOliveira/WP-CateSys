@@ -3,5 +3,5 @@ import { TurmaDomain } from "./turma.model";
 
 export class TurmaDto {
 	turma!: TurmaDomain;
-	aluno!: aluno;
+	aluno!: aluno[] | any;
 }
