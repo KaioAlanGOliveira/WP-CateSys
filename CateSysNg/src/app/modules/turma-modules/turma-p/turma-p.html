@@ -12,16 +12,6 @@
         }
       </div>
 
-      <!-- Código -->
-      <div class="campo">
-        <label>Código</label>
-        <input pInputText formControlName="codigo" placeholder="Código"
-          [invalid]="formulario.get('codigo')?.invalid && formulario.get('codigo')?.touched" />
-        @if (formulario.get('codigo')?.invalid && formulario.get('codigo')?.touched) {
-        <p-message severity="error" variant="simple" size="small">O código é obrigatório</p-message>
-        }
-      </div>
-
       <!-- Nome -->
       <div class="campo">
         <label>Nome</label>
@@ -37,7 +27,7 @@
         <label>Professor</label>
 
         <!-- Container flex alinhado pela base com espaçamento correto -->
-        <cmp-componente-professor inputId="professorMatricula" cmpProximoCampo="status" #pesqAluno
+        <cmp-componente-professor inputId="professorMatricula" cmpProximoCampo="status" #pesqProf 
           formControlName="professorMatricula">
         </cmp-componente-professor>
       </div>

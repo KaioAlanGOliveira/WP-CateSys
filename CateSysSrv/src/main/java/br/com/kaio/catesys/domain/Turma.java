@@ -2,8 +2,6 @@ package br.com.kaio.catesys.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -12,7 +10,6 @@ import jakarta.persistence.Table;
 public class Turma {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "codigo")
 	private Integer codigo;
 
@@ -24,28 +21,6 @@ public class Turma {
 
 	@Column(name = "professor_matricula")
 	private Integer professorMatricula;
-
-	@Column(name = "aluno_matricula")
-	private Integer alunoMatricula;
-
-	@Column(name = "turma_codigo")
-	private Integer turmaCodigo;
-
-	public Integer getAlunoMatricula() {
-		return alunoMatricula;
-	}
-
-	public void setAlunoMatricula(Integer alunoMatricula) {
-		this.alunoMatricula = alunoMatricula;
-	}
-
-	public Integer getTurmaCodigo() {
-		return turmaCodigo;
-	}
-
-	public void setTurmaCodigo(Integer turmaCodigo) {
-		this.turmaCodigo = turmaCodigo;
-	}
 
 	public Integer getProfessorMatricula() {
 		return professorMatricula;

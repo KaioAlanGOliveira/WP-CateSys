@@ -6,10 +6,10 @@ import br.com.kaio.catesys.domain.Aluno;
 import br.com.kaio.catesys.domain.Turma;
 import br.com.kaio.catesys.domain.TurmaAluno;
 import br.com.kaio.catesys.domain.TurmaAlunoId;
-import br.com.kaio.catesys.eps.dto.TurmaDto;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 @Stateless
@@ -33,7 +33,7 @@ public class TurmaBss {
 			TypedQuery<Turma> query = em.createQuery(jpql, Turma.class);
 
 			query.setParameter("nome", nome);
-			query.setParameter("codigo", (codigo == null || codigo.equals("null")) ? null : codigo);
+			query.setParameter("codigo", codigo.equals("null") ? null : codigo);
 			query.setParameter("status", status);
 			query.setParameter("professorMatricula", codProfessor);
 
@@ -60,55 +60,26 @@ public class TurmaBss {
 
 	public List<Object[]> getTurmaAluno(Integer codigo) {
 
-	    try {
-	        String jpql = """
-	           SELECT a.matricula, a.nome, a.status
-	            FROM TurmaAluno ta
-	            LEFT JOIN Aluno a
-	                ON a.matricula = ta.id.alunoMatricula
-	            WHERE :codigo IS NULL
-	               OR ta.id.turmaCodigo = :codigo
-	            """;
+		try {
+			String jpql = """
+					SELECT a.matricula, a.nome, a.status
+					 FROM TurmaAluno ta
+					 LEFT JOIN Aluno a
+					     ON a.matricula = ta.id.alunoMatricula
+					 WHERE :codigo IS NULL
+					    OR ta.id.turmaCodigo = :codigo
+					 """;
 
-	        TypedQuery<Object[]> query =
-	                em.createQuery(jpql, Object[].class);
+			TypedQuery<Object[]> query = em.createQuery(jpql, Object[].class);
 
-	        query.setParameter("codigo", codigo);
+			query.setParameter("codigo", codigo);
 
-	        return query.getResultList();
+			return query.getResultList();
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        throw new RuntimeException("Erro ao listar", e);
-	    }
-	}
-
-	public void adicionar(TurmaDto dto) throws Exception {
-
-	    try {
-
-	        TurmaAlunoId id = new TurmaAlunoId();
-	        Turma turma = new Turma();
-
-	        turma.setCodigo(dto.getTurma().getCodigo());
-	        turma.setNome(dto.getTurma().getNome());
-	        turma.setProfessorMatricula(dto.getTurma().getProfessorMatricula());
-	        turma.setStatus(dto.getTurma().getStatus());
-	        	        
-			id.setTurmaCodigo(dto.getTurma().getCodigo());
-	        id.setAlunoMatricula(dto.getAluno().getMatricula());
-
-	        TurmaAluno turmaAluno = new TurmaAluno();
-	        turmaAluno.setId(id);
-	        
-	        em.persist(turmaAluno);
-
-	    } catch (Exception e) {
-
-	        throw new RuntimeException(
-	            "Erro ao adicionar aluno na turma", e
-	        );
-	    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao listar", e);
+		}
 	}
 
 	public void alterar(Turma domain) {
@@ -140,5 +111,47 @@ public class TurmaBss {
 			e.printStackTrace();
 			throw new RuntimeException("Erro ao listar", e);
 		}
+	}
+
+	public void adicionar(Turma turma, List<Aluno> alunos) {
+		
+		try {
+
+
+			turma.setCodigo(getNextCod());
+			em.persist(turma);
+			
+			for (Aluno aluno : alunos) {
+				
+				TurmaAluno tas = new TurmaAluno();
+				tas.setId(new TurmaAlunoId(turma.getCodigo(), aluno.getMatricula()));
+
+				em.persist(tas);
+			}
+			
+		} catch (Exception e) {
+			throw new RuntimeException("Erro ao adicionar aluno na turma", e);
+		}
+
+	}
+
+	private Integer getNextCod() {
+		
+		Query query = em.createQuery("select max(codigo) + 1 from Turma");
+		Object cod = query.getSingleResult();
+
+		if (cod == null)
+			return 1;
+
+		if (cod instanceof Integer)
+			return (Integer) cod;
+
+		if (cod instanceof Long)
+			return ((Long) cod).intValue();
+
+		if (cod instanceof Short)
+			return ((Short) cod).intValue();
+
+		return (Integer) cod;
 	}
 }

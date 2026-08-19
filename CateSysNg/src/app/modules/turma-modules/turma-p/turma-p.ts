@@ -103,10 +103,8 @@ export class TurmaP implements OnChanges, OnInit {
 
   private initForm(): void {
     this.formulario = this.fb.group({
-      codigo: [{ value: '', disabled: true }, [Validators.required]],
       nome: [{ value: '', disabled: true }, [Validators.required]],
       status: [{ value: 1, disabled: true }, [Validators.required]],
-      professor: [{ value: "", disabled: true }],
       codAluno: [{ value: null, disabled: true }],
       professorMatricula: [{ value: null }]
     });
@@ -213,17 +211,17 @@ export class TurmaP implements OnChanges, OnInit {
     }
 
     const formValue = this.formulario.getRawValue();
-    const formTADto = {
-      ...this.listTAluno,
-      ...formValue
-    }
-    
+
+    const formTADto: TurmaDto = {
+      turma: formValue,
+      alunos: this.listTAluno
+    };
 
     if (this.modo === 'creating') {
       this.create(formTADto);
-      this.fecharModal();
+      // this.fecharModal();
     } else {
-      this.alterar(formValue);
+      this.alterar(formTADto);
     }
     this.modo = 'initial';
     this.alterarEstadoUI();
@@ -236,7 +234,7 @@ export class TurmaP implements OnChanges, OnInit {
     });
   }
 
-  private alterar(formValue: TurmaDomain) {
+  private alterar(formValue: TurmaDto) {
     if (!this.Selecionado) return;
 
     const atualizado: TurmaDomain = { ...this.Selecionado, ...formValue };
@@ -261,12 +259,9 @@ export class TurmaP implements OnChanges, OnInit {
       });
       this.fecharModal();
     }
-
   }
 
-  private finalizarComSucesso() {
-    this.carregarTurma();
-  }
+  private finalizarComSucesso() {}
 
   habilitarCampos(formulario: FormGroup, habilitar: boolean) {
     Object.keys(formulario.controls).forEach((campo) => {
@@ -330,7 +325,7 @@ export class TurmaP implements OnChanges, OnInit {
 
           this.alunoSelecionado = alunoEncontrado;
         },
-
+        
         error: (err) => {
           console.error('Erro ao buscar aluno:', err);
           alert('Erro ao buscar o aluno.');

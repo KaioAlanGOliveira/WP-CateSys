@@ -29,7 +29,17 @@ public class TurmaEp {
 
 	@Inject
 	private TurmaBss turmaBss;
-
+	
+	@POST
+	public String create(TurmaDto dto) {
+		try {
+			turmaBss.adicionar(dto.getTurma(), dto.getAlunos());
+			return "Novo cadastrado no banco";
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}
+	
 	@GET
 	public List<Turma> getList(@QueryParam("codigo") String codigo, @QueryParam("nome") String nome,
 			@QueryParam("codProfessor") String codProfessor, @QueryParam("status") String status) {
@@ -56,16 +66,6 @@ public class TurmaEp {
 	public List<Object[]> getListAlunoT(@PathParam("codigo") Integer codigo) {
 
 		return turmaBss.getTurmaAluno(codigo);
-	}
-
-	@POST
-	public String create(TurmaDto domain) {
-		try {
-			turmaBss.adicionar(domain);
-			return "Novo cadastrado no banco";
-		} catch (Exception e) {
-			return e.getMessage();
-		}
 	}
 
 	@DELETE
