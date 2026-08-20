@@ -9,6 +9,8 @@ import { AlunoService } from '../../../service/aluno.service';
 import { UtilService } from '../../../service/util.service';
 import { PesqAlunoLst } from './pesq-aluno-frm/pesq-aluno-lst';
 import { CommonModule } from '@angular/common';
+import { DialogRef } from '../dialog/models/dialog-ref.model';
+import { DialogMensagemComponent } from '../dialog/dialog-mensagem/dialog-mensagem.component';
 
 @Component({
   selector: 'cmp-componente-aluno',
@@ -176,27 +178,27 @@ export class ComponenteAluno implements ControlValueAccessor {
     this.cdr.markForCheck();
   }
 
+   public showErro(msg: string): DialogRef<DialogMensagemComponent> {
+      let ref = this.dialogService.open(DialogMensagemComponent, {
+        title: 'Erro!',
+        closeButton: true,
+        esc: true
+      });
+  
+      ref.componentInstance.mensagem = msg;
+  
+      return ref;
+    }
+  
+    public showMensagem(msg: string): DialogRef<DialogMensagemComponent> {
+      let ref = this.dialogService.open(DialogMensagemComponent, {
+        title: 'Opa!',
+        closeButton: true,
+        esc: true
+      });
+  
+      ref.componentInstance.mensagem = msg;
+  
+      return ref;
+    }
 }
-//  public showErro(msg: string): DialogRef<DialogMensagemComponent> {
-//     let ref = this.dialogService.open(DialogMensagemComponent, {
-//       title: 'Erro!',
-//       closeButton: true,
-//       esc: true
-//     });
-
-//     ref.componentInstance.mensagem = msg;
-
-//     return ref;
-//   }
-
-//   public showMensagem(msg: string): DialogRef<DialogMensagemComponent> {
-//     let ref = this.dialogService.open(DialogMensagemComponent, {
-//       title: 'Opa!',
-//       closeButton: true,
-//       esc: true
-//     });
-
-//     ref.componentInstance.mensagem = msg;
-
-//     return ref;
-//   }
