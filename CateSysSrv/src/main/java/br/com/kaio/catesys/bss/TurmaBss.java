@@ -33,7 +33,7 @@ public class TurmaBss {
 
 			query.setParameter("nome", nome);
 			query.setParameter("codigo", (codigo == null || codigo.equals("null")) ? null : codigo);
-			query.setParameter("status", status);
+			query.setParameter("status", (status == null || status.equals("null")) ? null : status);
 			query.setParameter("professorMatricula", codProfessor);
 
 			return query.getResultList();
