@@ -90,8 +90,16 @@ export class Turma implements OnInit {
       this.carregarDados();
     }
   }
+
   selecionado(turma: any) {
     this.turmaSelecionado = turma;
     this.abrirMeuPopup();
+  }
+  apagar(dado: any) {
+     
+  }
+  removerAll() {
+
+     this.turmaServece.apagarAll().subscribe();
   }
 }

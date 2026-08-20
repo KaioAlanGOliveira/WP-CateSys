@@ -29,7 +29,7 @@ public class TurmaEp {
 
 	@Inject
 	private TurmaBss turmaBss;
-	
+
 	@POST
 	public String create(TurmaDto dto) {
 		try {
@@ -39,7 +39,7 @@ public class TurmaEp {
 			return e.getMessage();
 		}
 	}
-	
+
 	@GET
 	public List<Turma> getList(@QueryParam("codigo") String codigo, @QueryParam("nome") String nome,
 			@QueryParam("codProfessor") String codProfessor, @QueryParam("status") String status) {
@@ -77,6 +77,12 @@ public class TurmaEp {
 		} catch (Exception e) {
 			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
 		}
+	}
+
+	@GET
+	@Path("/apagarAll")
+	public void apagarAll() {
+		turmaBss.apagarAll();
 	}
 
 	@PUT

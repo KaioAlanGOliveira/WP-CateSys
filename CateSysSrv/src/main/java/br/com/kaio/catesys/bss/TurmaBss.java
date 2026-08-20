@@ -154,4 +154,14 @@ public class TurmaBss {
 
 		return (Integer) cod;
 	}
+	
+	public void apagarAll() {
+
+		try {
+			em.createQuery("DELETE FROM TurmaAluno").executeUpdate();
+			em.createQuery("DELETE FROM Turma").executeUpdate();
+		} catch (Exception e) {
+			throw new RuntimeException("Erro ao remover", e);
+		}
+	}
 }

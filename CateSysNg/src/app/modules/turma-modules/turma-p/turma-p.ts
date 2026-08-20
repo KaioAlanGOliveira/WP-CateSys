@@ -44,6 +44,7 @@ import { TurmaAluno } from '../../../models/TurmaAluno.model';
 })
 export class TurmaP implements OnChanges, OnInit {
 
+
   get novoHabilitado() { return this.modo === 'initial'; }
   get alterarHabilitado() { return this.modo === 'initial' && !!this.Selecionado; }
   get apagarHabilitado() { return this.modo === 'initial' && !!this.Selecionado; }
@@ -134,10 +135,8 @@ export class TurmaP implements OnChanges, OnInit {
       this.formulario.disable();
     } else if (this.modo === 'editing') {
       this.formulario.enable();
-      this.formulario.get('matricula')?.disable();
     } else {
       this.formulario.enable();
-      this.formulario.get('matricula')?.enable();
     }
   }
 
@@ -218,20 +217,16 @@ export class TurmaP implements OnChanges, OnInit {
     };
 
     if (this.modo === 'creating') {
+      this.formulario.enable();
       this.create(formTADto);
-      // this.fecharModal();
     } else {
       this.alterar(formTADto);
     }
-    this.modo = 'initial';
-    this.alterarEstadoUI();
+
   }
 
   private create(formTADto: TurmaDto) {
-    this.turmaService.salvar(formTADto).subscribe({
-      next: () => this.finalizarComSucesso(),
-      error: (err) => { alert('Erro ao salvar a turma. A turma já existe.'); console.error('Erro ao salvar:', err); }
-    });
+    this.turmaService.salvar(formTADto).subscribe();
   }
 
   private alterar(formValue: TurmaDto) {
@@ -261,7 +256,9 @@ export class TurmaP implements OnChanges, OnInit {
     }
   }
 
-  private finalizarComSucesso() {}
+  private finalizarComSucesso() {
+
+  }
 
   habilitarCampos(formulario: FormGroup, habilitar: boolean) {
     Object.keys(formulario.controls).forEach((campo) => {
@@ -325,7 +322,7 @@ export class TurmaP implements OnChanges, OnInit {
 
           this.alunoSelecionado = alunoEncontrado;
         },
-        
+
         error: (err) => {
           console.error('Erro ao buscar aluno:', err);
           alert('Erro ao buscar o aluno.');
@@ -382,4 +379,6 @@ export class TurmaP implements OnChanges, OnInit {
       }
     })
   }
+
+ 
 }
