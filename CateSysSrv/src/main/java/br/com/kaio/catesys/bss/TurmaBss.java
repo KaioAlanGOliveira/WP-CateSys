@@ -88,7 +88,7 @@ public class TurmaBss {
 			em.merge(turma);
 
 			for (Aluno aluno : alunos) {
-				em.persist(aluno);
+				em.merge(aluno);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
