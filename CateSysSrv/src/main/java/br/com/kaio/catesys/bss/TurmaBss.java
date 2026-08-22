@@ -82,10 +82,14 @@ public class TurmaBss {
 		}
 	}
 
-	public void alterar(Turma domain) {
+	public void alterar(Turma turma, List<Aluno> alunos) {
 
 		try {
-			em.merge(domain);
+			em.merge(turma);
+
+			for (Aluno aluno : alunos) {
+				em.persist(aluno);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Erro ao atualizar", e);
@@ -113,22 +117,22 @@ public class TurmaBss {
 		}
 	}
 
-	public void adicionar(Turma turma, List<Aluno> alunos) {
-		
-		try {
+	public Turma adicionar(Turma turma, List<Aluno> alunos) {
 
+		try {
 
 			turma.setCodigo(getNextCod());
 			em.persist(turma);
-			
+
 			for (Aluno aluno : alunos) {
-				
+
 				TurmaAluno tas = new TurmaAluno();
 				tas.setId(new TurmaAlunoId(turma.getCodigo(), aluno.getMatricula()));
 
 				em.persist(tas);
 			}
-			
+			return turma;
+
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao adicionar aluno na turma", e);
 		}
@@ -136,7 +140,7 @@ public class TurmaBss {
 	}
 
 	private Integer getNextCod() {
-		
+
 		Query query = em.createQuery("select max(codigo) + 1 from Turma");
 		Object cod = query.getSingleResult();
 
@@ -154,7 +158,7 @@ public class TurmaBss {
 
 		return (Integer) cod;
 	}
-	
+
 	public void apagarAll() {
 
 		try {

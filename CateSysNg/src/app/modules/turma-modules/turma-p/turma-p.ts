@@ -60,6 +60,7 @@ export class TurmaP implements OnChanges, OnInit {
   alunosFiltrados: any[] = [];
   alunoSelecionado!: any;
   tAlunosFiltrados: TurmaAluno[] = [];
+  salvo = false
 
   private modo: 'initial' | 'creating' | 'editing' = 'initial';
 
@@ -79,7 +80,6 @@ export class TurmaP implements OnChanges, OnInit {
 
   ngOnInit() {
     this.initForm();
-    // this.formulario.disable();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -92,7 +92,6 @@ export class TurmaP implements OnChanges, OnInit {
       this.carregarTurmaSelecionada();
       this.carregarTurma();
       this.originalTurma = { ...this.Selecionado };
-
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
       this.modo = 'creating';
       this.formulario.reset();
@@ -104,15 +103,11 @@ export class TurmaP implements OnChanges, OnInit {
 
   private initForm(): void {
     this.formulario = this.fb.group({
+      codigo: [{ value: '', disabled: false}],
       nome: [{ value: '', disabled: true }, [Validators.required]],
-      status: [{ value: 1, disabled: true }, [Validators.required]],
+      status: [{ value: 0, disabled: true }, [Validators.required]],
       codAluno: [{ value: null, disabled: true }],
       professorMatricula: [{ value: null }]
-    });
-
-    this.formAlunos = this.fb.group({
-      matricula: new FormControl<number | null>(null),
-      nome: new FormControl<string | "">("", Validators.required)
     });
   }
 
@@ -150,6 +145,7 @@ export class TurmaP implements OnChanges, OnInit {
     this.formulario.markAllAsTouched();
     this.formulario.updateValueAndValidity();
     this.formulario.enable();
+    this.listTAluno = [];
     this.alterarEstadoUI();
   }
 
@@ -217,17 +213,29 @@ export class TurmaP implements OnChanges, OnInit {
     };
 
     if (this.modo === 'creating') {
-      this.formulario.enable();
       this.create(formTADto);
     } else {
       this.alterar(formTADto);
     }
-
   }
 
   private create(formTADto: TurmaDto) {
-    this.turmaService.salvar(formTADto).subscribe();
+    this.turmaService.salvar(formTADto).subscribe({
+      next: (dados) => {
+        alert('Turma criada com sucesso.');
+
+        this.Selecionado = dados ?? formTADto.turma;
+        this.originalTurma = { ...this.Selecionado };
+
+        this.finalizarComSucesso();
+      },
+      error: (err) => {
+        console.error('Erro ao criar turma:', err);
+        alert('Erro ao criar a turma.');
+      }
+    });
   }
+
 
   private alterar(formValue: TurmaDto) {
     if (!this.Selecionado) return;
@@ -249,15 +257,15 @@ export class TurmaP implements OnChanges, OnInit {
       if (!this.Selecionado?.codigo) return;
 
       this.turmaService.apagar(this.Selecionado).subscribe({
-        next: () => { this.finalizarComSucesso(); },
+        next: () => { this.finalizarComSucesso();  this.fecharModal(); },
         error: (err) => { alert('Erro ao apagar a turma.'); this.finalizarComSucesso(); },
       });
-      this.fecharModal();
     }
   }
 
   private finalizarComSucesso() {
-
+    this.modo = 'initial';
+    this.alterarEstadoUI();
   }
 
   habilitarCampos(formulario: FormGroup, habilitar: boolean) {
@@ -380,5 +388,5 @@ export class TurmaP implements OnChanges, OnInit {
     })
   }
 
- 
+
 }

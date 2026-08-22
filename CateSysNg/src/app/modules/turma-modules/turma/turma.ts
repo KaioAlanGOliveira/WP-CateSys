@@ -59,7 +59,7 @@ export class Turma implements OnInit {
   novo() {
     this.form.reset();
     this.turmaSelecionado = null;
-    this.abrirMeuPopup();
+    this.abrirPopup();
   }
   pesquisar() {
     const { nome, codigo, status, professorMatricula } = this.form.value;
@@ -76,13 +76,12 @@ export class Turma implements OnInit {
 
     this.carregarDados();
   }
-  abrirMeuPopup() {
+  abrirPopup() {
     this.exibirModalPrincipal = true;
   }
-  add() {
-    this.form.reset();
+  abrirNovoPopup() {
     this.turmaSelecionado = null;
-    this.abrirMeuPopup();
+    this.abrirPopup();
   }
   retornoPopUp(exib: boolean) {
 
@@ -93,7 +92,7 @@ export class Turma implements OnInit {
 
   selecionado(turma: any) {
     this.turmaSelecionado = turma;
-    this.abrirMeuPopup();
+    this.abrirPopup();
   }
   apagar(dado: any) {
      

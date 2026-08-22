@@ -5,6 +5,7 @@ import { TurmaDomain } from '../models/turma.model';
 import { HttpParamsObject } from '../core/http/http-params-object';
 import { dot } from 'node:test/reporters';
 import { Turma } from '../modules/turma-modules/turma/turma';
+import { TurmaDto } from '../models/turmaDto.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,15 +16,15 @@ export class TurmaService {
 
   constructor(private http: HttpClient) { }
 
-  salvar(dto: any): Observable<{ mensagem: string }> {
-    return this.http.post<{ mensagem: string }>(this.apiUrl, dto);
+  salvar(dto: TurmaDto): Observable<any>{
+    return this.http.post<TurmaDto>(this.apiUrl, dto);
   }
 
   apagar(turma: TurmaDomain) {
     return this.http.delete<{ mensagem: string }>(this.apiUrl, {
       body: turma
     });
-  } 
+  }
   apagarAll() {
     return this.http.get(`${this.apiUrl}/apagarAll`)
   }

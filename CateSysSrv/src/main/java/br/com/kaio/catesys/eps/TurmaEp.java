@@ -31,13 +31,13 @@ public class TurmaEp {
 	private TurmaBss turmaBss;
 
 	@POST
-	public String create(TurmaDto dto) {
+	public Turma create(TurmaDto dto) {
 		try {
-			turmaBss.adicionar(dto.getTurma(), dto.getAlunos());
-			return "Novo cadastrado no banco";
+			return turmaBss.adicionar(dto.getTurma(), dto.getAlunos());
 		} catch (Exception e) {
-			return e.getMessage();
+			e.getMessage();
 		}
+		return null;
 	}
 
 	@GET
@@ -86,10 +86,10 @@ public class TurmaEp {
 	}
 
 	@PUT
-	public Response editar(Turma domain) {
+	public Response editar(TurmaDto dto) {
 
 		try {
-			turmaBss.alterar(domain);
+			turmaBss.alterar(dto.getTurma(), dto.getAlunos());
 			return Response.ok(Map.of("mensagem", "Alterado com sucesso")).build();
 		} catch (Exception e) {
 			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
