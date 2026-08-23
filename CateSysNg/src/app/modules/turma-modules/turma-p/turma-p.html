@@ -63,10 +63,10 @@
 
           <!-- Grupo de botões agrupados de forma fixa à direita -->
           <div class="button-group">
-            <p-button icon="pi pi-minus" (onClick)="remover()"></p-button>
+            <p-button icon="pi pi-minus" [disabled]="disabled ?? true" (onClick)="remover()"></p-button>
 
-            <p-button id="bt-add" icon="pi pi-plus"
-              (onClick)="add(formulario.get('codAluno')?.value); pesqAluno.limparTudo()">
+            <p-button [disabled]="disabled ?? true" id="bt-add" icon="pi pi-plus"
+              (onClick)="add(formulario.get('codAluno')?.value); pesqAluno.limparTudo() ">
             </p-button>
           </div>
         </div>

@@ -37,14 +37,14 @@ public class AulaEp {
 	}
 
 	@POST
-	public String adicionar(Aula aula) {
+	public Aula adicionar(Aula aula) {
 
 		try {
-			aulaBss.adicionar(aula);
-			return "Novo cadastrado no banco";
+			return aulaBss.adicionar(aula);
 		} catch (Exception e) {
-			return e.getMessage();
+			e.printStackTrace();
 		}
+		return null;
 	}
 
 	@DELETE

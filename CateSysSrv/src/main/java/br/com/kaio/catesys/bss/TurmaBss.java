@@ -86,9 +86,15 @@ public class TurmaBss {
 
 		try {
 			em.merge(turma);
-
+			em.createQuery(
+				    "DELETE FROM TurmaAluno ta WHERE ta.id.turmaCodigo = :codigo"
+				)
+				.setParameter("codigo", turma.getCodigo())
+				.executeUpdate();
 			for (Aluno aluno : alunos) {
-				em.merge(aluno);
+				TurmaAluno tas = new TurmaAluno();
+				tas.setId(new TurmaAlunoId(turma.getCodigo(), aluno.getMatricula()));
+				em.merge(tas);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

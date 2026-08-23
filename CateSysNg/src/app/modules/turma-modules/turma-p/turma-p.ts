@@ -61,6 +61,7 @@ export class TurmaP implements OnChanges, OnInit {
   alunoSelecionado!: any;
   tAlunosFiltrados: TurmaAluno[] = [];
   salvo = false
+  disabled?: boolean;
 
   private modo: 'initial' | 'creating' | 'editing' = 'initial';
 
@@ -92,7 +93,9 @@ export class TurmaP implements OnChanges, OnInit {
       this.carregarTurmaSelecionada();
       this.carregarTurma();
       this.originalTurma = { ...this.Selecionado };
+      this.disabled = true;
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
+      this.disabled = false;
       this.modo = 'creating';
       this.formulario.reset();
     }
@@ -103,7 +106,7 @@ export class TurmaP implements OnChanges, OnInit {
 
   private initForm(): void {
     this.formulario = this.fb.group({
-      codigo: [{ value: '', disabled: false}],
+      codigo: [{ value: '', disabled: false }],
       nome: [{ value: '', disabled: true }, [Validators.required]],
       status: [{ value: 0, disabled: true }, [Validators.required]],
       codAluno: [{ value: null, disabled: true }],
@@ -130,6 +133,7 @@ export class TurmaP implements OnChanges, OnInit {
       this.formulario.disable();
     } else if (this.modo === 'editing') {
       this.formulario.enable();
+      this.disabled = false;
     } else {
       this.formulario.enable();
     }
@@ -146,6 +150,7 @@ export class TurmaP implements OnChanges, OnInit {
     this.formulario.updateValueAndValidity();
     this.formulario.enable();
     this.listTAluno = [];
+    this.disabled = false;
     this.alterarEstadoUI();
   }
 
@@ -172,6 +177,7 @@ export class TurmaP implements OnChanges, OnInit {
       this.fecharModal();
     } else if (this.modo === 'editing' && this.originalTurma) {
       this.formulario.patchValue(this.originalTurma);
+      this.disabled = true;
       this.modo = 'initial';
       this.alterarEstadoUI();
     }
@@ -226,7 +232,7 @@ export class TurmaP implements OnChanges, OnInit {
 
         this.Selecionado = dados ?? formTADto.turma;
         this.originalTurma = { ...this.Selecionado };
-
+        this.disabled = true;
         this.finalizarComSucesso();
       },
       error: (err) => {
@@ -240,11 +246,12 @@ export class TurmaP implements OnChanges, OnInit {
   private alterar(formValue: TurmaDto) {
     if (!this.Selecionado) return;
 
-    const atualizado: TurmaDomain = { ...this.Selecionado, ...formValue };
+    const atualizado: TurmaDto = { ...this.Selecionado, ...formValue };
 
     this.turmaService.editar(atualizado).subscribe({
       next: () => {
         alert('Turma atualizada com sucesso.');
+        this.disabled = true;
         this.finalizarComSucesso();
       },
       error: (err) => console.error('Erro ao alterar:', err)
@@ -257,7 +264,7 @@ export class TurmaP implements OnChanges, OnInit {
       if (!this.Selecionado?.codigo) return;
 
       this.turmaService.apagar(this.Selecionado).subscribe({
-        next: () => { this.finalizarComSucesso();  this.fecharModal(); },
+        next: () => { this.finalizarComSucesso(); this.fecharModal(); },
         error: (err) => { alert('Erro ao apagar a turma.'); this.finalizarComSucesso(); },
       });
     }

@@ -38,7 +38,7 @@ export class TurmaService {
     return this.http.get<any[]>(`${this.apiUrl}`, { params: new HttpParamsObject(filtro) });
   }
 
-  editar(turma: any): Observable<TurmaDomain> {
+  editar(turma: TurmaDto): Observable<any> {
     return this.http.put(this.apiUrl, turma);
   }
 }

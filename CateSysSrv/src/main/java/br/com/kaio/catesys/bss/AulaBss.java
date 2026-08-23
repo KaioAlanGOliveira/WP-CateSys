@@ -31,23 +31,20 @@ public class AulaBss {
 	    String jpql = """
 	        SELECT p
 	        FROM Aula p
-	        WHERE (:nome IS NULL OR :nome = '' OR
-	               LOWER(p.nome) LIKE LOWER(CONCAT('%', :nome, '%')))
-	          AND (:matricula IS NULL OR p.matricula = :matricula)
+	        WHERE (:cod IS NULL OR p.cod = :cod)
 	        """;
 
 	    TypedQuery<Aula> query = em.createQuery(jpql, Aula.class);
 
-	    //query.setParameter("nome", aula.getNome());
-	   // query.setParameter("matricula", aula.getMatricula());
-
+	    query.setParameter("cod", aula.getCodigo());
 	    return query.getResultList();
 	}
 
-	public void adicionar(Aula aula) throws Exception {
+	public Aula adicionar(Aula aula) throws Exception {
 
 		try {
 			em.persist(aula);
+			return aula;
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao adicionar", e);
 		}
