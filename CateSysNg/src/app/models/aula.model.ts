@@ -1,6 +1,6 @@
 
 export class AulaDoain {
-    codigo?: number;
-	presencas?: number;
+	codigo?: number;
+	turmaCodigo?: number;
 	data?: Date;
 }

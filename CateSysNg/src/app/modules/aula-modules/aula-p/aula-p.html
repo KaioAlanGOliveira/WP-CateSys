@@ -1,0 +1,104 @@
+<p-dialog header="Cadastro das Aulas" [(visible)]="visivel" (onHide)="fecharModal()" [modal]="true"
+  [style]="{ width: '900px', height: '60vh' }">
+  <form [formGroup]="formulario">
+
+    <div class="campos">
+
+      <div class="mensagem">
+        @if (formulario.invalid && formulario.touched) {
+        <p-message severity="error" icon="pi pi-times-circle" styleClass="mb-2">
+          A validação falhou!
+        </p-message>
+        }
+      </div>
+
+      <!-- Codigo -->
+      <div class="campo">
+        <label>Código</label>
+        <input pInputText formControlName="codigo" placeholder="Codigo" [disabled]="false" readonly />
+      </div>
+
+
+      <!-- Turma -->
+      <div class="campo">
+        <label>Turma</label>
+        <input pInputText formControlName="nome" placeholder="turma"
+          [invalid]="formulario.get('turma')?.invalid && formulario.get('turma')?.touched" />
+        @if (formulario.get('turma')?.invalid && formulario.get('turma')?.touched) {
+        <p-message severity="error" variant="simple" size="small">A turma é obrigatório</p-message>
+        }
+      </div>
+
+      <!-- Professor cmp -->
+      <div class="field flex-grow-1">
+        <label>Professor</label>
+
+        <!-- Container flex alinhado pela base com espaçamento correto -->
+        <cmp-componente-professor inputId="professorMatricula" cmpProximoCampo="status" #pesqProf
+          formControlName="professorMatricula">
+        </cmp-componente-professor>
+      </div>
+
+      <!-- Data -->
+      <div class="campo">
+        <label for="date">Data</label>
+
+        <input id="date" type="date" formControlName="date" class="input-field">
+      </div>
+
+      <!-- Tabela Alunos -->
+      <div class="tabela-container">
+
+        <p-table [value]="listTAluno" [tableStyle]="{ 'min-width': '50rem' }">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Matrícula</th>
+              <th>nome</th>
+              <th>Presença</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-aluno>
+            <tr (click)="selecionado(aluno)">
+              <td>{{ aluno.matricula }}</td>
+              <td>{{ aluno.nome }}</td>
+              <td>{{ aluno.presenca }}</td>
+            </tr>
+          </ng-template>
+
+        </p-table>
+
+      </div>
+      <!-- Rodapé -->
+      <div class="table-footer">
+
+        <span>
+          Total de registros encontrados:
+          <strong>{{ listTAluno.length }}</strong>
+        </span>
+
+        <span>
+          Máx. de linhas:
+          <strong>{{ listTAluno.length }}</strong>
+        </span>
+
+      </div>
+    </div>
+
+
+
+    <!-- BLOCO DA DIREITA: BOTÕES (180px) -->
+    <div class="acoes">
+      <p-button label="Novo" [disabled]="!novoHabilitado" (onClick)="novo()"></p-button>
+      <p-button label="Alterar" [disabled]="!alterarHabilitado" (onClick)="editar()"></p-button>
+      <br>
+      <p-button label="Salvar" [disabled]="!salvarHabilitado" (onClick)="salvar()"></p-button>
+      <p-button label="Cancelar" [disabled]="!cancelarHabilitado" (onClick)="cancelar()"></p-button>
+      <br>
+      <p-button label="Apagar" [disabled]="!apagarHabilitado" (onClick)="apagar()"></p-button>
+      <p-button label="Fechar" [disabled]="!fecharHabilitado" (onClick)="fecharModal()"></p-button>
+    </div>
+
+  </form>
+</p-dialog>

@@ -1,0 +1,401 @@
+import { Component, Input, Output, EventEmitter, inject, OnChanges, OnInit, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { InputMaskModule } from 'primeng/inputmask';
+import { MessageModule } from 'primeng/message';
+import { InputTextModule } from 'primeng/inputtext';
+import { TurmaService } from '../../../service/turma.service';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { DatePickerModule } from 'primeng/datepicker';
+import { TurmaDomain } from '../../../models/turma.model';
+import { TurmaDto } from '../../../models/turmaDto.model';
+import { aluno } from '../../../models/aluno.model';
+import { AlunoService } from '../../../service/aluno.service';
+import { TurmaAlunoService } from '../../../service/turmaAluno.service';
+import { TableModule } from "primeng/table";
+import { ComponenteAluno } from "../../../shared/componente/componente-pesq-aluno/componente-aluno";
+import { ComponenteProfessor } from '../../../shared/componente/componente-pesq-professor/componente-professor';
+import { TurmaAluno } from '../../../models/TurmaAluno.model';
+import { AulaDoain } from '../../../models/aula.model';
+import { AulaService } from '../../../service/aula.service';
+import { log } from 'console';
+
+@Component({
+  selector: 'app-aula-p',
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    DialogModule,
+    ButtonModule,
+    InputMaskModule,
+    MessageModule,
+    InputTextModule,
+    FormsModule,
+    RadioButtonModule,
+    DatePickerModule,
+    TableModule,
+    ComponenteProfessor
+  ],
+  templateUrl: './aula-p.html',
+  styleUrl: './aula-p.css'
+})
+export class AulaP implements OnChanges, OnInit {
+
+
+  get novoHabilitado() { return this.modo === 'initial'; }
+  get alterarHabilitado() { return this.modo === 'initial' && !!this.Selecionado; }
+  get apagarHabilitado() { return this.modo === 'initial' && !!this.Selecionado; }
+  get salvarHabilitado() { return this.modo !== 'initial'; }
+  get cancelarHabilitado() { return this.modo !== 'initial'; }
+  get fecharHabilitado() { return true; }
+
+  turmas: TurmaDomain[] = [];
+  formulario!: FormGroup;
+  tipoPagamento: any;
+  formAlunos!: FormGroup;
+  listTAluno: any[] = [];
+  alunosFiltrados: any[] = [];
+  alunoSelecionado!: any;
+  tAlunosFiltrados: TurmaAluno[] = [];
+  salvo = false
+  disabled?: boolean;
+
+  private modo: 'initial' | 'creating' | 'editing' = 'initial';
+
+  private alunoServece = inject(AlunoService);
+  private cdr = inject(ChangeDetectorRef);
+
+  @Input() Selecionado: AulaDoain | null = null;
+  @Output() visivelChange = new EventEmitter<boolean>();
+  @Input() visivel = false;
+
+  private fb = inject(FormBuilder);
+  private turmaService = inject(TurmaService);
+  private turmaAlunoService = inject(TurmaAlunoService);
+  private aulaService = inject(AulaService);
+
+  private originalTurma: TurmaDomain | null = null;
+  turmasFiltradas: any;
+
+  ngOnInit() {
+    this.initForm();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['visivel'] && !this.visivel) {
+      this.resetToInitialState();
+    }
+
+    if (changes['Selecionado'] && this.Selecionado && this.formulario) {
+      this.modo = 'initial';
+      this.carregarTurmaSelecionada();
+      //this.carregarTurma();
+      this.originalTurma = { ...this.Selecionado };
+      this.disabled = true;
+    } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
+      this.disabled = false;
+      this.modo = 'creating';
+      this.formulario.reset();
+    }
+
+    this.alterarEstadoUI();
+  }
+
+
+  private initForm(): void {
+    this.formulario = this.fb.group({
+      codigo: [{ value: '', disabled: false }],
+      nome: [{ value: '', disabled: true }, [Validators.required]],
+      date: [{ value: '', disabled: false }, [Validators.required]],
+      codAluno: [{ value: null, disabled: true }],
+      professorMatricula: [{ value: null }]
+    });
+  }
+
+  carregarTurma() {
+    const codigo = this.Selecionado?.turmaCodigo;
+
+    if (!codigo) return;
+
+    this.turmaService.getEntity(codigo).subscribe({
+      next: (dados) => {
+        this.formulario.patchValue(dados);
+      }
+    });
+  }
+
+  // ==================== CONTROLE CENTRALIZADO ====================
+  private alterarEstadoUI(): void {
+    if (!this.formulario) return;
+
+    if (this.modo === 'initial') {
+      this.formulario.disable();
+    } else if (this.modo === 'editing') {
+      this.formulario.enable();
+      this.disabled = false;
+    } else {
+      this.formulario.enable();
+    }
+  }
+
+
+  // ==================== AÇÕES ====================
+  novo() {
+    this.modo = 'creating';
+    this.originalTurma = null;
+    this.formulario.reset();
+    this.formulario.markAllAsDirty();
+    this.formulario.markAllAsTouched();
+    this.formulario.updateValueAndValidity();
+    this.formulario.enable();
+    this.listTAluno = [];
+    this.disabled = false;
+    this.alterarEstadoUI();
+  }
+
+  editar() {
+    if (!this.Selecionado) return;
+    this.modo = 'editing';
+    this.formulario.patchValue(this.Selecionado);
+    this.originalTurma = { ...this.Selecionado };
+    this.formulario.enable();
+    this.formulario.markAllAsDirty();
+    this.formulario.markAllAsTouched();
+    this.formulario.updateValueAndValidity();
+    this.alterarEstadoUI();
+  }
+
+  private removerMascaras(valor: any): string {
+    if (!valor) return '';
+    return valor.toString().replace(/\D/g, '');
+  }
+
+  cancelar() {
+    if (this.modo === 'creating') {
+      this.formulario.reset();
+      this.fecharModal();
+    } else if (this.modo === 'editing' && this.originalTurma) {
+      this.formulario.patchValue(this.originalTurma);
+      this.disabled = true;
+      this.modo = 'initial';
+      this.alterarEstadoUI();
+    }
+  }
+
+  fecharModal() {
+    this.modo = 'initial';
+    this.visivel = false;
+    this.originalTurma = null;
+    this.visivelChange.emit(false);
+    this.formulario.reset();
+  }
+
+  recarregarPaginaInteira() {
+    window.location.reload();
+  }
+
+  private resetToInitialState() {
+    this.modo = 'initial';
+    this.originalTurma = null;
+    if (this.Selecionado) {
+      this.formulario.patchValue(this.Selecionado);
+    }
+    this.alterarEstadoUI();
+  }
+
+
+  salvar() {
+    if (this.formulario.invalid) {
+      this.formulario.markAllAsTouched();
+      return;
+    }
+
+    const formValue = this.formulario.getRawValue();
+
+    const formTADto: TurmaDto = {
+      turma: formValue,
+      alunos: this.listTAluno
+    };
+
+    if (this.modo === 'creating') {
+      this.create(formTADto);
+    } else {
+      this.alterar(formTADto);
+    }
+  }
+
+  private create(formTADto: TurmaDto) {
+    this.turmaService.salvar(formTADto).subscribe({
+      next: (dados) => {
+        alert('Turma criada com sucesso.');
+
+        this.Selecionado = dados ?? formTADto.turma;
+        this.originalTurma = { ...this.Selecionado };
+        this.disabled = true;
+        this.finalizarComSucesso();
+      },
+      error: (err) => {
+        console.error('Erro ao criar turma:', err);
+        alert('Erro ao criar a turma.');
+      }
+    });
+  }
+
+
+  private alterar(formValue: TurmaDto) {
+    if (!this.Selecionado) return;
+
+    const atualizado: TurmaDto = { ...this.Selecionado, ...formValue };
+
+    this.turmaService.editar(atualizado).subscribe({
+      next: () => {
+        alert('Turma atualizada com sucesso.');
+        this.disabled = true;
+        this.finalizarComSucesso();
+      },
+      error: (err) => console.error('Erro ao alterar:', err)
+    });
+  }
+
+  apagar() {
+    const respota = window.confirm('Deseja realmente apagar o elemento selecionado?');
+    if (respota) {
+      if (!this.Selecionado?.codigo) return;
+
+      this.turmaService.apagar(this.Selecionado).subscribe({
+        next: () => { this.finalizarComSucesso(); this.fecharModal(); },
+        error: (err) => { alert('Erro ao apagar a turma.'); this.finalizarComSucesso(); },
+      });
+    }
+  }
+
+  private finalizarComSucesso() {
+    this.modo = 'initial';
+    this.alterarEstadoUI();
+  }
+
+  habilitarCampos(formulario: FormGroup, habilitar: boolean) {
+    Object.keys(formulario.controls).forEach((campo) => {
+      const controle = formulario.get(campo);
+      if (controle) {
+        if (habilitar) {
+          controle.enable();
+        } else {
+          controle.disable();
+        }
+      }
+    });
+  }
+
+  selecionado(aluno: aluno) {
+
+    this.alunoSelecionado = aluno;
+    this.visivel = true;
+  }
+
+  remover(): void {
+    const index = this.listTAluno.indexOf(this.alunoSelecionado);
+    if (index !== -1) {
+      this.listTAluno.splice(index, 1);
+    }
+    this.alunoSelecionado = null;
+  }
+
+  add(aluno: aluno | null): void {
+    if (!aluno) {
+      alert('Nenhum aluno selecionado!');
+      return;
+    } else if (this.listTAluno.find(c => c.matricula == aluno)) {
+      alert("Cliente já adicionado!");
+      return;
+    } else {
+
+      const alunoPesquisa: aluno = {
+        matricula: aluno
+      } as aluno;
+
+      this.alunoServece.listarTodosFiltrados(alunoPesquisa).subscribe({
+        next: (dados) => {
+
+          if (!dados || dados.length === 0) {
+            alert('Aluno não encontrado.');
+            return;
+          }
+
+          const alunoEncontrado = dados[0];
+
+          this.listTAluno = [
+            ...this.listTAluno,
+            alunoEncontrado
+          ];
+
+          this.cdr.detectChanges();
+          this.tAlunosFiltrados = [
+            ...this.listTAluno
+          ];
+
+          this.alunoSelecionado = alunoEncontrado;
+        },
+
+        error: (err) => {
+          console.error('Erro ao buscar aluno:', err);
+          alert('Erro ao buscar o aluno.');
+        }
+      });
+    }
+  }
+  private carregarTurmaSelecionada(): void {
+    if (!this.Selecionado) {
+      return;
+    }
+
+    const filtro: AulaDoain = {
+      codigo: this.Selecionado.codigo
+    } as TurmaDomain;
+
+    // carregar turma
+    this.aulaService.listFiltrados(filtro).subscribe({
+      next: (dados) => {
+
+        if (!dados || dados.length === 0) {
+          alert('Turma não encontrada.');
+          return;
+        }
+
+        const aula = dados[0];
+
+        this.formulario.patchValue(aula);
+
+        this.originalTurma = { ...aula };
+
+        //  carregar aluno
+
+        this.turmaAlunoService.getListAT(aula.codigo).subscribe({
+          next: (dados) => {
+
+            this.listTAluno = dados.map((item: any) => ({
+              matricula: item[0],
+              nome: item[1],
+              status: item[2]
+            }));
+
+            this.tAlunosFiltrados = [...this.listTAluno];
+
+            console.log(this.listTAluno);
+
+            this.cdr.detectChanges();
+          },
+
+          error: (err) => {
+            console.error(err);
+          }
+        });
+      }
+    })
+  }
+
+
+}
