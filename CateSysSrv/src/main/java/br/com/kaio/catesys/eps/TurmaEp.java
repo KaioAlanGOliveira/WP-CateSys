@@ -5,7 +5,6 @@ import java.util.Map;
 
 import br.com.kaio.catesys.bss.TurmaBss;
 import br.com.kaio.catesys.domain.Turma;
-import br.com.kaio.catesys.domain.TurmaAluno;
 import br.com.kaio.catesys.eps.dto.TurmaDto;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -56,7 +55,7 @@ public class TurmaEp {
 
 	@GET
 	@Path("/listTA")
-	public List<TurmaAluno> getList() {
+	public List<Turma> getList() {
 
 		return turmaBss.getTA();
 	}

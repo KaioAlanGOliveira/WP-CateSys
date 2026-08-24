@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import br.com.kaio.catesys.bss.AulaBss;
+import br.com.kaio.catesys.bss.TurmaBss;
 import br.com.kaio.catesys.domain.Aula;
+import br.com.kaio.catesys.domain.Turma;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -25,6 +27,9 @@ public class AulaEp {
 	@Inject
 	private AulaBss aulaBss;
 
+	@Inject
+	private TurmaBss turmaBss;
+
 	@GET
 	public List<Aula> getAula() {
 		return aulaBss.getList();
@@ -34,6 +39,13 @@ public class AulaEp {
 	@Path("/filtrar")
 	public List<Aula> getList(Aula aula) {
 		return aulaBss.getListFiltrado(aula);
+	}
+
+	@GET
+	@Path("/listTA")
+	public List<Turma> getList() {
+
+		return turmaBss.getTA();
 	}
 
 	@POST

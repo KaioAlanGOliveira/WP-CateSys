@@ -111,10 +111,10 @@ public class TurmaBss {
 		}
 	}
 
-	public List<TurmaAluno> getTA() {
+	public List<Turma> getTA() {
 		try {
-			String jpql = "	SELECT p FROM TurmaAluno p";
-			TypedQuery<TurmaAluno> query = em.createQuery(jpql, TurmaAluno.class);
+			String jpql = "	SELECT p FROM Turma p";
+			TypedQuery<Turma> query = em.createQuery(jpql, Turma.class);
 
 			return query.getResultList();
 		} catch (Exception e) {
