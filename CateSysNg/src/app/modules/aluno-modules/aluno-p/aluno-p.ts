@@ -62,6 +62,7 @@ export class AlunoP implements OnChanges, OnInit {
     }
 
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
+      this.modo = 'initial';
       this.originalAluno = { ...this.Selecionado };
       this.formulario.patchValue(this.Selecionado);
     }
@@ -121,6 +122,7 @@ export class AlunoP implements OnChanges, OnInit {
   editar() {
     if (!this.Selecionado) return;
     this.modo = 'editing';
+    this.formulario.get('matricula')?.disable();
     this.originalAluno = { ...this.Selecionado };
     this.formulario.patchValue(this.Selecionado);
     this.atualizarEstadoUI();

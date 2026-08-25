@@ -8,6 +8,7 @@ import Aura from '@primeuix/themes/aura';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideClientHydration(),
     providePrimeNG({
       theme: {
         preset: Aura,

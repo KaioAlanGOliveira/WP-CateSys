@@ -10,18 +10,18 @@
   <form class="filtros" [formGroup]="form" (ngSubmit)="carregarDados()">
 
     <div class="form-field">
-      <label for="nome">Nome</label>
-
-      <input id="nome" class="input-field" type="text" formControlName="nome" placeholder="Digite o nome" #inputNome
-        (input)="pesquisar(inputNome.value,  inputMatricular.value)"
-        (keyup.enter)="pesquisar(inputNome.value,  inputMatricular.value)">
-    </div>
-
-    <div class="form-field">
       <label for="matricula">Matrícula</label>
 
       <input id="matricula" class="input-field" type="number" formControlName="matricula"
         placeholder="Digite a matrícula" #inputMatricular (input)="pesquisar(inputNome.value,  inputMatricular.value)"
+        (keyup.enter)="pesquisar(inputNome.value,  inputMatricular.value)">
+    </div>
+
+    <div class="form-field">
+      <label for="nome">Nome</label>
+
+      <input id="nome" class="input-field" type="text" formControlName="nome" placeholder="Digite o nome" #inputNome
+        (input)="pesquisar(inputNome.value,  inputMatricular.value)"
         (keyup.enter)="pesquisar(inputNome.value,  inputMatricular.value)">
     </div>
 
