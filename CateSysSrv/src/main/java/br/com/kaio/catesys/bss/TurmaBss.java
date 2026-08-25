@@ -102,11 +102,20 @@ public class TurmaBss {
 		}
 	}
 
-	public void remover(Turma domain) {
+	public void remover(Turma turma, List<Aluno> alunos) {
 
 		try {
-			em.remove(em.find(Turma.class, domain.getCodigo()));
+			
+			em.createQuery("DELETE FROM TurmaAluno ta WHERE ta.id.turmaCodigo = :turmaCodigo")
+			  .setParameter("turmaCodigo", turma.getCodigo())
+			  .executeUpdate();
+
+			em.createQuery("DELETE FROM Turma t WHERE t.codigo = :turmaCodigo")
+			  .setParameter("turmaCodigo", turma.getCodigo())
+			  .executeUpdate();
+
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException("Erro ao remover", e);
 		}
 	}

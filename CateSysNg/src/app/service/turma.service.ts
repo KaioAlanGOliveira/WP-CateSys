@@ -20,10 +20,9 @@ export class TurmaService {
     return this.http.post<TurmaDto>(this.apiUrl, dto);
   }
 
-  apagar(turma: TurmaDomain) {
-    return this.http.delete<{ mensagem: string }>(this.apiUrl, {
-      body: turma
-    });
+  apagar(turma: TurmaDto) {
+    
+    return this.http.post(`${this.apiUrl}/remover`, turma);
   }
   apagarAll() {
     return this.http.get(`${this.apiUrl}/apagarAll`)

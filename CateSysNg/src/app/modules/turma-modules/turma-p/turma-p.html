@@ -37,6 +37,10 @@
         <cmp-componente-professor inputId="professorMatricula" cmpProximoCampo="status" #pesqProf 
           formControlName="professorMatricula">
         </cmp-componente-professor>
+         @if (formulario.get('professorMatricula')?.invalid && formulario.get('professorMatricula')?.touched) {
+        <p-message severity="error" variant="simple" size="small">A matricula do professor é obrigatório</p-message>
+        }
+       
       </div>
 
 

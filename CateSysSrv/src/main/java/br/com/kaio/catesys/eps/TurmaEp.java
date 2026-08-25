@@ -10,7 +10,6 @@ import br.com.kaio.catesys.eps.dto.TurmaDto;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
@@ -68,21 +67,16 @@ public class TurmaEp {
 		return turmaBss.getTurmaAluno(codigo);
 	}
 
-	@DELETE
-	public Response remover(Turma domain) {
+	@POST
+	@Path("/remover")
+	public Response remover(TurmaDto dto) {
 
 		try {
-			turmaBss.remover(domain);
+			turmaBss.remover(dto.getTurma(), dto.getAlunos());
 			return Response.ok(Map.of("mensagem", " apagado com sucesso")).build();
 		} catch (Exception e) {
 			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
 		}
-	}
-
-	@GET
-	@Path("/apagarAll")
-	public void apagarAll() {
-		turmaBss.apagarAll();
 	}
 
 	@PUT
@@ -95,4 +89,11 @@ public class TurmaEp {
 			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
 		}
 	}
+
+	@GET
+	@Path("/apagarAll")
+	public void apagarAll() {
+		turmaBss.apagarAll();
+	}
+
 }

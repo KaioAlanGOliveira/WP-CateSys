@@ -110,7 +110,7 @@ export class TurmaP implements OnChanges, OnInit {
       nome: [{ value: '', disabled: true }, [Validators.required]],
       status: [{ value: 0, disabled: true }, [Validators.required]],
       codAluno: [{ value: null, disabled: true }],
-      professorMatricula: [{ value: null }]
+      professorMatricula: [{ value: null }, [Validators.required]],
     });
   }
 
@@ -263,7 +263,19 @@ export class TurmaP implements OnChanges, OnInit {
     if (respota) {
       if (!this.Selecionado?.codigo) return;
 
-      this.turmaService.apagar(this.Selecionado).subscribe({
+      if (this.formulario.invalid) {
+        this.formulario.markAllAsTouched();
+        return;
+      }
+
+      const formValue = this.formulario.getRawValue();
+
+      const formTADto: TurmaDto = {
+        turma: formValue,
+        alunos: this.listTAluno
+      };
+
+      this.turmaService.apagar(formTADto).subscribe({
         next: () => { this.finalizarComSucesso(); this.fecharModal(); },
         error: (err) => { alert('Erro ao apagar a turma.'); this.finalizarComSucesso(); },
       });
