@@ -16,7 +16,17 @@ public class Aula {
 	private Integer codigo;
 	
 	private LocalDate data;
-	private Integer presencas;
+		
+	@Column(name = "turma_codigo")
+	private Integer turmaCodigo;
+
+	public Integer getTurmaCodigo() {
+	    return turmaCodigo;
+	}
+
+	public void setTurmaCodigo(Integer turmaCodigo) {
+	    this.turmaCodigo = turmaCodigo;
+	}
 
 	public Integer getCodigo() {
 		return codigo;
@@ -32,13 +42,6 @@ public class Aula {
 
 	public void setData(LocalDate data) {
 		this.data = data;
-	}
-
-	public Integer getPresencas() {
-		return presencas;
-	}
-	public void setPresencas(Integer presencas) {
-		this.presencas = presencas;
 	}
 
 }

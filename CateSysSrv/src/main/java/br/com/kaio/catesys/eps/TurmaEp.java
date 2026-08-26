@@ -6,7 +6,7 @@ import java.util.Map;
 import br.com.kaio.catesys.bss.TurmaBss;
 import br.com.kaio.catesys.domain.Turma;
 import br.com.kaio.catesys.domain.TurmaAluno;
-import br.com.kaio.catesys.eps.dto.TurmaDto;
+import br.com.kaio.catesys.eps.dto.TurmaDTO;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -30,7 +30,7 @@ public class TurmaEp {
 	private TurmaBss turmaBss;
 
 	@POST
-	public Turma create(TurmaDto dto) {
+	public Turma create(TurmaDTO dto) {
 		try {
 			return turmaBss.adicionar(dto.getTurma(), dto.getAlunos());
 		} catch (Exception e) {
@@ -69,18 +69,20 @@ public class TurmaEp {
 
 	@POST
 	@Path("/remover")
-	public Response remover(TurmaDto dto) {
+	public Response remover(TurmaDTO dto) {
 
 		try {
 			turmaBss.remover(dto.getTurma(), dto.getAlunos());
 			return Response.ok(Map.of("mensagem", " apagado com sucesso")).build();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
 		}
 	}
 
+
 	@PUT
-	public Response editar(TurmaDto dto) {
+	public Response editar(TurmaDTO dto) {
 
 		try {
 			turmaBss.alterar(dto.getTurma(), dto.getAlunos());

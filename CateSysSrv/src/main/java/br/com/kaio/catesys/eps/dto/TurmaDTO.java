@@ -5,7 +5,7 @@ import java.util.List;
 import br.com.kaio.catesys.domain.Aluno;
 import br.com.kaio.catesys.domain.Turma;
 
-public class TurmaDto {
+public class TurmaDTO {
 
 	private Turma turma;
 	private List<Aluno> alunos;

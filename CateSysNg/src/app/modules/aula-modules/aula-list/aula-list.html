@@ -1,0 +1,88 @@
+<!-- Cabeçalho -->
+<div class="page-header">
+  <h2>Aula</h2>
+</div>
+
+<!-- Card principal -->
+<div class="alunos-card">
+
+  <!-- Filtros -->
+  <form class="filtros" [formGroup]="form" (ngSubmit)="carregarDados()">
+
+    <!-- Código -->
+    <div class="form-field">
+      <label for="codigo">Código</label>
+
+      <input id="codigo" class="input-field" type="text" formControlName="codigo" placeholder="Digite o código"
+        #inputCodigo>
+    </div>
+
+    <!-- Turma -->
+    <div class="form-field">
+      <label for="turma">Turma</label>
+
+      <input id="turma" class="input-field" type="text" formControlName="turma" placeholder="Digite a turma" #inputturma>
+    </div>
+
+     <!-- Data -->
+    <div class="campo">
+      <label for="data">Data</label>
+
+      <input id="data" type="date" formControlName="data" class="input-field">
+    </div>
+
+    <div class="form-action">
+      <button id="btn" class="btn-primary" type="submit" (click)="pesquisar()">
+        Pesquisar
+      </button>
+    </div>
+
+    <div class="form-action">
+      <button id="btn" class="btn-primary" icon="pi pi-plus" type="button" (click)="abrirNovoPopup()">
+        +
+      </button>
+    </div>
+
+  </form>
+
+
+  <!-- Tabela -->
+  <div class="tabela-container">
+
+    <p-table [value]="aulaFiltradas" [tableStyle]="{ 'min-width': '50rem' }">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Código</th>
+          <th>Turma</th>
+          <th>Data</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-aula>
+        <tr (dblclick)="selecionado(aula)">
+          <td>{{ aula.codigo }}</td>
+          <td>{{ aula.turmaCodigo }}</td>
+          <td>{{ aula.data }}</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+
+  </div>
+
+
+  <!-- Rodapé -->
+  <div class="table-footer">
+
+    <span>
+      Total de registros encontrados:
+      <strong>{{ listAula.length }}</strong>
+    </span>
+
+  </div>
+
+</div>
+<app-aula [(visivel)]="exibirModalPrincipal" (visivelChange)="retornoPopUp($event)" [Selecionado]="aulaSelecionado">
+
+</app-aula>

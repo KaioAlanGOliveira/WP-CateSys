@@ -2,17 +2,15 @@ import { Component, Input, Output, EventEmitter, inject, OnChanges, OnInit, Simp
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { TurmaService } from '../../../service/turma.service';
-import { professor } from '../../../models/professor.model';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
 import { TurmaDomain } from '../../../models/turma.model';
 import { TurmaDto } from '../../../models/turmaDto.model';
-import { Aluno } from '../../aluno-modules/aluno/aluno';
 import { aluno } from '../../../models/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { TurmaAlunoService } from '../../../service/turmaAluno.service';
@@ -20,9 +18,13 @@ import { TableModule } from "primeng/table";
 import { ComponenteAluno } from "../../../shared/componente/componente-pesq-aluno/componente-aluno";
 import { ComponenteProfessor } from '../../../shared/componente/componente-pesq-professor/componente-professor';
 import { TurmaAluno } from '../../../models/TurmaAluno.model';
+import { AulaDoain } from '../../../models/aula.model';
+import { AulaService } from '../../../service/aula.service';
+import { log } from 'console';
+import { AulaDto } from '../../../models/aulaDto.model';
 
 @Component({
-  selector: 'app-turma-p',
+  selector: 'app-aula-p',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -36,13 +38,12 @@ import { TurmaAluno } from '../../../models/TurmaAluno.model';
     RadioButtonModule,
     DatePickerModule,
     TableModule,
-    ComponenteAluno,
     ComponenteProfessor
   ],
-  templateUrl: './turma-p.html',
-  styleUrl: './turma-p.css'
+  templateUrl: './aula-p.html',
+  styleUrl: './aula-p.css'
 })
-export class TurmaP implements OnChanges, OnInit {
+export class AulaP implements OnChanges, OnInit {
 
 
   get novoHabilitado() { return this.modo === 'initial'; }
@@ -68,13 +69,14 @@ export class TurmaP implements OnChanges, OnInit {
   private alunoServece = inject(AlunoService);
   private cdr = inject(ChangeDetectorRef);
 
-  @Input() Selecionado: TurmaDomain | null = null;
+  @Input() Selecionado: AulaDoain | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
 
   private fb = inject(FormBuilder);
   private turmaService = inject(TurmaService);
   private turmaAlunoService = inject(TurmaAlunoService);
+  private aulaService = inject(AulaService);
 
   private originalTurma: TurmaDomain | null = null;
   turmasFiltradas: any;
@@ -89,7 +91,7 @@ export class TurmaP implements OnChanges, OnInit {
     }
 
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
-      this.modo = 'initial';
+      this.modo = 'creating';
       this.carregarTurmaSelecionada();
       this.carregarTurma();
       this.originalTurma = { ...this.Selecionado };
@@ -108,19 +110,27 @@ export class TurmaP implements OnChanges, OnInit {
     this.formulario = this.fb.group({
       codigo: [{ value: '', disabled: false }],
       nome: [{ value: '', disabled: true }, [Validators.required]],
-      status: [{ value: 0, disabled: true }, [Validators.required]],
+      date: [{ value: '', disabled: false }, [Validators.required]],
       codAluno: [{ value: null, disabled: true }],
       professorMatricula: [{ value: null }]
     });
   }
 
   carregarTurma() {
-    const codigo = this.Selecionado?.codigo;
-    if (!codigo) return;
+    const codigoTurma = this.Selecionado?.turmaCodigo;
+    if (!codigoTurma) return;
 
-    this.turmaService.getEntity(codigo).subscribe({
+    this.aulaService.getEntity(codigoTurma).subscribe({
       next: (dados) => {
-        this.formulario.patchValue(dados);
+        console.log('Dados recebidos:', dados); 
+      this.listTAluno = dados.alunos;
+      this.formulario.patchValue({
+        date: this.Selecionado?.data,
+        nome: dados.turma?.nome,          
+        professorMatricula: dados.turma?.professorMatricula
+      });
+
+      this.cdr.detectChanges();
       }
     });
   }
@@ -213,9 +223,10 @@ export class TurmaP implements OnChanges, OnInit {
 
     const formValue = this.formulario.getRawValue();
 
-    const formTADto: TurmaDto = {
+    const formTADto: AulaDto = {
       turma: formValue,
-      alunos: this.listTAluno
+      alunos: this.listTAluno,
+      aula: formValue,
     };
 
     if (this.modo === 'creating') {
@@ -225,10 +236,10 @@ export class TurmaP implements OnChanges, OnInit {
     }
   }
 
-  private create(formTADto: TurmaDto) {
+  private create(formTADto: AulaDto) {
     this.turmaService.salvar(formTADto).subscribe({
       next: (dados) => {
-        alert('Turma criada com sucesso.');
+        alert('Aula criada com sucesso.');
 
         this.Selecionado = dados ?? formTADto.turma;
         this.originalTurma = { ...this.Selecionado };
@@ -236,8 +247,8 @@ export class TurmaP implements OnChanges, OnInit {
         this.finalizarComSucesso();
       },
       error: (err) => {
-        console.error('Erro ao criar turma:', err);
-        alert('Erro ao criar a turma.');
+        console.error('Erro ao criar Aula:', err);
+        alert('Erro ao criar a Aula.');
       }
     });
   }
@@ -262,13 +273,14 @@ export class TurmaP implements OnChanges, OnInit {
     const respota = window.confirm('Deseja realmente apagar o elemento selecionado?');
     if (respota) {
       if (!this.Selecionado?.codigo) return;
+
       const formValue = this.formulario.getRawValue();
 
       const formTADto: TurmaDto = {
         turma: formValue,
         alunos: this.listTAluno
       };
-      
+
       this.turmaService.apagar(formTADto).subscribe({
         next: () => { this.finalizarComSucesso(); this.fecharModal(); },
         error: (err) => { alert('Erro ao apagar a turma.'); this.finalizarComSucesso(); },
@@ -356,12 +368,12 @@ export class TurmaP implements OnChanges, OnInit {
       return;
     }
 
-    const filtro: TurmaDomain = {
+    const filtro: AulaDoain = {
       codigo: this.Selecionado.codigo
     } as TurmaDomain;
 
     // carregar turma
-    this.turmaService.listFiltrados(filtro).subscribe({
+    this.aulaService.listFiltrados(filtro).subscribe({
       next: (dados) => {
 
         if (!dados || dados.length === 0) {
@@ -369,15 +381,15 @@ export class TurmaP implements OnChanges, OnInit {
           return;
         }
 
-        const turma = dados[0];
+        const aula = dados[0];
 
-        this.formulario.patchValue(turma);
+        this.formulario.patchValue(aula);
 
-        this.originalTurma = { ...turma };
+        this.originalTurma = { ...aula };
 
         //  carregar aluno
 
-        this.turmaAlunoService.getListAT(turma.codigo).subscribe({
+        this.turmaAlunoService.getListAT(aula.codigo).subscribe({
           next: (dados) => {
 
             this.listTAluno = dados.map((item: any) => ({

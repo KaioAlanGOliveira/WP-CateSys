@@ -2,10 +2,16 @@ package br.com.kaio.catesys.bss;
 
 import java.util.List;
 
+import br.com.kaio.catesys.domain.Aluno;
 import br.com.kaio.catesys.domain.Aula;
+import br.com.kaio.catesys.domain.Presenca;
+import br.com.kaio.catesys.domain.Turma;
+import br.com.kaio.catesys.domain.TurmaAluno;
+import br.com.kaio.catesys.eps.dto.AulaDTO;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 @Stateless
@@ -14,7 +20,7 @@ public class AulaBss {
 	@PersistenceContext(unitName = "MeuPu")
 	private EntityManager em;
 
-	public List<Aula> getList() {
+	public List<Aula> getListAula() {
 
 		try {
 			String jpql = "select obj from Aula obj";
@@ -26,25 +32,73 @@ public class AulaBss {
 		}
 	}
 
-	public List<Aula> getListFiltrado(Aula aula) {
+	public List<Aula> getTA() {
+		try {
+			String jpql = "	SELECT p FROM Aula p";
+			TypedQuery<Aula> query = em.createQuery(jpql, Aula.class);
 
-	    String jpql = """
-	        SELECT p
-	        FROM Aula p
-	        WHERE (:cod IS NULL OR p.cod = :cod)
-	        """;
-
-	    TypedQuery<Aula> query = em.createQuery(jpql, Aula.class);
-
-	    query.setParameter("cod", aula.getCodigo());
-	    return query.getResultList();
+			return query.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao listar", e);
+		}
 	}
 
-	public Aula adicionar(Aula aula) throws Exception {
+	public List<TurmaAluno> getList() {
+		try {
+			String jpql = "	SELECT p FROM TurmaAluno p";
+			TypedQuery<TurmaAluno> query = em.createQuery(jpql, TurmaAluno.class);
+
+			return query.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao listar", e);
+		}
+	}
+
+	public AulaDTO getEntity(Integer codigoTurma) {
+		try {
+
+			// 1. Busca a turma
+			Turma turma = em.createQuery("SELECT t FROM Turma t WHERE t.codigo = :codigo", Turma.class)
+					.setParameter("codigo", codigoTurma).getSingleResult();
+
+			// 2. Busca os alunos da turma
+			List<Aluno> alunos = em.createQuery("""
+					SELECT a
+					FROM TurmaAluno ta
+					JOIN Aluno a ON a.matricula = ta.id.alunoMatricula
+					WHERE ta.id.turmaCodigo = :codigoTurma
+					""", Aluno.class).setParameter("codigoTurma", codigoTurma).getResultList();
+
+			// 3. Monta o DTO
+			AulaDTO dto = new AulaDTO();
+			dto.setAlunos(alunos);
+			dto.setTurma(turma);
+
+			return dto;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao buscar dados da aula", e);
+		}
+	}
+
+	public AulaDTO adicionar(Turma turma, List<Aluno> alunos, Aula aula) throws Exception {
 
 		try {
+			aula.setCodigo(getNextCod());
+			
+			for (Aluno aluno : alunos) {
+				
+				Presenca presenca = new Presenca();
+				presenca.setAlunoMatricula(aluno.getMatricula());
+				presenca.setAulaCodigo(aula.getCodigo());
+				em.persist(presenca);
+
+			}
 			em.persist(aula);
-			return aula;
+			return null;
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao adicionar", e);
 		}
@@ -67,5 +121,25 @@ public class AulaBss {
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao remover", e);
 		}
+	}
+
+	private Integer getNextCod() {
+
+		Query query = em.createQuery("select max(codigo) + 1 from Turma");
+		Object cod = query.getSingleResult();
+
+		if (cod == null)
+			return 1;
+
+		if (cod instanceof Integer)
+			return (Integer) cod;
+
+		if (cod instanceof Long)
+			return ((Long) cod).intValue();
+
+		if (cod instanceof Short)
+			return ((Short) cod).intValue();
+
+		return (Integer) cod;
 	}
 }

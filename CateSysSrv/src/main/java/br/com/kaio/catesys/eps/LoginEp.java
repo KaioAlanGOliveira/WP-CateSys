@@ -4,7 +4,7 @@ import java.util.Map;
 
 import br.com.kaio.catesys.bss.LoginBss;
 import br.com.kaio.catesys.domain.Professor;
-import br.com.kaio.catesys.eps.dto.LoginDto;
+import br.com.kaio.catesys.eps.dto.LoginDTO;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -24,7 +24,7 @@ public class LoginEp {
 	private LoginBss loginBss;
 
 	@POST
-	public Response login(LoginDto login) {
+	public Response login(LoginDTO login) {
 
 		Professor professor = loginBss.getProfessor(login.getLogin(), login.getSenha());
 

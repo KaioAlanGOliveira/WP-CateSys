@@ -1,66 +1,65 @@
 package br.com.kaio.catesys.domain;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.Table;
+import jakarta.persistence.Embeddable;
 
-@Entity
-@Table(name = "presenca")
-public class Presenca {
+@Embeddable
+public class Presenca implements Serializable {
 
-	@EmbeddedId
-	private PresencaId id;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@MapsId("aulaCodigo")
-	@JoinColumn(name = "aula_codigo")
-	private Aula aula;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@MapsId("alunoMatricula")
-	@JoinColumn(name = "aluno_matricula")
-	private Aluno aluno;
-
-	@Column(name = "presente")
-	private Integer presente;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	@Column(name = "aula_codigo")
+	private Integer aulaCodigo;
+	
+	@Column(name = "aluno_matricula")
+	private Integer alunoMatricula;
 
 	public Presenca() {
 	}
 
-	public PresencaId getId() {
-		return id;
+	public Presenca(Integer aulaCodigo, Integer alunoMatricula) {
+		this.aulaCodigo = aulaCodigo;
+		this.alunoMatricula = alunoMatricula;
 	}
 
-	public void setId(PresencaId id) {
-		this.id = id;
+	public Integer getAulaCodigo() {
+		return aulaCodigo;
 	}
 
-	public Aula getAula() {
-		return aula;
+	public void setAulaCodigo(Integer aulaCodigo) {
+		this.aulaCodigo = aulaCodigo;
 	}
 
-	public void setAula(Aula aula) {
-		this.aula = aula;
+	public Integer getAlunoMatricula() {
+		return alunoMatricula;
 	}
 
-	public Aluno getAluno() {
-		return aluno;
+	public void setAlunoMatricula(Integer alunoMatricula) {
+		this.alunoMatricula = alunoMatricula;
 	}
 
-	public void setAluno(Aluno aluno) {
-		this.aluno = aluno;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+
+		if (!(o instanceof Presenca)) {
+			return false;
+		}
+
+		Presenca that = (Presenca) o;
+
+		return Objects.equals(aulaCodigo, that.aulaCodigo) && Objects.equals(alunoMatricula, that.alunoMatricula);
 	}
 
-	public Integer getPresente() {
-		return presente;
-	}
-
-	public void setPresente(Integer presente) {
-		this.presente = presente;
+	@Override
+	public int hashCode() {
+		return Objects.hash(aulaCodigo, alunoMatricula);
 	}
 }

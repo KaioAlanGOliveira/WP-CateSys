@@ -1,0 +1,49 @@
+<!-- Cabeçalho -->
+<div class="page-header">
+  <h2>Aula</h2>
+</div>
+
+<!-- Card principal -->
+<div class="alunos-card">
+
+  <form class="filtros" [formGroup]="form" (ngSubmit)="carregarDados()">
+
+    <!-- Turma -->
+    <div class="campo">
+      <label for="turma">Turma</label>
+
+      <select id="turma" formControlName="turmaCodigo" class="input-field">
+        <option value="">Selecione uma turma</option>
+
+        <option *ngFor="let turma of turmas" [value]="turma.codigo">
+          {{ turma.nome }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Data -->
+    <div class="campo">
+      <label for="data">Data</label>
+
+      <input id="data" type="date" formControlName="data" class="input-field">
+    </div>
+
+    <!-- Botões -->
+    <div class="acoes">
+
+      <button type="button" (click)="cancelar()">
+        Cancelar
+      </button>
+
+      <button (click)="criar()">
+        Criar
+      </button>
+
+    </div>
+
+  </form>
+
+</div>
+
+<app-aula-p [(visivel)]="exibirModalPrincipal" (visivelChange)="retornoPopUp($event)" [Selecionado]="turmaSelecionado">
+</app-aula-p>
