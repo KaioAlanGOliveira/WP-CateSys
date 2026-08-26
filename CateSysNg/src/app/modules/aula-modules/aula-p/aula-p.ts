@@ -92,7 +92,7 @@ export class AulaP implements OnChanges, OnInit {
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
       this.modo = 'initial';
       this.carregarTurmaSelecionada();
-      //this.carregarTurma();
+      this.carregarTurma();
       this.originalTurma = { ...this.Selecionado };
       this.disabled = true;
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
@@ -116,11 +116,10 @@ export class AulaP implements OnChanges, OnInit {
   }
 
   carregarTurma() {
-    const codigo = this.Selecionado?.turmaCodigo;
+    const codigoTurma = this.Selecionado?.turmaCodigo;
+    if (!codigoTurma) return;
 
-    if (!codigo) return;
-
-    this.turmaService.getEntity(codigo).subscribe({
+    this.aulaService.getEntity(codigoTurma).subscribe({
       next: (dados) => {
         this.formulario.patchValue(dados);
       }
@@ -265,7 +264,14 @@ export class AulaP implements OnChanges, OnInit {
     if (respota) {
       if (!this.Selecionado?.codigo) return;
 
-      this.turmaService.apagar(this.Selecionado).subscribe({
+      const formValue = this.formulario.getRawValue();
+
+      const formTADto: TurmaDto = {
+        turma: formValue,
+        alunos: this.listTAluno
+      };
+
+      this.turmaService.apagar(formTADto).subscribe({
         next: () => { this.finalizarComSucesso(); this.fecharModal(); },
         error: (err) => { alert('Erro ao apagar a turma.'); this.finalizarComSucesso(); },
       });

@@ -35,4 +35,12 @@ export class AulaService {
   salvar(aula: AulaDoain): Observable<AulaDoain> {
     return this.http.post<AulaDoain>(this.apiUrl, aula);
   }
+
+  list(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/listTA`);
+  }
+  getEntity(codTurma: number ): Observable<AulaDoain> {
+
+    return this.http.get<AulaDoain>(`${this.apiUrl}/${codTurma}`);
+  }
 }

@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { Turma } from '../../turma-modules/turma/turma';
 import { AulaDoain } from '../../../models/aula.model';
 import { log } from 'console';
+import { AulaService } from '../../../service/aula.service';
 
 @Component({
   selector: 'app-turma',
@@ -23,6 +24,7 @@ export class Aula implements OnInit {
     throw new Error('Method not implemented.');
   }
 
+  private aulaService = inject(AulaService);
   private turmaServece = inject(TurmaService);
   private cdr = inject(ChangeDetectorRef);
 
@@ -43,7 +45,7 @@ export class Aula implements OnInit {
   }
 
   carregarDados() {
-    this.turmaServece.list().subscribe({
+    this.aulaService.list().subscribe({
       next: (dados) => {
         this.turmas = dados;
         this.cdr.detectChanges();

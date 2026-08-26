@@ -5,11 +5,11 @@ import java.util.Map;
 
 import br.com.kaio.catesys.bss.TurmaBss;
 import br.com.kaio.catesys.domain.Turma;
-import br.com.kaio.catesys.eps.dto.TurmaDto;
+import br.com.kaio.catesys.domain.TurmaAluno;
+import br.com.kaio.catesys.eps.dto.TurmaDTO;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
@@ -30,7 +30,7 @@ public class TurmaEp {
 	private TurmaBss turmaBss;
 
 	@POST
-	public Turma create(TurmaDto dto) {
+	public Turma create(TurmaDTO dto) {
 		try {
 			return turmaBss.adicionar(dto.getTurma(), dto.getAlunos());
 		} catch (Exception e) {
@@ -55,7 +55,7 @@ public class TurmaEp {
 
 	@GET
 	@Path("/listTA")
-	public List<Turma> getList() {
+	public List<TurmaAluno> getList() {
 
 		return turmaBss.getTA();
 	}
@@ -67,12 +67,25 @@ public class TurmaEp {
 		return turmaBss.getTurmaAluno(codigo);
 	}
 
-	@DELETE
-	public Response remover(Turma domain) {
+	@POST
+	@Path("/remover")
+	public Response remover(TurmaDTO dto) {
 
 		try {
-			turmaBss.remover(domain);
+			turmaBss.remover(dto.getTurma(), dto.getAlunos());
 			return Response.ok(Map.of("mensagem", " apagado com sucesso")).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
+		}
+	}
+
+	@PUT
+	public Response editar(TurmaDTO dto) {
+
+		try {
+			turmaBss.alterar(dto.getTurma(), dto.getAlunos());
+			return Response.ok(Map.of("mensagem", "Alterado com sucesso")).build();
 		} catch (Exception e) {
 			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
 		}
@@ -84,14 +97,4 @@ public class TurmaEp {
 		turmaBss.apagarAll();
 	}
 
-	@PUT
-	public Response editar(TurmaDto dto) {
-
-		try {
-			turmaBss.alterar(dto.getTurma(), dto.getAlunos());
-			return Response.ok(Map.of("mensagem", "Alterado com sucesso")).build();
-		} catch (Exception e) {
-			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
-		}
-	}
 }

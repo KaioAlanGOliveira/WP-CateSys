@@ -86,11 +86,8 @@ public class TurmaBss {
 
 		try {
 			em.merge(turma);
-			em.createQuery(
-				    "DELETE FROM TurmaAluno ta WHERE ta.id.turmaCodigo = :codigo"
-				)
-				.setParameter("codigo", turma.getCodigo())
-				.executeUpdate();
+			em.createQuery("DELETE FROM TurmaAluno ta WHERE ta.id.turmaCodigo = :codigo")
+					.setParameter("codigo", turma.getCodigo()).executeUpdate();
 			for (Aluno aluno : alunos) {
 				TurmaAluno tas = new TurmaAluno();
 				tas.setId(new TurmaAlunoId(turma.getCodigo(), aluno.getMatricula()));
@@ -102,19 +99,29 @@ public class TurmaBss {
 		}
 	}
 
-	public void remover(Turma domain) {
+	public void remover(Turma turma, List<Aluno> alunos) {
 
 		try {
-			em.remove(em.find(Turma.class, domain.getCodigo()));
+			em.createQuery("DELETE FROM Aula a WHERE a.turmaCodigo = :turmaCodigo")
+            .setParameter("turmaCodigo", turma.getCodigo())
+            .executeUpdate();
+			
+			em.createQuery("DELETE FROM TurmaAluno ta WHERE ta.id.turmaCodigo = :turmaCodigo")
+					.setParameter("turmaCodigo", turma.getCodigo()).executeUpdate();
+			
+			em.createQuery("DELETE FROM Turma t WHERE t.codigo = :turmaCodigo")
+					.setParameter("turmaCodigo", turma.getCodigo()).executeUpdate();
+
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException("Erro ao remover", e);
 		}
 	}
 
-	public List<Turma> getTA() {
+	public List<TurmaAluno> getTA() {
 		try {
-			String jpql = "	SELECT p FROM Turma p";
-			TypedQuery<Turma> query = em.createQuery(jpql, Turma.class);
+			String jpql = "	SELECT p FROM TurmaAluno p";
+			TypedQuery<TurmaAluno> query = em.createQuery(jpql, TurmaAluno.class);
 
 			return query.getResultList();
 		} catch (Exception e) {
@@ -168,8 +175,17 @@ public class TurmaBss {
 	public void apagarAll() {
 
 		try {
-			em.createQuery("DELETE FROM TurmaAluno").executeUpdate();
-			em.createQuery("DELETE FROM Turma").executeUpdate();
+			// 1. Apaga todas as presenças
+	        em.createQuery("DELETE FROM Presenca").executeUpdate();
+
+	        // 2. Apaga todas as aulas
+	        em.createQuery("DELETE FROM Aula").executeUpdate();
+
+	        // 3. Apaga todos os vínculos turma-aluno
+	        em.createQuery("DELETE FROM TurmaAluno").executeUpdate();
+
+	        // 4. Apaga todas as turmas
+	        em.createQuery("DELETE FROM Turma").executeUpdate();
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao remover", e);
 		}

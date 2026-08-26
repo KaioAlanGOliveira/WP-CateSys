@@ -1,6 +1,6 @@
 package br.com.kaio.catesys.eps.dto;
 
-public class LoginDto {
+public class LoginDTO {
 
 	private String login;
 	private String senha;

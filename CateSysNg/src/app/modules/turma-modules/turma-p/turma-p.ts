@@ -262,8 +262,14 @@ export class TurmaP implements OnChanges, OnInit {
     const respota = window.confirm('Deseja realmente apagar o elemento selecionado?');
     if (respota) {
       if (!this.Selecionado?.codigo) return;
+      const formValue = this.formulario.getRawValue();
 
-      this.turmaService.apagar(this.Selecionado).subscribe({
+      const formTADto: TurmaDto = {
+        turma: formValue,
+        alunos: this.listTAluno
+      };
+      
+      this.turmaService.apagar(formTADto).subscribe({
         next: () => { this.finalizarComSucesso(); this.fecharModal(); },
         error: (err) => { alert('Erro ao apagar a turma.'); this.finalizarComSucesso(); },
       });
