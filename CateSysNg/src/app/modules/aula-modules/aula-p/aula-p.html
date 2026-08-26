@@ -63,7 +63,7 @@
             <tr (click)="selecionado(aluno)">
               <td>{{ aluno.matricula }}</td>
               <td>{{ aluno.nome }}</td>
-              <td>{{ aluno.presenca }}</td>
+               <p-tableCheckbox [value]="aluno"></p-tableCheckbox>
             </tr>
           </ng-template>
 

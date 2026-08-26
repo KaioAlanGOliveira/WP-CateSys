@@ -121,7 +121,15 @@ export class AulaP implements OnChanges, OnInit {
 
     this.aulaService.getEntity(codigoTurma).subscribe({
       next: (dados) => {
-        this.formulario.patchValue(dados);
+        console.log('Dados recebidos:', dados); 
+      this.listTAluno = dados.alunos;
+      this.formulario.patchValue({
+        date: this.Selecionado?.data,
+        nome: dados.turma?.nome,          
+        professorMatricula: dados.turma?.professorMatricula
+      });
+
+      this.cdr.detectChanges();
       }
     });
   }

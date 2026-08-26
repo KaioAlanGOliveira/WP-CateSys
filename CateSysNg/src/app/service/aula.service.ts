@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { loginDto } from '../models/login.model';
 import { log } from 'node:console';
 import { AulaDoain } from '../models/aula.model';
-
+import { AulaDto } from '../models/aulaDto.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -39,8 +39,8 @@ export class AulaService {
   list(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/listTA`);
   }
-  getEntity(codTurma: number ): Observable<AulaDoain> {
+  getEntity(codTurma: number ): Observable<AulaDto> {
 
-    return this.http.get<AulaDoain>(`${this.apiUrl}/${codTurma}`);
+    return this.http.get<AulaDto>(`${this.apiUrl}/${codTurma}`);
   }
 }

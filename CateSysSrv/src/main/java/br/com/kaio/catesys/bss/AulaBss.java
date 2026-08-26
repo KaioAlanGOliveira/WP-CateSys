@@ -4,13 +4,13 @@ import java.util.List;
 
 import br.com.kaio.catesys.domain.Aluno;
 import br.com.kaio.catesys.domain.Aula;
-import br.com.kaio.catesys.domain.Professor;
 import br.com.kaio.catesys.domain.Turma;
 import br.com.kaio.catesys.domain.TurmaAluno;
 import br.com.kaio.catesys.eps.dto.AulaDTO;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 @Stateless
@@ -56,45 +56,31 @@ public class AulaBss {
 	}
 
 	public AulaDTO getEntity(Integer codigoTurma) {
-
 		try {
-			String jpql = """
-					    SELECT a
-					    FROM Aula a
-					    WHERE a.turmaCodigo = :codigoTurma
-					""";
 
-			Aula aula = em.createQuery(jpql, Aula.class).setParameter("codigoTurma", codigoTurma).getSingleResult();
-			String jpqlProfessor = """
-					    SELECT p
-					    FROM Turma t
-					    JOIN t.professor p
-					    WHERE t.codigo = :codigoTurma
-					""";
-			Professor professor = em.createQuery(jpqlProfessor, Professor.class)
-					.setParameter("codigoTurma", codigoTurma).getSingleResult();
+			// 1. Busca a turma
+			Turma turma = em.createQuery("SELECT t FROM Turma t WHERE t.codigo = :codigo", Turma.class)
+					.setParameter("codigo", codigoTurma).getSingleResult();
 
-			String jpqlAlunos = """
-					    SELECT a
-					    FROM TurmaAluno ta
-					    JOIN ta.aluno a
-					    WHERE ta.turma.codigo = :codigoTurma
-					""";
+			// 2. Busca os alunos da turma
+			List<Aluno> alunos = em.createQuery("""
+					SELECT a
+					FROM TurmaAluno ta
+					JOIN Aluno a ON a.matricula = ta.id.alunoMatricula
+					WHERE ta.id.turmaCodigo = :codigoTurma
+					""", Aluno.class).setParameter("codigoTurma", codigoTurma).getResultList();
 
-			List<Aluno> alunos = em.createQuery(jpqlAlunos, Aluno.class).setParameter("codigoTurma", codigoTurma)
-					.getResultList();
-
+			// 3. Monta o DTO
 			AulaDTO dto = new AulaDTO();
-
-			dto.setCodigo(aula.getCodigo());
-			dto.setData(aula.getData());
-			dto.setProfessor(professor);
 			dto.setAlunos(alunos);
+			dto.setTurma(turma); 
+			
 
 			return dto;
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("Erro ao listar", e);
+			throw new RuntimeException("Erro ao buscar dados da aula", e);
 		}
 	}
 
@@ -126,4 +112,6 @@ public class AulaBss {
 			throw new RuntimeException("Erro ao remover", e);
 		}
 	}
+	
+
 }
