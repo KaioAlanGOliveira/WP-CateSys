@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TurmaService } from '../../../service/turma.service';
 import { TableModule } from 'primeng/table';
@@ -9,6 +9,7 @@ import { Turma } from '../../turma-modules/turma/turma';
 import { AulaDoain } from '../../../models/aula.model';
 import { log } from 'console';
 import { AulaService } from '../../../service/aula.service';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-aula',
@@ -34,6 +35,11 @@ export class Aula implements OnInit {
   listTurmas: TurmaDomain[] = [];
   turmasFiltradas: TurmaDomain[] = [];
   turmas: TurmaDomain[] = [];
+
+  
+  @Input() Selecionado: AulaDoain | null = null;
+  @Output() visivelChange = new EventEmitter<boolean>();
+  @Input() visivel = false;
 
   form = new FormGroup({
     turmaCodigo: new FormControl<number | null>(null, Validators.required),

@@ -1,12 +1,12 @@
 package br.com.kaio.catesys.bss;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import br.com.kaio.catesys.domain.Aluno;
 import br.com.kaio.catesys.domain.Aula;
 import br.com.kaio.catesys.domain.Presenca;
 import br.com.kaio.catesys.domain.Turma;
-import br.com.kaio.catesys.domain.TurmaAluno;
 import br.com.kaio.catesys.eps.dto.AulaDTO;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -44,15 +44,32 @@ public class AulaBss {
 		}
 	}
 
-	public List<TurmaAluno> getList() {
+	public List<Aula> getList(String codigo, String data, String turmaCodigo) {
+
 		try {
-			String jpql = "	SELECT p FROM TurmaAluno p";
-			TypedQuery<TurmaAluno> query = em.createQuery(jpql, TurmaAluno.class);
+
+			String jpql = """
+					SELECT a
+					FROM Aula a
+					WHERE (:codigo IS NULL OR a.codigo = :codigo)
+					  AND (:data IS NULL OR a.data = :data)
+					  AND (:turmaCodigo IS NULL OR a.turmaCodigo = :turmaCodigo)
+					""";
+
+			TypedQuery<Aula> query = em.createQuery(jpql, Aula.class);
+
+			query.setParameter("codigo", codigo);
+
+			query.setParameter("data",
+					data == null || data.equals("null") || data.isBlank() ? null : LocalDate.parse(data));
+
+			query.setParameter("turmaCodigo", turmaCodigo);
 
 			return query.getResultList();
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("Erro ao listar", e);
+			throw new RuntimeException("Erro ao listar aulas", e);
 		}
 	}
 
@@ -88,9 +105,9 @@ public class AulaBss {
 
 		try {
 			aula.setCodigo(getNextCod());
-			
+
 			for (Aluno aluno : alunos) {
-				
+
 				Presenca presenca = new Presenca();
 				presenca.setAlunoMatricula(aluno.getMatricula());
 				presenca.setAulaCodigo(aula.getCodigo());

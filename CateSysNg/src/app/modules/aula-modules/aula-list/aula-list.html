@@ -21,7 +21,7 @@
     <div class="form-field">
       <label for="turma">Turma</label>
 
-      <input id="turma" class="input-field" type="text" formControlName="turma" placeholder="Digite a turma" #inputturma>
+      <input id="turma" class="input-field" type="text" formControlName="turmaCodigo" placeholder="Digite a turma" #inputturma>
     </div>
 
      <!-- Data -->
@@ -83,6 +83,6 @@
   </div>
 
 </div>
-<app-aula [(visivel)]="exibirModalPrincipal" (visivelChange)="retornoPopUp($event)" [Selecionado]="aulaSelecionado">
+<app-aula [(visivel)]="exibirModal" (visivelChange)="retornoPopUp($event)" [Selecionado]="aulaSelecionado">
 
 </app-aula>

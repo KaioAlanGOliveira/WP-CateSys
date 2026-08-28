@@ -5,7 +5,6 @@ import java.util.Map;
 
 import br.com.kaio.catesys.bss.AulaBss;
 import br.com.kaio.catesys.domain.Aula;
-import br.com.kaio.catesys.domain.TurmaAluno;
 import br.com.kaio.catesys.eps.dto.AulaDTO;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -17,6 +16,7 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -29,8 +29,9 @@ public class AulaEp {
 	private AulaBss aulaBss;
 
 	@GET
-	public List<TurmaAluno> getAula() {
-		return aulaBss.getList();
+	public List<Aula> getList(@QueryParam("codigo") String codigo, @QueryParam("turmaCodigo") String turmaCodigo, @QueryParam("data") String data) {
+
+		return aulaBss.getList(codigo, data, turmaCodigo);
 	}
 
 	@GET

@@ -14,7 +14,7 @@ import { Aula } from "../aula/aula";
 
 @Component({
   selector: 'app-list',
-  imports: [ReactiveFormsModule, TableModule, AulaP, CommonModule, Aluno, Aula],
+  imports: [ReactiveFormsModule, TableModule, CommonModule, Aula],
   standalone: true,
   templateUrl: './aula-list.html',
   styleUrl: './aula-list.css',
@@ -30,7 +30,7 @@ export class AulaList implements OnInit {
   private aulaService = inject(AulaService);
   private cdr = inject(ChangeDetectorRef);
 
-  exibirModalPrincipal: boolean = false;
+  exibirModal: boolean = false;
   aulaSelecionado!: AulaDoain | any;
   formTurma!: TurmaDomain;
   listAula: TurmaDomain[] = [];
@@ -38,9 +38,9 @@ export class AulaList implements OnInit {
   aulas: AulaDoain[] = [];
 
   form = new FormGroup({
-    codigo: new FormControl<number | null>(null, Validators.required),
-    turma: new FormControl<Turma | null | number>(null, Validators.required),
-    data: new FormControl<Date | null>(null, Validators.required),
+    codigo: new FormControl<number | null>(null),
+    turmaCodigo: new FormControl<number | null>(null),
+    data: new FormControl<string | null>(null),
   });
 
   ngOnInit() {
@@ -48,11 +48,18 @@ export class AulaList implements OnInit {
   }
 
   carregarDados() {
-    this.aulaService.list().subscribe({
+    const raw = this.form.getRawValue();
+    const parametros: any = {};
+
+    if (raw.codigo != null) parametros.codigo = raw.codigo;
+    if (raw.turmaCodigo != null) parametros.turmaCodigo = raw.turmaCodigo;
+    if (raw.data != null) parametros.data = raw.data;
+
+    this.aulaService.listFiltrados(parametros).subscribe({
       next: (dados) => {
         this.aulas = dados;
         this.aulaFiltradas = dados;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('Erro ao carregar os dados:', err);
@@ -66,21 +73,14 @@ export class AulaList implements OnInit {
     this.abrirFormulario();
   }
   pesquisar() {
-    const filtro = this.form.value;
-    if (!filtro) {
-      this.aulaFiltradas = [...this.listAula];
-      return;
-    }
-    this.form.patchValue({});
-
     this.carregarDados();
   }
   abrirFormulario() {
-    this.exibirModalPrincipal = true;
+    this.exibirModal = true;
   }
 
   abrirFormularioCriar() {
-    this.exibirModalPrincipal = true;
+    this.exibirModal = true;
   }
 
   abrirNovoPopup() {

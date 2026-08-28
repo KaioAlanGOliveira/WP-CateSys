@@ -5,6 +5,7 @@ import { loginDto } from '../models/login.model';
 import { log } from 'node:console';
 import { AulaDoain } from '../models/aula.model';
 import { AulaDto } from '../models/aulaDto.model';
+import { HttpParamsObject } from '../core/http/http-params-object';
 @Injectable({
   providedIn: 'root'
 })
@@ -24,8 +25,9 @@ export class AulaService {
     return this.http.get<AulaDoain[]>(this.apiUrl);
   }
 
-  listFiltrados(filtro: AulaDoain): Observable<AulaDoain[]> {
-    return this.http.post<AulaDoain[]>(`${this.apiUrl}/filtrar`, filtro);
+  listFiltrados(filtro: any): Observable<any> {
+    console.log(filtro);
+    return this.http.get<any>(`${this.apiUrl}`, { params: new HttpParamsObject(filtro) });
   }
 
   editar(aula: AulaDoain) {
@@ -40,7 +42,7 @@ export class AulaService {
     return this.http.get<AulaDoain[]>(`${this.apiUrl}/listTA`);
   }
 
-  getEntity(codTurma: number ): Observable<AulaDto> {
+  getEntity(codTurma: number): Observable<AulaDto> {
 
     return this.http.get<AulaDto>(`${this.apiUrl}/${codTurma}`);
   }
