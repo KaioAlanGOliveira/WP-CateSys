@@ -3,13 +3,9 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { TurmaService } from '../../../service/turma.service';
 import { TableModule } from 'primeng/table';
 import { TurmaDomain } from '../../../models/turma.model';
-import { AulaP } from '../aula-form/aula-p';
 import { CommonModule } from '@angular/common';
-import { Turma } from '../../turma-modules/turma/turma';
 import { AulaDoain } from '../../../models/aula.model';
-import { log } from 'console';
 import { AulaService } from '../../../service/aula.service';
-import { Aluno } from "../../aluno-modules/aluno/aluno";
 import { Aula } from "../aula/aula";
 
 @Component({

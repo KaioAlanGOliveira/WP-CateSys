@@ -1,0 +1,138 @@
+/* ================================
+   FORMULÁRIO DE PESQUISA
+   ================================ */
+
+form {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+
+  border: 1px solid #d5d5d5;
+  background-color: #ffffff;
+}
+
+/* Cada campo */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Matrícula */
+.form-field:first-child {
+  width: 105px;
+}
+
+/* Nome */
+.form-field:nth-child(2) {
+  flex: 1;
+}
+
+/* Labels */
+.form-field label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Input normal */
+.form-field input {
+  width: 100%;
+  height: 28px;
+  box-sizing: border-box;
+}
+
+/* InputNumber do PrimeNG */
+.form-field p-inputNumber {
+  width: 100%;
+}
+
+.form-field p-inputNumber input {
+  width: 100%;
+}
+
+/* ================================
+   BOTÃO PESQUISAR
+   ================================ */
+
+#btn-pesq {
+  height: 32px;
+  min-width: 95px;
+  margin-bottom: 0;
+}
+
+/* ================================
+   TABELA
+   ================================ */
+
+:host ::ng-deep .p-datatable {
+  width: 100%;
+  border: 1px solid #d5d5d5;
+}
+
+/* Cabeçalho */
+:host ::ng-deep .p-datatable-thead > tr > th {
+  height: 30px;
+  padding: 5px 10px;
+
+  background-color: #f1f3f5;
+  border: 1px solid #d5d5d5;
+
+  font-size: 13px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* Linhas */
+:host ::ng-deep .p-datatable-tbody > tr > td {
+  height: 30px;
+  padding: 5px 10px;
+
+  border: 1px solid #e0e0e0;
+
+  font-size: 13px;
+}
+
+/* Hover da linha */
+:host ::ng-deep .p-datatable-tbody > tr:hover {
+  background-color: #eaf3fb;
+  cursor: pointer;
+}
+
+/* Linha selecionada */
+:host ::ng-deep .p-datatable-tbody > tr.p-highlight {
+  background-color: #cfe8ff;
+  color: #222;
+}
+
+/* ================================
+   RODAPÉ
+   ================================ */
+
+.total-registros {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px 0;
+
+  font-size: 13px;
+}
+
+/* ================================
+   BOTÃO SELECIONAR
+   ================================ */
+
+.btn-selecionar {
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: 5px;
+}
+
+.btn-selecionar button {
+  min-width: 90px;
+  height: 32px;
+}

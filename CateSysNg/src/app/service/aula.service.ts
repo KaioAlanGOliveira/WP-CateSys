@@ -6,10 +6,14 @@ import { log } from 'node:console';
 import { AulaDoain } from '../models/aula.model';
 import { AulaDto } from '../models/aulaDto.model';
 import { HttpParamsObject } from '../core/http/http-params-object';
+import { Presenca } from '../models/presenca.model';
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class AulaService {
+
 
   private apiUrl = 'api/aula';
 
@@ -42,8 +46,7 @@ export class AulaService {
     return this.http.get<AulaDoain[]>(`${this.apiUrl}/listTA`);
   }
 
-  getEntity(codTurma: number): Observable<AulaDto> {
-
-    return this.http.get<AulaDto>(`${this.apiUrl}/${codTurma}`);
+  getEntity(codTurma: number): Observable<AulaDoain> {    
+    return this.http.get<AulaDoain>(`${this.apiUrl}/filtro/${codTurma}`);
   }
 }

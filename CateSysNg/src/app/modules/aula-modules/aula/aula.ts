@@ -3,7 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { TurmaService } from '../../../service/turma.service';
 import { TableModule } from 'primeng/table';
 import { TurmaDomain } from '../../../models/turma.model';
-import { AulaP } from '../aula-form/aula-p';
+import { AulaForm } from '../aula-form/aula-form';
 import { CommonModule } from '@angular/common';
 import { Turma } from '../../turma-modules/turma/turma';
 import { AulaDoain } from '../../../models/aula.model';
@@ -11,10 +11,11 @@ import { log } from 'console';
 import { AulaService } from '../../../service/aula.service';
 import { EventEmitter } from '@angular/core';
 import { Dialog } from "primeng/dialog";
+import { AlunoP } from "../../aluno-modules/aluno-p/aluno-p";
 
 @Component({
   selector: 'app-aula',
-  imports: [ReactiveFormsModule, TableModule, CommonModule, Dialog],
+  imports: [ReactiveFormsModule, TableModule, CommonModule, Dialog, AulaForm],
   standalone: true,
   templateUrl: './aula.html',
   styleUrl: './aula.css',
@@ -30,30 +31,43 @@ export class Aula implements OnInit {
   private turmaServece = inject(TurmaService);
   private cdr = inject(ChangeDetectorRef);
 
-  turmaSelecionado!: AulaDoain | any;
+  aulaSelecionado!: AulaDoain | any;
   formTurma!: TurmaDomain;
   listTurmas: TurmaDomain[] = [];
   turmasFiltradas: TurmaDomain[] = [];
   turmas: TurmaDomain[] = [];
-
+  exibirModal: boolean = false;
 
   @Input() Selecionado: AulaDoain | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
 
   form = new FormGroup({
+    codigo: new FormControl<number | null>(null, Validators.required),
     turmaCodigo: new FormControl<number | null>(null, Validators.required),
-    data: new FormControl<string | null>(null, Validators.required)
+    data: new FormControl<string | null | Date>(null, Validators.required)
   });
+
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (changes['Selecionado'] && this.Selecionado && this.form) {
+      this.form.patchValue(this.Selecionado);
+    }
+  }
 
   ngOnInit() {
     this.carregarDados();
   }
 
   carregarDados() {
-    this.aulaService.list().subscribe({
+    const codigo = this.Selecionado?.turmaCodigo;
+    if (!codigo) return;
+
+    this.aulaService.getEntity(codigo).subscribe({
       next: (dados) => {
-        this.turmas = dados;
+        console.log(dados);
+
+        this.form.patchValue(dados);
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -62,9 +76,10 @@ export class Aula implements OnInit {
 
     });
   }
+
   novo() {
     this.form.reset();
-    this.turmaSelecionado = null;
+    this.aulaSelecionado = null;
     this.abrirPopup();
   }
   pesquisar() {
@@ -78,9 +93,10 @@ export class Aula implements OnInit {
     this.carregarDados();
   }
   abrirPopup() {
+    this.exibirModal = true;
   }
   abrirNovoPopup() {
-    this.turmaSelecionado = null;
+    this.aulaSelecionado = null;
     this.abrirPopup();
   }
   retornoPopUp(exib: boolean) {
@@ -91,7 +107,7 @@ export class Aula implements OnInit {
   }
 
   selecionado(turma: any) {
-    this.turmaSelecionado = turma;
+    this.aulaSelecionado = turma;
     this.visivel = true;
     this.abrirPopup();
   }
@@ -104,7 +120,7 @@ export class Aula implements OnInit {
   }
 
   criar() {
-    this.turmaSelecionado = this.form.getRawValue();
+    this.aulaSelecionado = this.form.getRawValue();
     this.abrirPopup();
   }
   fecharModal() {

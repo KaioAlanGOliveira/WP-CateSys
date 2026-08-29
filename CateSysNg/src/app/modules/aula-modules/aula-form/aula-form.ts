@@ -15,16 +15,15 @@ import { aluno } from '../../../models/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { TurmaAlunoService } from '../../../service/turmaAluno.service';
 import { TableModule } from "primeng/table";
-import { ComponenteAluno } from "../../../shared/componente/componente-pesq-aluno/componente-aluno";
-import { ComponenteProfessor } from '../../../shared/componente/componente-pesq-professor/componente-professor';
 import { TurmaAluno } from '../../../models/TurmaAluno.model';
 import { AulaDoain } from '../../../models/aula.model';
 import { AulaService } from '../../../service/aula.service';
 import { log } from 'console';
 import { AulaDto } from '../../../models/aulaDto.model';
+import { ComponenteTurma } from "../../../shared/componente/componente-pesq-turma/componente-turma";
 
 @Component({
-  selector: 'app-aula-p',
+  selector: 'app-aula-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -38,12 +37,12 @@ import { AulaDto } from '../../../models/aulaDto.model';
     RadioButtonModule,
     DatePickerModule,
     TableModule,
-    ComponenteProfessor
-  ],
-  templateUrl: './aula-p.html',
-  styleUrl: './aula-p.css'
+    ComponenteTurma
+],
+  templateUrl: './aula-form.html',
+  styleUrl: './aula-form.css'
 })
-export class AulaP implements OnChanges, OnInit {
+export class AulaForm implements OnChanges, OnInit {
 
 
   get novoHabilitado() { return this.modo === 'initial'; }
@@ -93,7 +92,6 @@ export class AulaP implements OnChanges, OnInit {
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
       this.modo = 'creating';
       this.carregarTurmaSelecionada();
-      this.carregarTurma();
       this.originalTurma = { ...this.Selecionado };
       this.disabled = true;
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
@@ -109,31 +107,12 @@ export class AulaP implements OnChanges, OnInit {
   private initForm(): void {
     this.formulario = this.fb.group({
       codigo: [{ value: '', disabled: false }],
-      nome: [{ value: '', disabled: true }, [Validators.required]],
-      date: [{ value: '', disabled: false }, [Validators.required]],
-      codAluno: [{ value: null, disabled: true }],
-      professorMatricula: [{ value: null }]
+      data: [{ value: '', disabled: false }, [Validators.required]],
+      turmaCodigo: [{ value: null, disabled: true }],
     });
   }
 
-  carregarTurma() {
-    const codigoTurma = this.Selecionado?.turmaCodigo;
-    if (!codigoTurma) return;
-
-    this.aulaService.getEntity(codigoTurma).subscribe({
-      next: (dados) => {
-        console.log('Dados recebidos:', dados); 
-      this.listTAluno = dados.alunos;
-      this.formulario.patchValue({
-        date: this.Selecionado?.data,
-        nome: dados.turma?.nome,          
-        professorMatricula: dados.turma?.professorMatricula
-      });
-
-      this.cdr.detectChanges();
-      }
-    });
-  }
+ 
 
   // ==================== CONTROLE CENTRALIZADO ====================
   private alterarEstadoUI(): void {
@@ -374,7 +353,7 @@ export class AulaP implements OnChanges, OnInit {
 
     // carregar turma
     this.aulaService.listFiltrados(filtro).subscribe({
-      next: (dados) => {
+      next: (dados) => {        
 
         if (!dados || dados.length === 0) {
           alert('Turma não encontrada.');
@@ -383,6 +362,8 @@ export class AulaP implements OnChanges, OnInit {
 
         const aula = dados[0];
 
+        console.log(aula.data);
+        
         this.formulario.patchValue(aula);
 
         this.originalTurma = { ...aula };
@@ -391,6 +372,7 @@ export class AulaP implements OnChanges, OnInit {
 
         this.turmaAlunoService.getListAT(aula.codigo).subscribe({
           next: (dados) => {
+console.log(dados);
 
             this.listTAluno = dados.map((item: any) => ({
               matricula: item[0],
@@ -400,7 +382,7 @@ export class AulaP implements OnChanges, OnInit {
 
             this.tAlunosFiltrados = [...this.listTAluno];
 
-            console.log(this.listTAluno);
+            console.log(this.tAlunosFiltrados);
 
             this.cdr.detectChanges();
           },

@@ -6,20 +6,7 @@
     <!-- Turma -->
     <div class="campo">
       <label for="turma">Turma</label>
-
-      <select id="turma" formControlName="turmaCodigo" class="input-field">
-
-        <option [ngValue]="null">
-          Selecione uma turma
-        </option>
-
-        <option *ngFor="let turma of turmas" [ngValue]="turma.codigo">
-
-          {{ turma.nome }}
-
-        </option>
-
-      </select>
+      <input id="turma" type="text" formControlName="turmaCodigo" class="input-field">
     </div>
 
     <!-- Data -->
@@ -49,3 +36,5 @@
   </form>
 
 </p-dialog>
+
+<app-aula-form [(visivel)]="exibirModal" (visivelChange)="retornoPopUp($event)" [Selecionado]="aulaSelecionado"></app-aula-form>

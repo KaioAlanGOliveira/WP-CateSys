@@ -109,7 +109,20 @@ public class AulaBss {
 			throw new RuntimeException("Erro ao buscar dados da aula", e);
 		}
 	}
+	public Aula getEntityFiltrado(Integer codigoTurma) {
+		try {
 
+			// 1. Busca a Aula
+			Aula aula = em.createQuery("SELECT p FROM Aula p WHERE p.turmaCodigo = :codigo", Aula.class)
+					.setParameter("codigo", codigoTurma).getSingleResult();
+
+			return aula;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao buscar dados da aula", e);
+		}
+	}
 	public AulaDTO adicionar(Turma turma, List<Aluno> alunos, Aula aula) throws Exception {
 
 		try {

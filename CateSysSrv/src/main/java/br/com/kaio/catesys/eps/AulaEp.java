@@ -29,7 +29,8 @@ public class AulaEp {
 	private AulaBss aulaBss;
 
 	@GET
-	public List<Aula> getList(@QueryParam("codigo") String codigo, @QueryParam("turmaCodigo") String turmaCodigo, @QueryParam("data") String data) {
+	public List<Aula> getList(@QueryParam("codigo") String codigo, @QueryParam("turmaCodigo") String turmaCodigo,
+			@QueryParam("data") String data) {
 
 		return aulaBss.getList(codigo, data, turmaCodigo);
 	}
@@ -39,6 +40,13 @@ public class AulaEp {
 	public AulaDTO getEntity(@PathParam("codigo") Integer codigo) {
 
 		return aulaBss.getEntity(codigo);
+	}
+
+	@GET
+	@Path("/filtro/{codigo}")
+	public Aula getEntityFiltrado(@PathParam("codigo") Integer codigo) {
+
+		return aulaBss.getEntityFiltrado(codigo);
 	}
 
 	@GET
