@@ -1,23 +1,24 @@
-<!-- Cabeçalho -->
-<div class="page-header">
-  <h2>Aula</h2>
-</div>
+<p-dialog header="Cadastro das Turmas" [(visible)]="visivel" (onHide)="fecharModal()" [modal]="true"
+  [style]="{ width: '900px', height: '60vh' }">
 
-<!-- Card principal -->
-<div class="alunos-card">
-
-  <form class="filtros" [formGroup]="form" (ngSubmit)="carregarDados()">
+  <form [formGroup]="form">
 
     <!-- Turma -->
     <div class="campo">
       <label for="turma">Turma</label>
 
       <select id="turma" formControlName="turmaCodigo" class="input-field">
-        <option value="">Selecione uma turma</option>
 
-        <option *ngFor="let turma of turmas" [value]="turma.codigo">
-          {{ turma.nome }}
+        <option [ngValue]="null">
+          Selecione uma turma
         </option>
+
+        <option *ngFor="let turma of turmas" [ngValue]="turma.codigo">
+
+          {{ turma.nome }}
+
+        </option>
+
       </select>
     </div>
 
@@ -31,19 +32,20 @@
     <!-- Botões -->
     <div class="acoes">
 
-      <button type="button" (click)="cancelar()">
+      <button type="button" (click)="fecharModal()">
+
         Cancelar
+
       </button>
 
-      <button (click)="criar()">
+      <button type="button" (click)="criar()">
+
         Criar
+
       </button>
 
     </div>
 
   </form>
 
-</div>
-
-<app-aula-p [(visivel)]="exibirModalPrincipal" (visivelChange)="retornoPopUp($event)" [Selecionado]="turmaSelecionado">
-</app-aula-p>
+</p-dialog>

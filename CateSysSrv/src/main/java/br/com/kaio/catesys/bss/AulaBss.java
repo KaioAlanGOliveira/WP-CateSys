@@ -58,13 +58,22 @@ public class AulaBss {
 
 			TypedQuery<Aula> query = em.createQuery(jpql, Aula.class);
 
-			query.setParameter("codigo", codigo);
+			Integer codigoInt = (codigo == null || codigo.equals("null") || codigo.isBlank())
+	                ? null
+	                : Integer.valueOf(codigo);
 
-			query.setParameter("data",
-					data == null || data.equals("null") || data.isBlank() ? null : LocalDate.parse(data));
+	        LocalDate dataParsed = (data == null || data.equals("null") || data.isBlank())
+	                ? null
+	                : LocalDate.parse(data);
 
-			query.setParameter("turmaCodigo", turmaCodigo);
+	        Integer turmaCodigoInt = (turmaCodigo == null || turmaCodigo.equals("null") || turmaCodigo.isBlank())
+	                ? null
+	                : Integer.valueOf(turmaCodigo);
 
+	        query.setParameter("data", dataParsed);
+	        query.setParameter("codigo", codigoInt);
+	        query.setParameter("turmaCodigo", turmaCodigoInt);
+	        
 			return query.getResultList();
 
 		} catch (Exception e) {

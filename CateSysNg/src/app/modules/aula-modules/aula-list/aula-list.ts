@@ -48,17 +48,13 @@ export class AulaList implements OnInit {
   }
 
   carregarDados() {
-    const raw = this.form.getRawValue();
-    const parametros: any = {};
+    const filtros = this.form.value as AulaDoain;
 
-    if (raw.codigo != null) parametros.codigo = raw.codigo;
-    if (raw.turmaCodigo != null) parametros.turmaCodigo = raw.turmaCodigo;
-    if (raw.data != null) parametros.data = raw.data;
-
-    this.aulaService.listFiltrados(parametros).subscribe({
+    this.aulaService.listFiltrados(filtros).subscribe({
       next: (dados) => {
         this.aulas = dados;
         this.aulaFiltradas = dados;
+        this.listAula = dados;
         this.cdr.markForCheck();
       },
       error: (err) => {
@@ -73,6 +69,12 @@ export class AulaList implements OnInit {
     this.abrirFormulario();
   }
   pesquisar() {
+    const { codigo, data, turmaCodigo } = this.form.value;
+    if (!codigo && !data && !turmaCodigo) {
+      this.aulaFiltradas = [...this.listAula];
+      return;
+    }
+    
     this.carregarDados();
   }
   abrirFormulario() {

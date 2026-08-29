@@ -10,10 +10,11 @@ import { AulaDoain } from '../../../models/aula.model';
 import { log } from 'console';
 import { AulaService } from '../../../service/aula.service';
 import { EventEmitter } from '@angular/core';
+import { Dialog } from "primeng/dialog";
 
 @Component({
   selector: 'app-aula',
-  imports: [ReactiveFormsModule, TableModule, AulaP, CommonModule],
+  imports: [ReactiveFormsModule, TableModule, CommonModule, Dialog],
   standalone: true,
   templateUrl: './aula.html',
   styleUrl: './aula.css',
@@ -29,14 +30,13 @@ export class Aula implements OnInit {
   private turmaServece = inject(TurmaService);
   private cdr = inject(ChangeDetectorRef);
 
-  exibirModalPrincipal: boolean = false;
   turmaSelecionado!: AulaDoain | any;
   formTurma!: TurmaDomain;
   listTurmas: TurmaDomain[] = [];
   turmasFiltradas: TurmaDomain[] = [];
   turmas: TurmaDomain[] = [];
 
-  
+
   @Input() Selecionado: AulaDoain | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
@@ -78,7 +78,6 @@ export class Aula implements OnInit {
     this.carregarDados();
   }
   abrirPopup() {
-    this.exibirModalPrincipal = true;
   }
   abrirNovoPopup() {
     this.turmaSelecionado = null;
@@ -93,6 +92,7 @@ export class Aula implements OnInit {
 
   selecionado(turma: any) {
     this.turmaSelecionado = turma;
+    this.visivel = true;
     this.abrirPopup();
   }
   apagar(dado: any) {
@@ -106,5 +106,10 @@ export class Aula implements OnInit {
   criar() {
     this.turmaSelecionado = this.form.getRawValue();
     this.abrirPopup();
+  }
+  fecharModal() {
+    this.visivel = false;
+    this.visivelChange.emit(false);
+    this.form.reset();
   }
 }

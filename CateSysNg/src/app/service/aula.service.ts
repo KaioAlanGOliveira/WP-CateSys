@@ -25,7 +25,7 @@ export class AulaService {
     return this.http.get<AulaDoain[]>(this.apiUrl);
   }
 
-  listFiltrados(filtro: any): Observable<any> {
+  listFiltrados(filtro: AulaDoain): Observable<AulaDoain[]> {
     console.log(filtro);
     return this.http.get<any>(`${this.apiUrl}`, { params: new HttpParamsObject(filtro) });
   }
