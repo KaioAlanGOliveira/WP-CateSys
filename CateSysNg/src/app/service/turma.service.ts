@@ -7,7 +7,7 @@ import { dot } from 'node:test/reporters';
 import { Turma } from '../modules/turma-modules/turma/turma';
 import { TurmaDto } from '../models/turmaDto.model';
 import { Aula } from '../modules/aula-modules/aula/aula';
-import { AulaDoain } from '../models/aula.model';
+import { AulaDomain } from '../models/aula.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,9 +30,9 @@ export class TurmaService {
     return this.http.get(`${this.apiUrl}/apagarAll`)
   }
 
-  getEntity(codTurma: number): Observable<AulaDoain> {
+  getEntity(codTurma: number): Observable<AulaDomain> {
 
-    return this.http.get<AulaDoain>(`${this.apiUrl}/${codTurma}`);
+    return this.http.get<AulaDomain>(`${this.apiUrl}/${codTurma}`);
   }
 
   listFiltrados(filtro: TurmaDomain): Observable<TurmaDomain[]> {

@@ -4,10 +4,10 @@
   <form [formGroup]="form">
 
     <!-- Turma -->
-    <div class="campo">
-      <label for="turma">Turma</label>
-      <input id="turma" type="text" formControlName="turmaCodigo" class="input-field">
-    </div>
+      <div class="campo">
+        <label>Turma</label>
+        <cmp-componente-turma inputId="codAluno" cmpProximoCampo="bt-add" #pesqTurma formControlName="turmaCodigo"></cmp-componente-turma>
+      </div>
 
     <!-- Data -->
     <div class="campo">

@@ -11,6 +11,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { json } from 'node:stream/consumers';
 import { ProfessorService } from '../../../../service/professor.service';
+import { TurmaService } from '../../../../service/turma.service';
+import { TurmaDomain } from '../../../../models/turma.model';
 
 @Component({
   selector: 'app-pesq-turma-frm',
@@ -20,17 +22,17 @@ import { ProfessorService } from '../../../../service/professor.service';
   styleUrls: ['./pesq-turma-frm.css'],
 })
 export class PesqProfessorLst {
-  alunoSelecionado: any = null;
-  public lista: any[] = [];
+  turmaSelecionado: any = null;
+  public lista: TurmaDomain[] = [];
   public loading: boolean = false;
   public selectedItem: any;
   private cdr = inject(ChangeDetectorRef);
   @Input() cmpControleEnabled: Boolean = false;
 
-  constructor(private service: ProfessorService, public ref: DialogRef<PesqProfessorLst>, private util: UtilService) {
+  constructor(private service: TurmaService, public ref: DialogRef<PesqProfessorLst>, private util: UtilService) {
   }
 
-  formAluno = new FormGroup({
+  formTurma = new FormGroup({
     matricula: new FormControl({ value: '', disabled: false }, [Validators.required]),
     nome: new FormControl({ value: '', disabled: false }, [Validators.required, Validators.minLength(3)]),
   })
@@ -41,7 +43,7 @@ export class PesqProfessorLst {
       this.cdr.markForCheck();
     });
     this.loading = true;
-    const raw = this.formAluno.getRawValue();
+    const raw = this.formTurma.getRawValue();
     const filtro: any = {
       ...raw,
       matricula: raw.matricula != null && raw.matricula !== '' ? Number(raw.matricula) : undefined
@@ -71,7 +73,7 @@ export class PesqProfessorLst {
  // Altere apenas esta função no seu ficheiro .ts para garantir a consistência
 selecionarDaTela(item: any) {
   this.selectedItem = item;
-  this.alunoSelecionado = item; // Mantém para o seu binding atual do HTML funcionar
+  this.turmaSelecionado = item; // Mantém para o seu binding atual do HTML funcionar
 }
 
 

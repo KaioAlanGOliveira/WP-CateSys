@@ -4,7 +4,7 @@ import { TurmaService } from '../../../service/turma.service';
 import { TableModule } from 'primeng/table';
 import { TurmaDomain } from '../../../models/turma.model';
 import { CommonModule } from '@angular/common';
-import { AulaDoain } from '../../../models/aula.model';
+import { AulaDomain } from '../../../models/aula.model';
 import { AulaService } from '../../../service/aula.service';
 import { Aula } from "../aula/aula";
 
@@ -27,11 +27,11 @@ export class AulaList implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   exibirModal: boolean = false;
-  aulaSelecionado!: AulaDoain | any;
+  aulaSelecionado!: AulaDomain | any;
   formTurma!: TurmaDomain;
   listAula: TurmaDomain[] = [];
   aulaFiltradas: TurmaDomain[] = [];
-  aulas: AulaDoain[] = [];
+  aulas: AulaDomain[] = [];
 
   form = new FormGroup({
     codigo: new FormControl<number | null>(null),
@@ -44,7 +44,7 @@ export class AulaList implements OnInit {
   }
 
   carregarDados() {
-    const filtros = this.form.value as AulaDoain;
+    const filtros = this.form.value as AulaDomain;
 
     this.aulaService.listFiltrados(filtros).subscribe({
       next: (dados) => {

@@ -33,7 +33,7 @@ public class TurmaBss {
 			TypedQuery<Turma> query = em.createQuery(jpql, Turma.class);
 
 			query.setParameter("nome", nome);
-			query.setParameter("codigo", codigo.equals("null") ? null : codigo);
+			query.setParameter("codigo", "null".equals(codigo) ? null : codigo);
 			query.setParameter("status", status);
 			query.setParameter("professorMatricula", codProfessor);
 

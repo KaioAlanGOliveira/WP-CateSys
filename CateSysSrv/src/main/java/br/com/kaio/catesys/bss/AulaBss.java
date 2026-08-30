@@ -6,6 +6,7 @@ import java.util.List;
 import br.com.kaio.catesys.domain.Aluno;
 import br.com.kaio.catesys.domain.Aula;
 import br.com.kaio.catesys.domain.Presenca;
+import br.com.kaio.catesys.domain.PresencaId;
 import br.com.kaio.catesys.domain.Turma;
 import br.com.kaio.catesys.eps.dto.AulaDTO;
 import jakarta.ejb.Stateless;
@@ -60,7 +61,6 @@ public class AulaBss {
 
 			query.setParameter("codigo", codigo);
 
-			System.out.println(query.getResultList());
 			return query.getResultList();
 
 		} catch (Exception e) {
@@ -68,6 +68,7 @@ public class AulaBss {
 			throw new RuntimeException("Erro ao listar", e);
 		}
 	}
+
 	public List<Aula> getList(String codigo, String data, String turmaCodigo) {
 
 		try {
@@ -82,22 +83,19 @@ public class AulaBss {
 
 			TypedQuery<Aula> query = em.createQuery(jpql, Aula.class);
 
-			Integer codigoInt = (codigo == null || codigo.equals("null") || codigo.isBlank())
-	                ? null
-	                : Integer.valueOf(codigo);
+			Integer codigoInt = (codigo == null || codigo.equals("null") || codigo.isBlank()) ? null
+					: Integer.valueOf(codigo);
 
-	        LocalDate dataParsed = (data == null || data.equals("null") || data.isBlank())
-	                ? null
-	                : LocalDate.parse(data);
+			LocalDate dataParsed = (data == null || data.equals("null") || data.isBlank()) ? null
+					: LocalDate.parse(data);
 
-	        Integer turmaCodigoInt = (turmaCodigo == null || turmaCodigo.equals("null") || turmaCodigo.isBlank())
-	                ? null
-	                : Integer.valueOf(turmaCodigo);
+			Integer turmaCodigoInt = (turmaCodigo == null || turmaCodigo.equals("null") || turmaCodigo.isBlank()) ? null
+					: Integer.valueOf(turmaCodigo);
 
-	        query.setParameter("data", dataParsed);
-	        query.setParameter("codigo", codigoInt);
-	        query.setParameter("turmaCodigo", turmaCodigoInt);
-	        
+			query.setParameter("data", dataParsed);
+			query.setParameter("codigo", codigoInt);
+			query.setParameter("turmaCodigo", turmaCodigoInt);
+
 			return query.getResultList();
 
 		} catch (Exception e) {
@@ -133,6 +131,7 @@ public class AulaBss {
 			throw new RuntimeException("Erro ao buscar dados da aula", e);
 		}
 	}
+
 	public Aula getEntityFiltrado(Integer codigoTurma) {
 		try {
 
@@ -147,22 +146,27 @@ public class AulaBss {
 			throw new RuntimeException("Erro ao buscar dados da aula", e);
 		}
 	}
+
 	public AulaDTO adicionar(Turma turma, List<Aluno> alunos, Aula aula) throws Exception {
 
 		try {
 			aula.setCodigo(getNextCod());
 
+			em.persist(aula);
 			for (Aluno aluno : alunos) {
 
 				Presenca presenca = new Presenca();
-				presenca.setAlunoMatricula(aluno.getMatricula());
-				presenca.setAulaCodigo(aula.getCodigo());
+
+				presenca.setId(new PresencaId(aluno.getMatricula(), aula.getCodigo()));
+
+				presenca.setPresente(0);
+				
 				em.persist(presenca);
 
 			}
-			em.persist(aula);
 			return null;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException("Erro ao adicionar", e);
 		}
 	}

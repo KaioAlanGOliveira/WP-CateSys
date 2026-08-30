@@ -16,7 +16,7 @@ import { AlunoService } from '../../../service/aluno.service';
 import { TurmaAlunoService } from '../../../service/turmaAluno.service';
 import { TableModule } from "primeng/table";
 import { TurmaAluno } from '../../../models/TurmaAluno.model';
-import { AulaDoain } from '../../../models/aula.model';
+import { AulaDomain } from '../../../models/aula.model';
 import { AulaService } from '../../../service/aula.service';
 import { log } from 'console';
 import { AulaDto } from '../../../models/aulaDto.model';
@@ -68,7 +68,7 @@ export class AulaForm implements OnChanges, OnInit {
   private alunoServece = inject(AlunoService);
   private cdr = inject(ChangeDetectorRef);
 
-  @Input() Selecionado: AulaDoain | null = null;
+  @Input() Selecionado: any | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
 
@@ -77,7 +77,7 @@ export class AulaForm implements OnChanges, OnInit {
   private turmaAlunoService = inject(TurmaAlunoService);
   private aulaService = inject(AulaService);
 
-  private originalTurma: TurmaDomain | null = null;
+  private originalAula: TurmaDomain | null = null;
   turmasFiltradas: any;
 
   ngOnInit() {
@@ -90,9 +90,10 @@ export class AulaForm implements OnChanges, OnInit {
     }
 
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
+      
       this.modo = 'creating';
       this.carregarTurmaSelecionada();
-      this.originalTurma = { ...this.Selecionado };
+      this.originalAula = { ...this.Selecionado };
       this.disabled = true;
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
       this.disabled = false;
@@ -132,7 +133,7 @@ export class AulaForm implements OnChanges, OnInit {
   // ==================== AÇÕES ====================
   novo() {
     this.modo = 'creating';
-    this.originalTurma = null;
+    this.originalAula = null;
     this.formulario.reset();
     this.formulario.markAllAsDirty();
     this.formulario.markAllAsTouched();
@@ -147,7 +148,7 @@ export class AulaForm implements OnChanges, OnInit {
     if (!this.Selecionado) return;
     this.modo = 'editing';
     this.formulario.patchValue(this.Selecionado);
-    this.originalTurma = { ...this.Selecionado };
+    this.originalAula = { ...this.Selecionado };
     this.formulario.enable();
     this.formulario.markAllAsDirty();
     this.formulario.markAllAsTouched();
@@ -164,8 +165,8 @@ export class AulaForm implements OnChanges, OnInit {
     if (this.modo === 'creating') {
       this.formulario.reset();
       this.fecharModal();
-    } else if (this.modo === 'editing' && this.originalTurma) {
-      this.formulario.patchValue(this.originalTurma);
+    } else if (this.modo === 'editing' && this.originalAula) {
+      this.formulario.patchValue(this.originalAula);
       this.disabled = true;
       this.modo = 'initial';
       this.alterarEstadoUI();
@@ -175,7 +176,7 @@ export class AulaForm implements OnChanges, OnInit {
   fecharModal() {
     this.modo = 'initial';
     this.visivel = false;
-    this.originalTurma = null;
+    this.originalAula = null;
     this.visivelChange.emit(false);
     this.formulario.reset();
   }
@@ -186,7 +187,7 @@ export class AulaForm implements OnChanges, OnInit {
 
   private resetToInitialState() {
     this.modo = 'initial';
-    this.originalTurma = null;
+    this.originalAula = null;
     if (this.Selecionado) {
       this.formulario.patchValue(this.Selecionado);
     }
@@ -216,12 +217,12 @@ export class AulaForm implements OnChanges, OnInit {
   }
 
   private create(formTADto: AulaDto) {
-    this.turmaService.salvar(formTADto).subscribe({
+    this.aulaService.salvar(formTADto).subscribe({
       next: (dados) => {
         alert('Aula criada com sucesso.');
 
         this.Selecionado = dados ?? formTADto.turma;
-        this.originalTurma = { ...this.Selecionado };
+        this.originalAula = { ...this.Selecionado };
         this.disabled = true;
         this.finalizarComSucesso();
       },
@@ -347,32 +348,31 @@ export class AulaForm implements OnChanges, OnInit {
       return;
     }
 
-    const filtro: AulaDoain = {
+    const filtro: AulaDomain = {
       codigo: this.Selecionado.codigo
     } as TurmaDomain;
-
-    // carregar turma
+    
+    console.log(filtro.codigo + "codigo");
+    // carregar aula
     this.aulaService.listFiltrados(filtro).subscribe({
       next: (dados) => {        
 
         if (!dados || dados.length === 0) {
-          alert('Turma não encontrada.');
+          alert('Aula não encontrada.');
           return;
         }
 
         const aula = dados[0];
 
-        console.log(aula.data);
         
         this.formulario.patchValue(aula);
 
-        this.originalTurma = { ...aula };
+        this.originalAula = { ...aula };
 
         //  carregar aluno
 
         this.aulaService.getListAT(aula.codigo).subscribe({
           next: (dados) => {
-console.log(dados);
 
             this.listTAluno = dados.map((item: any) => ({
               matricula: item[0],

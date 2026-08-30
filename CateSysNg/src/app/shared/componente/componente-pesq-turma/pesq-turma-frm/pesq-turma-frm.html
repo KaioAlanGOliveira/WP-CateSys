@@ -1,10 +1,10 @@
-<form [formGroup]="formAluno">
+<form [formGroup]="formTurma">
 
-    <!-- Matrícula -->
+    <!-- Codigo -->
     <div class="form-field">
-        <label for="matricula">Matrícula</label>
+        <label for="codigo">Código</label>
 
-        <p-inputNumber id="matricula" formControlName="matricula">
+        <p-inputNumber id="codigo" formControlName="matricula" >
         </p-inputNumber>
     </div>
 
@@ -13,7 +13,7 @@
     <div class="form-field">
         <label for="nome">Nome</label>
 
-        <input type="text" pInputText formControlName="nome" placeholder="Nome do aluno">
+        <input type="text" pInputText formControlName="nome" placeholder="Nome do turma">
     </div>
 
 
@@ -41,11 +41,11 @@
         </tr>
     </ng-template>
 
-    <ng-template pTemplate="body" let-aluno>
-        <tr (click)="selecionarDaTela(aluno)" 
-            [class.selecionado]="alunoSelecionado === aluno" (dblclick)="ref.close(aluno.matricula)">
-            <td>{{ aluno.matricula }}</td>
-            <td>{{ aluno.nome }}</td>
+    <ng-template pTemplate="body" let-turma>
+        <tr (click)="selecionarDaTela(turma)" 
+            [class.selecionado]="turmaSelecionado === turma" (dblclick)="ref.close(turma.codigo)">
+            <td>{{ turma.codigo }}</td>
+            <td>{{ turma.nome }}</td>
             <h1></h1>      
         </tr>
     </ng-template>

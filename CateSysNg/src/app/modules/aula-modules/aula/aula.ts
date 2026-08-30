@@ -6,16 +6,18 @@ import { TurmaDomain } from '../../../models/turma.model';
 import { AulaForm } from '../aula-form/aula-form';
 import { CommonModule } from '@angular/common';
 import { Turma } from '../../turma-modules/turma/turma';
-import { AulaDoain } from '../../../models/aula.model';
+import { AulaDomain } from '../../../models/aula.model';
 import { log } from 'console';
 import { AulaService } from '../../../service/aula.service';
 import { EventEmitter } from '@angular/core';
 import { Dialog } from "primeng/dialog";
 import { AlunoP } from "../../aluno-modules/aluno-p/aluno-p";
+import { ComponenteTurma } from "../../../shared/componente/componente-pesq-turma/componente-turma";
 
 @Component({
   selector: 'app-aula',
-  imports: [ReactiveFormsModule, TableModule, CommonModule, Dialog, AulaForm],
+  imports: [ReactiveFormsModule, TableModule, CommonModule, Dialog, AulaForm, ComponenteTurma],
+  
   standalone: true,
   templateUrl: './aula.html',
   styleUrl: './aula.css',
@@ -31,14 +33,14 @@ export class Aula implements OnInit {
   private turmaServece = inject(TurmaService);
   private cdr = inject(ChangeDetectorRef);
 
-  aulaSelecionado!: AulaDoain | any;
+  aulaSelecionado!: AulaDomain | any;
   formTurma!: TurmaDomain;
   listTurmas: TurmaDomain[] = [];
   turmasFiltradas: TurmaDomain[] = [];
   turmas: TurmaDomain[] = [];
   exibirModal: boolean = false;
 
-  @Input() Selecionado: AulaDoain | null = null;
+  @Input() Selecionado: AulaDomain | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
 

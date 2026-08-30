@@ -8,6 +8,7 @@ import { aluno } from '../../../models/aluno.model';
 import { PesqProfessorLst } from './pesq-turma-frm/pesq-turma-frm';
 import { CommonModule } from '@angular/common';
 import { ProfessorService } from '../../../service/professor.service';
+import { TurmaService } from '../../../service/turma.service';
 
 @Component({
   selector: 'cmp-componente-turma',
@@ -31,7 +32,7 @@ export class ComponenteTurma implements ControlValueAccessor {
 
   @Input() public inputId?: string;
   @Input() public disabled?: boolean;
-  @Input() public matricula: boolean | undefined;
+  @Input() public codigo: boolean | undefined;
   @Input() public proximoCampo: string | undefined;
   @Input() public enableCelular: boolean = false;
   @Input() public colaborador: boolean = false;
@@ -43,26 +44,26 @@ export class ComponenteTurma implements ControlValueAccessor {
   private _entity: aluno | null = null;
 
   public form = new FormGroup({
-    matricula: new FormControl<number | null>(null),
+    codigo: new FormControl<number | null>(null),
     nome: new FormControl<string | null>(null),
     celular: new FormControl<string | null>(null),
   });
 
-  public onChange = (matricula: number | null) => { };
+  public onChange = (codigo: number | null) => { };
 
-  constructor(private service: ProfessorService, private dialogService: DialogService) {
+  constructor(private service: TurmaService, private dialogService: DialogService) {
   }
 
-  protected getEntity(matricula: number) {
-    if (matricula != null) {
-      this.form.controls.matricula.patchValue(matricula);
+  protected getEntity(codigo: number) {
+    if (codigo != null) {
+      this.form.controls.codigo.patchValue(codigo);
 
       Promise.resolve().then(() => {
         this.loading = true;
         this.cdr.markForCheck();
       });
 
-      const filtro: any = { matricula: matricula };
+      const filtro: any = { codigo: codigo };
 
       this.service.listFiltrados(filtro).subscribe({
         next: (lista) => {
@@ -78,7 +79,7 @@ export class ComponenteTurma implements ControlValueAccessor {
           this.form.controls.nome.patchValue(entity?.nome ?? null);
           this.cdr.markForCheck();
 
-          this.onChange(entity?.matricula ?? null);
+          this.onChange(entity?.codigo ?? null);
           this.preenchido.emit();
 
           this.cdr.markForCheck();
@@ -116,21 +117,21 @@ export class ComponenteTurma implements ControlValueAccessor {
       esc: true
     });
 
-    ref.onClose.subscribe(matricula => {
+    ref.onClose.subscribe(codigo => {
       this.focus();
-      if (matricula) {
+      if (codigo) {
         this.viaSet = false;
-        this.getEntity(matricula);
+        this.getEntity(codigo);
       }
     });
   }
 
   public keydown(event: KeyboardEvent) {
     if (event.key == 'Enter') {
-      const matricula = this.form.getRawValue().matricula;
-      if (matricula) {
+      const codigo = this.form.getRawValue().codigo;
+      if (codigo) {
         this.viaSet = false;
-        this.getEntity(matricula);
+        this.getEntity(codigo);
       }
     } else if (event.key == '*') {
       this.show();
@@ -146,7 +147,7 @@ export class ComponenteTurma implements ControlValueAccessor {
   }
 
   public limparTudo() {
-    this.form.controls.matricula.patchValue(null);
+    this.form.controls.codigo.patchValue(null);
     this.limpar();
   }
 
@@ -156,10 +157,10 @@ export class ComponenteTurma implements ControlValueAccessor {
     })
   }
 
-  public writeValue(matricula: any): void {
-    if (matricula) {
+  public writeValue(codigo: any): void {
+    if (codigo) {
       this.viaSet = true;
-      this.getEntity(matricula);
+      this.getEntity(codigo);
     } else {
       this.limparTudo();
     }
