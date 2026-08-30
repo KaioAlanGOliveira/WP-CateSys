@@ -44,6 +44,30 @@ public class AulaBss {
 		}
 	}
 
+	public List<Object[]> getTurmaAluno(Integer codigo) {
+
+		try {
+			String jpql = """
+					SELECT a.matricula, a.nome, a.status
+					 FROM TurmaAluno ta
+					 LEFT JOIN Aluno a
+					     ON a.matricula = ta.id.alunoMatricula
+					 WHERE :codigo IS NULL
+					    OR ta.id.turmaCodigo = :codigo
+					 """;
+
+			TypedQuery<Object[]> query = em.createQuery(jpql, Object[].class);
+
+			query.setParameter("codigo", codigo);
+
+			System.out.println(query.getResultList());
+			return query.getResultList();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao listar", e);
+		}
+	}
 	public List<Aula> getList(String codigo, String data, String turmaCodigo) {
 
 		try {

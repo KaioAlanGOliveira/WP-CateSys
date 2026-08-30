@@ -56,6 +56,12 @@ public class AulaEp {
 		return aulaBss.getTA();
 	}
 
+	@GET
+	@Path("/ListAlunoT/{codigo}")
+	public List<Object[]> getListAlunoT(@PathParam("codigo") Integer codigo) {
+
+		return aulaBss.getTurmaAluno(codigo);
+	}
 	@POST
 	public AulaDTO adicionar(AulaDTO dto) {
 

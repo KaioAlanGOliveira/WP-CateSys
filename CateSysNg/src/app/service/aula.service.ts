@@ -46,7 +46,12 @@ export class AulaService {
     return this.http.get<AulaDoain[]>(`${this.apiUrl}/listTA`);
   }
 
-  getEntity(codTurma: number): Observable<AulaDoain> {    
+  getEntity(codTurma: number): Observable<AulaDoain> {
     return this.http.get<AulaDoain>(`${this.apiUrl}/filtro/${codTurma}`);
+  }
+
+
+  getListAT(turma: any): Observable<Object[]> {
+    return this.http.get<Object[]>(`${this.apiUrl}/ListAlunoT/${turma}`);
   }
 }

@@ -370,7 +370,7 @@ export class AulaForm implements OnChanges, OnInit {
 
         //  carregar aluno
 
-        this.turmaAlunoService.getListAT(aula.codigo).subscribe({
+        this.aulaService.getListAT(aula.codigo).subscribe({
           next: (dados) => {
 console.log(dados);
 
