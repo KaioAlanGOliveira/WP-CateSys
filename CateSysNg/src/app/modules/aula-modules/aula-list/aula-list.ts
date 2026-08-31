@@ -7,10 +7,11 @@ import { CommonModule } from '@angular/common';
 import { AulaDomain } from '../../../models/aula.model';
 import { AulaService } from '../../../service/aula.service';
 import { Aula } from "../aula/aula";
+import { AulaForm } from "../aula-form/aula-form";
 
 @Component({
   selector: 'app-list',
-  imports: [ReactiveFormsModule, TableModule, CommonModule, Aula],
+  imports: [ReactiveFormsModule, TableModule, CommonModule, Aula, AulaForm],
   standalone: true,
   templateUrl: './aula-list.html',
   styleUrl: './aula-list.css',
@@ -27,11 +28,13 @@ export class AulaList implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   exibirModal: boolean = false;
+  exibirModalForm: boolean = false;
   aulaSelecionado!: AulaDomain | any;
   formTurma!: TurmaDomain;
   listAula: TurmaDomain[] = [];
-  aulaFiltradas: TurmaDomain[] = [];
-  aulas: AulaDomain[] = [];
+  aulaFiltradas: AulaDomain[] = [];
+  aula: AulaDomain[] = [];
+  abrirNovoPopupValid!: boolean;
 
   form = new FormGroup({
     codigo: new FormControl<number | null>(null),
@@ -48,8 +51,10 @@ export class AulaList implements OnInit {
 
     this.aulaService.listFiltrados(filtros).subscribe({
       next: (dados) => {
-        this.aulas = dados;
+
+        this.aula = dados;
         this.aulaFiltradas = dados;
+        console.log(JSON.stringify(this.aulaFiltradas));
         this.listAula = dados;
         this.cdr.markForCheck();
       },
@@ -70,7 +75,7 @@ export class AulaList implements OnInit {
       this.aulaFiltradas = [...this.listAula];
       return;
     }
-    
+
     this.carregarDados();
   }
   abrirFormulario() {
@@ -82,6 +87,7 @@ export class AulaList implements OnInit {
   }
 
   abrirNovoPopup() {
+    this.exibirModal = true;
     this.aulaSelecionado = null;
     this.abrirFormulario();
   }
@@ -93,6 +99,8 @@ export class AulaList implements OnInit {
   }
 
   selecionado(turma: any) {
+    this.abrirNovoPopupValid = false
+    this.exibirModalForm = true;
     this.aulaSelecionado = turma;
     this.abrirFormulario();
   }

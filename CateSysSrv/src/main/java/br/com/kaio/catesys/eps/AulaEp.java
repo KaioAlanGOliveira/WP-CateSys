@@ -89,7 +89,7 @@ public class AulaEp {
 	public void editar(AulaDTO dto) {
 
 		try {
-			aulaBss.atualizar(dto.getAula(),dto.getTurma(), dto.getAlunos());
+			aulaBss.atualizar(dto.getAula(), dto.getTurma(), dto.getAlunos());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

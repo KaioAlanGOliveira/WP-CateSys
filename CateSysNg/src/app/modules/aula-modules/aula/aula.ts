@@ -16,7 +16,7 @@ import { ComponenteTurma } from "../../../shared/componente/componente-pesq-turm
 
 @Component({
   selector: 'app-aula',
-  imports: [ReactiveFormsModule, TableModule, CommonModule, Dialog, AulaForm, ComponenteTurma],
+  imports: [ReactiveFormsModule, TableModule, CommonModule, Dialog, ComponenteTurma],
   
   standalone: true,
   templateUrl: './aula.html',

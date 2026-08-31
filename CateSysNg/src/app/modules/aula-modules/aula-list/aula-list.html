@@ -21,10 +21,11 @@
     <div class="form-field">
       <label for="turma">Turma</label>
 
-      <input id="turma" class="input-field" type="text" formControlName="turmaCodigo" placeholder="Digite a turma" #inputturma>
+      <input id="turma" class="input-field" type="text" formControlName="turmaCodigo" placeholder="Digite a turma"
+        #inputturma>
     </div>
 
-     <!-- Data -->
+    <!-- Data -->
     <div class="campo">
       <label for="data">Data</label>
 
@@ -82,7 +83,20 @@
 
   </div>
 </div>
+@if (abrirNovoPopupValid) {
 
-<app-aula [(visivel)]="exibirModal" (visivelChange)="retornoPopUp($event)" [Selecionado]="aulaSelecionado">
+  <app-aula-form
+    [(visivel)]="exibirModalForm"
+    (visivelChange)="retornoPopUp($event)"
+    [Selecionado]="aulaSelecionado">
+  </app-aula-form>
 
-</app-aula>
+} @else {
+
+  <app-aula
+    [(visivel)]="exibirModal"
+    (visivelChange)="retornoPopUp($event)"
+    [Selecionado]="aulaSelecionado">
+  </app-aula>
+
+}

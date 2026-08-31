@@ -30,7 +30,7 @@ export class AulaService {
   }
 
   listFiltrados(filtro: AulaDomain): Observable<AulaDomain[]> {
-    return this.http.get<any>(`${this.apiUrl}`, { params: new HttpParamsObject(filtro) });
+    return this.http.get<AulaDomain[]>(`${this.apiUrl}`, { params: new HttpParamsObject(filtro) });
   }
 
   editar(aula: any) {

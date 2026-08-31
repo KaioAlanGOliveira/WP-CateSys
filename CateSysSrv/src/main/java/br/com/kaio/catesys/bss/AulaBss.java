@@ -135,8 +135,8 @@ public class AulaBss {
 
 			List<AlunoPresencaDTO> alunos = resultado.stream().map(r -> {
 				Aluno aluno = (Aluno) r[0];
-				Boolean presente = (Boolean) r[1];
-				return new AlunoPresencaDTO(aluno.getMatricula(), aluno.getNome(), Boolean.TRUE.equals(presente));
+				Integer presente = (Integer) r[1];
+				return new AlunoPresencaDTO(aluno.getMatricula(), aluno.getNome(), presente);
 			}).toList();
 
 			// Monta o DTO
@@ -169,19 +169,19 @@ public class AulaBss {
 		}
 	}
 
-	public AulaDTO adicionar(Turma turma, List<Aluno> alunos, Aula aula) throws Exception {
+	public AulaDTO adicionar(Turma turma, List<AlunoPresencaDTO> list, Aula aula) throws Exception {
 
 		try {
 			aula.setCodigo(getNextCod());
 
 			em.persist(aula);
-			for (Aluno aluno : alunos) {
+			for (AlunoPresencaDTO aluno : list) {
 
 				Presenca presenca = new Presenca();
 
 				presenca.setId(new PresencaId(aluno.getMatricula(), aula.getCodigo()));
 
-				presenca.setPresente();
+				presenca.setPresente(null);
 
 				em.persist(presenca);
 
@@ -193,7 +193,7 @@ public class AulaBss {
 		}
 	}
 
-	public void atualizar(Aula aula, Turma turma, List<AlunoPresencaDTO> alunos) throws Exception {
+	public void atualizar(Aula aula, Turma turma, List<AlunoPresencaDTO> list) throws Exception {
 
 		try {
 
@@ -214,7 +214,7 @@ public class AulaBss {
 					.setParameter("codigo", aula.getCodigo()).executeUpdate();
 
 			// 4. Cria novamente as presenças
-			for (AlunoPresencaDTO aluno : alunos) {
+			for (AlunoPresencaDTO aluno : list) {
 				PresencaId id = new PresencaId(aluno.getMatricula(), aula.getCodigo());
 				Presenca presenca = new Presenca();
 				presenca.setId(id);

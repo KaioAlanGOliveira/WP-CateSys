@@ -25,11 +25,11 @@ public class ProfessorEp {
 	@Inject
 	private ProfessorBss professorBss;
 
-	@GET
-	public List<Professor> getProfessores() {
-		return professorBss.getList();
-	}
-	
+//	@GET
+//	public List<Professor> getProfessores() {
+//		return professorBss.getList();
+//	}
+//	
 	@POST
 	@Path("/filtrar")
 	public List<Professor> getList(Professor pf) {
