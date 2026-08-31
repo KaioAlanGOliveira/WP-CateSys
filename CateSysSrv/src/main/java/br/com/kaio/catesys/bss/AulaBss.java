@@ -8,6 +8,7 @@ import br.com.kaio.catesys.domain.Aula;
 import br.com.kaio.catesys.domain.Presenca;
 import br.com.kaio.catesys.domain.PresencaId;
 import br.com.kaio.catesys.domain.Turma;
+import br.com.kaio.catesys.eps.dto.AlunoPresencaDTO;
 import br.com.kaio.catesys.eps.dto.AulaDTO;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -107,22 +108,43 @@ public class AulaBss {
 	public AulaDTO getEntity(Integer codigoTurma) {
 		try {
 
-			// 1. Busca a turma
+			// Busca a turma
 			Turma turma = em.createQuery("SELECT t FROM Turma t WHERE t.codigo = :codigo", Turma.class)
 					.setParameter("codigo", codigoTurma).getSingleResult();
 
-			// 2. Busca os alunos da turma
-			List<Aluno> alunos = em.createQuery("""
+			// Busca a última aula da turma
+			Aula aula = em.createQuery("""
 					SELECT a
+					FROM Aula a
+					WHERE a.turmaCodigo = :codigoTurma
+					ORDER BY a.codigo DESC
+					""", Aula.class).setParameter("codigoTurma", codigoTurma).setMaxResults(1).getSingleResult();
+
+			// Busca os alunos da turma
+			// Busca alunos JÁ com a presença nessa aula
+			List<Object[]> resultado = em.createQuery("""
+					SELECT a, p.presente
 					FROM TurmaAluno ta
 					JOIN Aluno a ON a.matricula = ta.id.alunoMatricula
+					LEFT JOIN Presenca p
+					    ON p.id.alunoMatricula = a.matricula
+					   AND p.id.aulaCodigo = :codigoAula
 					WHERE ta.id.turmaCodigo = :codigoTurma
-					""", Aluno.class).setParameter("codigoTurma", codigoTurma).getResultList();
+					""", Object[].class).setParameter("codigoTurma", codigoTurma)
+					.setParameter("codigoAula", aula.getCodigo()).getResultList();
 
-			// 3. Monta o DTO
+			List<AlunoPresencaDTO> alunos = resultado.stream().map(r -> {
+				Aluno aluno = (Aluno) r[0];
+				Boolean presente = (Boolean) r[1];
+				return new AlunoPresencaDTO(aluno.getMatricula(), aluno.getNome(), Boolean.TRUE.equals(presente));
+			}).toList();
+
+			// Monta o DTO
 			AulaDTO dto = new AulaDTO();
-			dto.setAlunos(alunos);
+
+			dto.setAula(aula);
 			dto.setTurma(turma);
+			dto.setAlunos(alunos);
 
 			return dto;
 
@@ -159,8 +181,8 @@ public class AulaBss {
 
 				presenca.setId(new PresencaId(aluno.getMatricula(), aula.getCodigo()));
 
-				presenca.setPresente(0);
-				
+				presenca.setPresente();
+
 				em.persist(presenca);
 
 			}
@@ -171,13 +193,37 @@ public class AulaBss {
 		}
 	}
 
-	public void alterar(Aula aula) {
+	public void atualizar(Aula aula, Turma turma, List<AlunoPresencaDTO> alunos) throws Exception {
 
 		try {
-			em.merge(aula);
+
+			// 1. Busca a aula existente
+			Aula aulaBanco = em.find(Aula.class, aula.getCodigo());
+
+			if (aulaBanco == null) {
+				throw new Exception("Aula não encontrada");
+			}
+
+			// 2. Atualiza os dados da aula
+			aulaBanco.setData(aula.getData());
+
+			em.merge(aulaBanco);
+
+			// 3. Remove as presenças antigas dessa aula
+			em.createQuery("DELETE FROM Presenca p " + "WHERE p.id.aulaCodigo = :codigo")
+					.setParameter("codigo", aula.getCodigo()).executeUpdate();
+
+			// 4. Cria novamente as presenças
+			for (AlunoPresencaDTO aluno : alunos) {
+				PresencaId id = new PresencaId(aluno.getMatricula(), aula.getCodigo());
+				Presenca presenca = new Presenca();
+				presenca.setId(id);
+				presenca.setPresente(aluno.isPresente()); // usar o valor real
+				em.persist(presenca);
+			}
+
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException("Erro ao atualizar", e);
+			throw new RuntimeException("Erro ao atualizar aula", e);
 		}
 	}
 

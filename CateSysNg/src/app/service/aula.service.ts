@@ -30,11 +30,10 @@ export class AulaService {
   }
 
   listFiltrados(filtro: AulaDomain): Observable<AulaDomain[]> {
-    console.log(filtro);
     return this.http.get<any>(`${this.apiUrl}`, { params: new HttpParamsObject(filtro) });
   }
 
-  editar(aula: AulaDomain) {
+  editar(aula: any) {
     return this.http.put(this.apiUrl, aula);
   }
 
@@ -46,12 +45,11 @@ export class AulaService {
     return this.http.get<AulaDomain[]>(`${this.apiUrl}/listTA`);
   }
 
-  getEntity(codTurma: number): Observable<AulaDomain> {    
-    return this.http.get<AulaDomain>(`${this.apiUrl}/filtro/${codTurma}`);
+  getEntity(codTurma: number): Observable<AulaDto> {
+    return this.http.get<AulaDto>(`${this.apiUrl}/filtradosDTO/${codTurma}`);
   }
 
-  
-  getListAT(turma: any): Observable<Object[]> {
-    return this.http.get<Object[]>(`${this.apiUrl}/ListAlunoT/${turma}`);
+  getListAT(codTurma: any): Observable<Object[]> {
+    return this.http.get<Object[]>(`${this.apiUrl}/ListAlunoT/${codTurma}`);
   }
 }

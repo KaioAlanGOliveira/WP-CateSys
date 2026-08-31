@@ -1,5 +1,6 @@
+import { PresencaId } from "./presencaId.model";
 
 export class Presenca {
-	turmaCodigo!: number;
-	data!: string;
+	id!: PresencaId;
+	presente!: number;
 }

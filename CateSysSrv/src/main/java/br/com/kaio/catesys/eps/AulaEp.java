@@ -36,7 +36,7 @@ public class AulaEp {
 	}
 
 	@GET
-	@Path("/{codigo}")
+	@Path("/filtradosDTO/{codigo}")
 	public AulaDTO getEntity(@PathParam("codigo") Integer codigo) {
 
 		return aulaBss.getEntity(codigo);
@@ -62,6 +62,7 @@ public class AulaEp {
 
 		return aulaBss.getTurmaAluno(codigo);
 	}
+
 	@POST
 	public AulaDTO adicionar(AulaDTO dto) {
 
@@ -85,13 +86,12 @@ public class AulaEp {
 	}
 
 	@PUT
-	public Response editar(Aula aula) {
+	public void editar(AulaDTO dto) {
 
 		try {
-			aulaBss.alterar(aula);
-			return Response.ok(Map.of("mensagem", "Alterado com sucesso")).build();
+			aulaBss.atualizar(dto.getAula(),dto.getTurma(), dto.getAlunos());
 		} catch (Exception e) {
-			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
+			e.printStackTrace();
 		}
 	}
 }

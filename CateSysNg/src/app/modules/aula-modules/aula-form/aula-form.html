@@ -22,7 +22,8 @@
       <!-- Turma -->
       <div class="campo">
         <label>Turma</label>
-        <cmp-componente-turma inputId="codAluno" cmpProximoCampo="bt-add" #pesqTurma formControlName="turmaCodigo"></cmp-componente-turma>
+        <cmp-componente-turma inputId="codAluno" cmpProximoCampo="bt-add" #pesqTurma
+          formControlName="turmaCodigo"></cmp-componente-turma>
       </div>
 
       <!-- Data -->
@@ -49,7 +50,10 @@
             <tr (click)="selecionado(aluno)">
               <td>{{ aluno.matricula }}</td>
               <td>{{ aluno.nome }}</td>
-               <p-tableCheckbox [value]="aluno"></p-tableCheckbox>
+              <td>
+                <p-checkbox [(ngModel)]="aluno.presente" [binary]="true" (click)="$event.stopPropagation()">
+                </p-checkbox>
+              </td>
             </tr>
           </ng-template>
 

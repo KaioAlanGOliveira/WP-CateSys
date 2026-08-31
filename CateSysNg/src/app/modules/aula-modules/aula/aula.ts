@@ -68,8 +68,8 @@ export class Aula implements OnInit {
     this.aulaService.getEntity(codigo).subscribe({
       next: (dados) => {
         console.log(dados);
-
-        this.form.patchValue(dados);
+        
+        this.form.patchValue(dados.aula);
         this.cdr.detectChanges();
       },
       error: (err) => {
