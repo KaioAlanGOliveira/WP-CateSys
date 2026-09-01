@@ -3,12 +3,6 @@
     flex: 0 0 auto;
 }
 
-.input-code,
-:host ::ng-deep .p-inputnumber,
-:host ::ng-deep .p-inputnumber-input {
-    width: 400px !important;
-}
-
 
 
 .input-text {

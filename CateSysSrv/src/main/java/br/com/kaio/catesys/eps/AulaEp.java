@@ -5,7 +5,9 @@ import java.util.Map;
 
 import br.com.kaio.catesys.bss.AulaBss;
 import br.com.kaio.catesys.domain.Aula;
+import br.com.kaio.catesys.domain.Turma;
 import br.com.kaio.catesys.eps.dto.AulaDTO;
+import br.com.kaio.catesys.eps.dto.TurmaDTO;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -63,7 +65,15 @@ public class AulaEp {
 		return aulaBss.getTurmaAluno(codigo);
 	}
 
-	
+	@POST
+	public AulaDTO create(AulaDTO dto) {
+		try {
+			return aulaBss.adicionar(dto.getTurma(), dto.getAlunos(), dto.getAula());
+		} catch (Exception e) {
+			e.getMessage();
+		}
+		return null;
+	}
 	
 	@POST
 	@Path("/criar")

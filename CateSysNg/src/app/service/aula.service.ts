@@ -36,6 +36,9 @@ export class AulaService {
   editar(aula: any) {
     return this.http.put(this.apiUrl, aula);
   }
+  create(aula: AulaDto): Observable<AulaDomain> {
+    return this.http.post<AulaDomain>(`${this.apiUrl}/create`, aula);
+  }
 
   salvar(aula: AulaDto): Observable<AulaDomain> {
     return this.http.post<AulaDomain>(`${this.apiUrl}`, aula);

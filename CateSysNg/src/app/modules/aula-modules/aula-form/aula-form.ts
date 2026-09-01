@@ -22,6 +22,7 @@ import { log } from 'console';
 import { AulaDto } from '../../../models/aulaDto.model';
 import { ComponenteTurma } from "../../../shared/componente/componente-pesq-turma/componente-turma";
 import { CheckboxModule } from 'primeng/checkbox';
+import { ComponenteProfessor } from "../../../shared/componente/componente-pesq-professor/componente-professor";
 
 @Component({
   selector: 'app-aula-form',
@@ -38,9 +39,10 @@ import { CheckboxModule } from 'primeng/checkbox';
     RadioButtonModule,
     DatePickerModule,
     TableModule,
-    CheckboxModule,   
-    ComponenteTurma
-  ],
+    CheckboxModule,
+    ComponenteTurma,
+    ComponenteProfessor
+],
   templateUrl: './aula-form.html',
   styleUrl: './aula-form.css'
 })
@@ -91,11 +93,10 @@ export class AulaForm implements OnChanges, OnInit {
       this.resetToInitialState();
     }
 
-     if (this.Selecionado) {
+    if (this.Selecionado) {
 
       this.modo = 'initial';
       this.carregarAulaSelecionada();
-      // this.carregarTurma();
       this.originalAula = { ...this.Selecionado };
       this.disabled = true;
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
@@ -105,7 +106,7 @@ export class AulaForm implements OnChanges, OnInit {
     }
   }
 
-   initForm(): void {
+  initForm(): void {
     this.formulario = this.fb.group({
       codigo: [{ value: '', disabled: false }],
       data: [{ value: '', disabled: false }, [Validators.required]],
@@ -218,7 +219,7 @@ export class AulaForm implements OnChanges, OnInit {
   }
 
   private create(formTADto: AulaDto) {
-    this.aulaService.salvar(formTADto).subscribe({
+    this.aulaService.create(formTADto).subscribe({
       next: (dados) => {
         alert('Aula criada com sucesso.');
 
@@ -288,8 +289,8 @@ export class AulaForm implements OnChanges, OnInit {
   }
 
   selecionado(aluno: aluno) {
-   console.log(aluno);
-   
+    console.log(aluno);
+
     this.alunoSelecionado = aluno;
     this.visivel = true;
   }
@@ -298,6 +299,7 @@ export class AulaForm implements OnChanges, OnInit {
     const index = this.listTAluno.indexOf(this.alunoSelecionado);
     if (index !== -1) {
       this.listTAluno.splice(index, 1);
+      this.tAlunosFiltrados = [...this.listTAluno];
     }
     this.alunoSelecionado = null;
   }
