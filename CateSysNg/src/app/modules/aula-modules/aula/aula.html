@@ -1,5 +1,5 @@
 <p-dialog header="Cadastro das Turmas" [(visible)]="visivel" (onHide)="fecharModal()" [modal]="true"
-  [style]="{ width: '900px', height: '60vh' }">
+  [style]="{ width: '900px', height: '30vh' }">
 
   <form [formGroup]="form">
 
@@ -7,13 +7,20 @@
       <div class="campo">
         <label>Turma</label>
         <cmp-componente-turma inputId="codAluno" cmpProximoCampo="bt-add" #pesqTurma formControlName="turmaCodigo"></cmp-componente-turma>
+        @if (form.get('turmaCodigo')?.invalid && form.get('turmaCodigo')?.touched) {
+        <p-message severity="error" variant="simple" size="small">A turma é obrigatória</p-message>
+        }
       </div>
 
     <!-- Data -->
     <div class="campo">
       <label for="data">Data</label>
 
-      <input id="data" type="date" formControlName="data" class="input-field">
+      <input pInputText id="data" type="date" formControlName="data" class="input-field"
+        [invalid]="form.get('data')?.invalid && form.get('data')?.touched" />
+        @if (form.get('data')?.invalid && form.get('data')?.touched) {
+        <p-message severity="error" variant="simple" size="small">A data é obrigatória</p-message>
+        }
     </div>
 
     <!-- Botões -->
@@ -36,5 +43,3 @@
   </form>
 
 </p-dialog>
-
-<app-aula [(visivel)]="exibirModal" (visivelChange)="retornoPopUp($event)" [Selecionado]="aulaSelecionado"></app-aula>

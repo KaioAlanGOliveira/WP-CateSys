@@ -63,22 +63,24 @@ public class AulaEp {
 		return aulaBss.getTurmaAluno(codigo);
 	}
 
+	
+	
 	@POST
-	public AulaDTO adicionar(AulaDTO dto) {
+	@Path("/criar")
+	public void criar(Aula aula) {
 
 		try {
-			return aulaBss.adicionar(dto.getTurma(), dto.getAlunos(), dto.getAula());
+			aulaBss.criar(aula);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
 	}
 
 	@DELETE
 	public Response remover(Aula aula) {
 
 		try {
-			aulaBss.remover(aula);
+			//aulaBss.remover(aula);
 			return Response.ok(Map.of("mensagem", " apagado com sucesso")).build();
 		} catch (Exception e) {
 			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();

@@ -13,10 +13,12 @@ import { EventEmitter } from '@angular/core';
 import { Dialog } from "primeng/dialog";
 import { AlunoP } from "../../aluno-modules/aluno-p/aluno-p";
 import { ComponenteTurma } from "../../../shared/componente/componente-pesq-turma/componente-turma";
+import { InputText } from "primeng/inputtext";
+import { Message } from "primeng/message";
 
 @Component({
   selector: 'app-aula',
-  imports: [ReactiveFormsModule, TableModule, CommonModule, Dialog, ComponenteTurma],
+  imports: [ReactiveFormsModule, TableModule, CommonModule, Dialog, ComponenteTurma, InputText, Message],
   
   standalone: true,
   templateUrl: './aula.html',
@@ -51,7 +53,6 @@ export class Aula implements OnInit {
   });
 
   ngOnChanges(changes: SimpleChanges): void {
-
     if (changes['Selecionado'] && this.Selecionado && this.form) {
       this.form.patchValue(this.Selecionado);
     }
@@ -122,8 +123,19 @@ export class Aula implements OnInit {
   }
 
   criar() {
+
     this.aulaSelecionado = this.form.getRawValue();
-    this.abrirPopup();
+
+    this.aulaService.criar(this.aulaSelecionado).subscribe({
+      next: (dados) => {
+        console.log('Aula criada com sucesso:', dados);
+        this.fecharModal();
+        this.carregarDados();
+      },
+      error: (err) => {
+        console.error('Erro ao criar a aula:', err);
+      }
+    });
   }
   fecharModal() {
     this.visivel = false;

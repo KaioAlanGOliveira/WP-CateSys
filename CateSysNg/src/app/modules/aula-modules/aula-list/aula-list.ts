@@ -82,20 +82,18 @@ export class AulaList implements OnInit {
 
   // ==================== AÇÕES ====================
 
-  // Botão "+" -> novo cadastro
   novo(): void {
     this.form.reset();
     this.aulaSelecionado = null;
     this.abrirPopup('form');
   }
 
-  // Duplo clique na tabela -> editar
-  selecionado(aula: AulaDomain): void {
+  selecionado(aula: AulaDomain): void {    
     this.aulaSelecionado = aula;
-    this.abrirPopup('form');
+    this.abrirPopup('visualizar');
+    this.visualizar(aula);
   }
 
-  // Visualizar uma aula específica
   visualizar(aula: AulaDomain): void {
     this.aulaSelecionado = aula;
     this.abrirPopup('visualizar');

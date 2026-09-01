@@ -38,7 +38,11 @@ export class AulaService {
   }
 
   salvar(aula: AulaDto): Observable<AulaDomain> {
-    return this.http.post<AulaDomain>(this.apiUrl, aula);
+    return this.http.post<AulaDomain>(`${this.apiUrl}`, aula);
+  }
+
+  criar(aula: AulaDomain): Observable<AulaDomain> {
+    return this.http.post<AulaDomain>(`${this.apiUrl}/criar`, aula);
   }
 
   list(): Observable<AulaDomain[]> {

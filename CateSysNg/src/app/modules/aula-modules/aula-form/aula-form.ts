@@ -91,10 +91,11 @@ export class AulaForm implements OnChanges, OnInit {
       this.resetToInitialState();
     }
 
-    if (changes['Selecionado'] && this.Selecionado && this.formulario) {
+     if (this.Selecionado) {
 
-      this.modo = 'creating';
+      this.modo = 'initial';
       this.carregarAulaSelecionada();
+      // this.carregarTurma();
       this.originalAula = { ...this.Selecionado };
       this.disabled = true;
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
@@ -102,12 +103,9 @@ export class AulaForm implements OnChanges, OnInit {
       this.modo = 'creating';
       this.formulario.reset();
     }
-
-    this.alterarEstadoUI();
   }
 
-
-  private initForm(): void {
+   initForm(): void {
     this.formulario = this.fb.group({
       codigo: [{ value: '', disabled: false }],
       data: [{ value: '', disabled: false }, [Validators.required]],

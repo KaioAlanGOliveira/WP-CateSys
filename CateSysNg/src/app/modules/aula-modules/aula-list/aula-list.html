@@ -70,17 +70,17 @@
   </div>
 </div>
 
-<!-- Popup: formulário (novo/editar) -->
-<app-aula-form
-  *ngIf="popupAberto === 'form'"
-  [visivel]="true"
-  (visivelChange)="retornoPopUp($event)"
-  [Selecionado]="aulaSelecionado">
-</app-aula-form>
-
+@if (popupAberto === 'visualizar') {
+  <!-- Popup: formulário (novo/editar) -->
+  <app-aula-form
+    [visivel]="true"
+    (visivelChange)="retornoPopUp($event)"
+    [Selecionado]="aulaSelecionado">
+  </app-aula-form>
+}
 <!-- Popup: visualização -->
 <app-aula
-  *ngIf="popupAberto === 'visualizar'"
+  *ngIf="popupAberto === 'form'"
   [visivel]="true"
   (visivelChange)="retornoPopUp($event)"
   [Selecionado]="aulaSelecionado">

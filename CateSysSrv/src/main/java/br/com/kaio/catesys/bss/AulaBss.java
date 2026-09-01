@@ -192,6 +192,17 @@ public class AulaBss {
 			throw new RuntimeException("Erro ao adicionar", e);
 		}
 	}
+	
+	public void criar(Aula aula) throws Exception {
+
+		try {
+			aula.setCodigo(getNextCod());
+			em.persist(aula);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao adicionar", e);
+		}
+	}
 
 	public void atualizar(Aula aula, Turma turma, List<AlunoPresencaDTO> list) throws Exception {
 
@@ -227,18 +238,18 @@ public class AulaBss {
 		}
 	}
 
-	public void remover(Aula aula) {
-
-		try {
-			em.remove(em.find(Aula.class, aula.getCodigo()));
-		} catch (Exception e) {
-			throw new RuntimeException("Erro ao remover", e);
-		}
-	}
+//	public void remover(Aula aula) {
+//
+//		try {
+//			em.remove(em.find(Aula.class, aula.getCodigo()));
+//		} catch (Exception e) {
+//			throw new RuntimeException("Erro ao remover", e);
+//		}
+//	}
 
 	private Integer getNextCod() {
 
-		Query query = em.createQuery("select max(codigo) + 1 from Turma");
+		Query query = em.createQuery("select max(codigo) + 1 from Aula");
 		Object cod = query.getSingleResult();
 
 		if (cod == null)
