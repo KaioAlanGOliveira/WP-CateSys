@@ -9,26 +9,18 @@
   <!-- Filtros -->
   <form class="filtros" [formGroup]="form" (ngSubmit)="carregarDados()">
 
-    <!-- Código -->
     <div class="form-field">
       <label for="codigo">Código</label>
-
-      <input id="codigo" class="input-field" type="text" formControlName="codigo" placeholder="Digite o código"
-        #inputCodigo>
+      <input id="codigo" class="input-field" type="text" formControlName="codigo" placeholder="Digite o código">
     </div>
 
-    <!-- Turma -->
     <div class="form-field">
       <label for="turma">Turma</label>
-
-      <input id="turma" class="input-field" type="text" formControlName="turmaCodigo" placeholder="Digite a turma"
-        #inputturma>
+      <input id="turma" class="input-field" type="text" formControlName="turmaCodigo" placeholder="Digite a turma">
     </div>
 
-    <!-- Data -->
     <div class="campo">
       <label for="data">Data</label>
-
       <input id="data" type="date" formControlName="data" class="input-field">
     </div>
 
@@ -39,17 +31,15 @@
     </div>
 
     <div class="form-action">
-      <button id="btn" class="btn-primary" icon="pi pi-plus" type="button" (click)="abrirNovoPopup()">
+      <button id="btn" class="btn-primary" type="button" (click)="novo()">
         +
       </button>
     </div>
 
   </form>
 
-
   <!-- Tabela -->
   <div class="tabela-container">
-
     <p-table [value]="aulaFiltradas" [tableStyle]="{ 'min-width': '50rem' }">
 
       <ng-template pTemplate="header">
@@ -69,34 +59,29 @@
       </ng-template>
 
     </p-table>
-
   </div>
-
 
   <!-- Rodapé -->
   <div class="table-footer">
-
     <span>
       Total de registros encontrados:
       <strong>{{ listAula.length }}</strong>
     </span>
-
   </div>
 </div>
-@if (abrirNovoPopupValid) {
 
-  <app-aula-form
-    [(visivel)]="exibirModalForm"
-    (visivelChange)="retornoPopUp($event)"
-    [Selecionado]="aulaSelecionado">
-  </app-aula-form>
+<!-- Popup: formulário (novo/editar) -->
+<app-aula-form
+  *ngIf="popupAberto === 'form'"
+  [visivel]="true"
+  (visivelChange)="retornoPopUp($event)"
+  [Selecionado]="aulaSelecionado">
+</app-aula-form>
 
-} @else {
-
-  <app-aula
-    [(visivel)]="exibirModal"
-    (visivelChange)="retornoPopUp($event)"
-    [Selecionado]="aulaSelecionado">
-  </app-aula>
-
-}
+<!-- Popup: visualização -->
+<app-aula
+  *ngIf="popupAberto === 'visualizar'"
+  [visivel]="true"
+  (visivelChange)="retornoPopUp($event)"
+  [Selecionado]="aulaSelecionado">
+</app-aula>

@@ -1,40 +1,33 @@
-import { ChangeDetectorRef, Component, inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TurmaService } from '../../../service/turma.service';
-import { TableModule } from 'primeng/table';
-import { TurmaDomain } from '../../../models/turma.model';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AulaDomain } from '../../../models/aula.model';
+import { TableModule } from 'primeng/table';
+import { TurmaService } from '../../../service/turma.service';
 import { AulaService } from '../../../service/aula.service';
+import { TurmaDomain } from '../../../models/turma.model';
+import { AulaDomain } from '../../../models/aula.model';
 import { Aula } from "../aula/aula";
 import { AulaForm } from "../aula-form/aula-form";
 
 @Component({
-  selector: 'app-list',
   imports: [ReactiveFormsModule, TableModule, CommonModule, Aula, AulaForm],
   standalone: true,
   templateUrl: './aula-list.html',
   styleUrl: './aula-list.css',
 })
-
 export class AulaList implements OnInit {
-
-  cancelar() {
-    throw new Error('Method not implemented.');
-  }
 
   private turmaServece = inject(TurmaService);
   private aulaService = inject(AulaService);
   private cdr = inject(ChangeDetectorRef);
 
-  exibirModal: boolean = false;
-  exibirModalForm: boolean = false;
+  // ==================== ÚNICA VARIÁVEL DE CONTROLE ====================
+  popupAberto: 'form' | 'visualizar' | null = null;
+
   aulaSelecionado!: AulaDomain | any;
   formTurma!: TurmaDomain;
-  listAula: TurmaDomain[] = [];
+  listAula: AulaDomain[] = [];
   aulaFiltradas: AulaDomain[] = [];
-  aula: AulaDomain[] = [];
-  abrirNovoPopupValid!: boolean;
 
   form = new FormGroup({
     codigo: new FormControl<number | null>(null),
@@ -51,69 +44,67 @@ export class AulaList implements OnInit {
 
     this.aulaService.listFiltrados(filtros).subscribe({
       next: (dados) => {
-
-        this.aula = dados;
-        this.aulaFiltradas = dados;
-        console.log(JSON.stringify(this.aulaFiltradas));
         this.listAula = dados;
+        this.aulaFiltradas = dados;
         this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('Erro ao carregar os dados:', err);
       }
-
     });
   }
-  novo() {
-    this.form.reset();
-    this.aulaSelecionado = null;
-    this.abrirFormulario();
-  }
+
   pesquisar() {
     const { codigo, data, turmaCodigo } = this.form.value;
     if (!codigo && !data && !turmaCodigo) {
       this.aulaFiltradas = [...this.listAula];
       return;
     }
-
     this.carregarDados();
   }
-  abrirFormulario() {
-    this.exibirModal = true;
+
+  // ==================== CONTROLE CENTRAL DO POPUP ====================
+  abrirPopup(tipo: 'form' | 'visualizar'): void {
+    this.popupAberto = tipo;
   }
 
-  abrirFormularioCriar() {
-    this.exibirModal = true;
-  }
-
-  abrirNovoPopup() {
-    this.exibirModal = true;
+  fecharPopup(): void {
+    this.popupAberto = null;
     this.aulaSelecionado = null;
-    this.abrirFormulario();
   }
-  retornoPopUp(exib: boolean) {
 
-    if (!exib) {
+  retornoPopUp(valor: boolean): void {
+    if (!valor) {
+      this.fecharPopup();
       this.carregarDados();
     }
   }
 
-  selecionado(turma: any) {
-    this.abrirNovoPopupValid = false
-    this.exibirModalForm = true;
-    this.aulaSelecionado = turma;
-    this.abrirFormulario();
+  // ==================== AÇÕES ====================
+
+  // Botão "+" -> novo cadastro
+  novo(): void {
+    this.form.reset();
+    this.aulaSelecionado = null;
+    this.abrirPopup('form');
   }
+
+  // Duplo clique na tabela -> editar
+  selecionado(aula: AulaDomain): void {
+    this.aulaSelecionado = aula;
+    this.abrirPopup('form');
+  }
+
+  // Visualizar uma aula específica
+  visualizar(aula: AulaDomain): void {
+    this.aulaSelecionado = aula;
+    this.abrirPopup('visualizar');
+  }
+
   apagar(dado: any) {
-
   }
+
   removerAll() {
-
     this.turmaServece.apagarAll().subscribe();
-  }
-
-  criar() {
-    this.aulaSelecionado = this.form.getRawValue();
-    this.abrirFormulario();
   }
 }
