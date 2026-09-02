@@ -99,7 +99,7 @@ export class AulaForm implements OnChanges, OnInit {
 
       this.modo = 'initial';
       this.carregarAulaSelecionada();
-      this.originalAula = { ...this.Selecionado };
+     // this.originalAula = { ...this.Selecionado };
       this.disabled = true;
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
       this.disabled = false;
@@ -114,7 +114,7 @@ export class AulaForm implements OnChanges, OnInit {
       data: [{ value: '', disabled: true }, [Validators.required]],
       turmaCodigo: [{ value: null, disabled: true }],
       professorCodigo: [{ value: null, disabled: true }],
-      presente: [{ value: false, disabled: true }]
+      presente: [{ value: 1, disabled: true }]
     });
   }
 
@@ -218,6 +218,7 @@ export class AulaForm implements OnChanges, OnInit {
       turma: formValue,
       alunos: this.listTAluno,
       aula: formValue,
+      presenca: formValue
     };
 
     if (this.modo === 'creating') {
@@ -379,10 +380,10 @@ export class AulaForm implements OnChanges, OnInit {
         console.log(JSON.stringify(dados, null, 2));
 
         console.log('Aula:');
-        console.log(JSON.stringify(dados.aula, null, 2));
+        console.log(JSON.stringify(dados, null, 2));
 
         // Preenche o formulário com a aula
-        this.formulario.patchValue(dados.aula);
+        this.formulario.patchValue(dados.presenca);
 
         // Guarda o DTO original
         this.originalAula = { ...dados };

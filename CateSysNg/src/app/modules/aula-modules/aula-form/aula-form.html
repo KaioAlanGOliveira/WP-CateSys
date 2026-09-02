@@ -59,9 +59,7 @@
               <td>{{ aluno.matricula }}</td>
               <td>{{ aluno.nome }}</td>
               <td>
-                <p-checkbox [binary]="true" [ngModel]="aluno.presente === 1"
-                  (ngModelChange)="aluno.presente = $event ? 1 : 0" [ngModelOptions]="{ standalone: true }"
-                  >
+                <p-checkbox formControlName="presente" [trueValue]="1" [falseValue]="0" label="Presente">
                 </p-checkbox>
               </td>
             </tr>

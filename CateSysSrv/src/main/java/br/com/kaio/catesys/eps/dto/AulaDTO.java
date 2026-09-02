@@ -31,7 +31,7 @@ public class AulaDTO {
 		return alunos;
 	}
 
-	public void setAlunos(List<AlunoPresencaDTO> alunos2) {
-		this.alunos = alunos2;
+	public void setAlunos(List<AlunoPresencaDTO> alunos) {
+		this.alunos = alunos;
 	}
 }

@@ -122,7 +122,7 @@ public class AulaBss {
 
 			// Busca os alunos da turma
 			// Busca alunos JÁ com a presença nessa aula
-			List<Object[]> resultado = em.createQuery("""
+			List<AlunoPresencaDTO> alunosAlunoPresencaDTO = em.createQuery("""
 					SELECT a, p.presente
 					FROM TurmaAluno ta
 					JOIN Aluno a ON a.matricula = ta.id.alunoMatricula
@@ -130,21 +130,17 @@ public class AulaBss {
 					    ON p.id.alunoMatricula = a.matricula
 					   AND p.id.aulaCodigo = :codigoAula
 					WHERE ta.id.turmaCodigo = :codigoTurma
-					""", Object[].class).setParameter("codigoTurma", codigoTurma)
+					
+					""", AlunoPresencaDTO.class)
+					.setParameter("codigoTurma", codigoTurma)
 					.setParameter("codigoAula", aula.getCodigo()).getResultList();
-
-			List<AlunoPresencaDTO> alunos = resultado.stream().map(r -> {
-				Aluno aluno = (Aluno) r[0];
-				Integer presente = (Integer) r[1];
-				return new AlunoPresencaDTO(aluno.getMatricula(), aluno.getNome(), presente);
-			}).toList();
 
 			// Monta o DTO
 			AulaDTO dto = new AulaDTO();
 
 			dto.setAula(aula);
 			dto.setTurma(turma);
-			dto.setAlunos(alunos);
+			dto.setAlunos(alunosAlunoPresencaDTO);
 
 			return dto;
 
