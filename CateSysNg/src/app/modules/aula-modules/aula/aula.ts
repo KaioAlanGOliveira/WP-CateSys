@@ -128,6 +128,10 @@ export class Aula implements OnInit {
 
     this.aulaService.criar(this.aulaSelecionado).subscribe({
       next: (dados) => {
+        if (dados == null) {
+          alert('Erro ao criar a aula: aula já existe para a turma e data informadas.');
+          return;
+        }
         console.log('Aula criada com sucesso:', dados);
         this.fecharModal();
         this.carregarDados();

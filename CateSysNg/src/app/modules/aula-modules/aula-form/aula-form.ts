@@ -42,7 +42,7 @@ import { ComponenteProfessor } from "../../../shared/componente/componente-pesq-
     CheckboxModule,
     ComponenteTurma,
     ComponenteProfessor
-],
+  ],
   templateUrl: './aula-form.html',
   styleUrl: './aula-form.css'
 })
@@ -86,6 +86,8 @@ export class AulaForm implements OnChanges, OnInit {
 
   ngOnInit() {
     this.initForm();
+    this.formulario.disable();
+    this.modo = 'initial';
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -108,13 +110,13 @@ export class AulaForm implements OnChanges, OnInit {
 
   initForm(): void {
     this.formulario = this.fb.group({
-      codigo: [{ value: '', disabled: false }],
-      data: [{ value: '', disabled: false }, [Validators.required]],
+      codigo: [{ value: '', disabled: true }],
+      data: [{ value: '', disabled: true }, [Validators.required]],
       turmaCodigo: [{ value: null, disabled: true }],
+      professorCodigo: [{ value: null, disabled: true }],
+      presente: [{ value: false, disabled: true }]
     });
   }
-
-
 
   // ==================== CONTROLE CENTRALIZADO ====================
   private alterarEstadoUI(): void {
@@ -147,14 +149,22 @@ export class AulaForm implements OnChanges, OnInit {
 
   editar() {
     if (!this.Selecionado) return;
+
     this.modo = 'editing';
+
     this.formulario.patchValue(this.Selecionado);
     this.originalAula = { ...this.Selecionado };
-    this.formulario.enable();
+
+    // Desabilita tudo
+    this.formulario.disable();
+
+    // Habilita somente os campos que podem ser alterados
+    this.formulario.get('professorCodigo')?.enable();
+    this.formulario.get('presente')?.enable();
+
     this.formulario.markAllAsDirty();
     this.formulario.markAllAsTouched();
     this.formulario.updateValueAndValidity();
-    this.alterarEstadoUI();
   }
 
   private removerMascaras(valor: any): string {
@@ -208,7 +218,6 @@ export class AulaForm implements OnChanges, OnInit {
       turma: formValue,
       alunos: this.listTAluno,
       aula: formValue,
-      presenca: []
     };
 
     if (this.modo === 'creating') {
@@ -219,14 +228,14 @@ export class AulaForm implements OnChanges, OnInit {
   }
 
   private create(formTADto: AulaDto) {
-    this.aulaService.create(formTADto).subscribe({
+    this.aulaService.salvar(formTADto).subscribe({
       next: (dados) => {
-        alert('Aula criada com sucesso.');
-
+        
         this.Selecionado = dados ?? formTADto.turma;
         this.originalAula = { ...this.Selecionado };
         this.disabled = true;
         this.finalizarComSucesso();
+        alert('Aula criada com sucesso.');
       },
       error: (err) => {
         console.error('Erro ao criar Aula:', err);

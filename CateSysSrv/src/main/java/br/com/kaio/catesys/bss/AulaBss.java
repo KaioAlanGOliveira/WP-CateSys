@@ -172,7 +172,6 @@ public class AulaBss {
 	public AulaDTO adicionar(Turma turma, List<AlunoPresencaDTO> list, Aula aula) throws Exception {
 
 		try {
-			aula.setCodigo(getNextCod());
 
 			em.persist(aula);
 			for (AlunoPresencaDTO aluno : list) {
@@ -192,12 +191,23 @@ public class AulaBss {
 			throw new RuntimeException("Erro ao adicionar", e);
 		}
 	}
-	
-	public void criar(Aula aula) throws Exception {
+
+	public Aula criar(Aula aula) throws Exception {
 
 		try {
+			Aula aulaBanco = em
+					.createQuery("SELECT a FROM Aula a " + "WHERE a.turmaCodigo = :turmaCodigo " + "AND a.data = :data",
+							Aula.class)
+					.setParameter("turmaCodigo", aula.getTurmaCodigo()).setParameter("data", aula.getData())
+					.setMaxResults(1).getResultStream().findFirst().orElse(null);
+
+			if (aulaBanco != null) {
+				return null;
+			}
+
 			aula.setCodigo(getNextCod());
 			em.persist(aula);
+			return aula;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Erro ao adicionar", e);

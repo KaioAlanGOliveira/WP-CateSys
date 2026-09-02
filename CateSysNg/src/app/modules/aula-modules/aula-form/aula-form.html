@@ -22,7 +22,7 @@
       <!-- Turma -->
       <div class="campo">
         <label>Turma</label>
-        <cmp-componente-turma inputId="codAluno"  cmpProximoCampo="bt-add" #pesqTurma
+        <cmp-componente-turma inputId="codAluno" cmpProximoCampo="bt-add" #pesqTurma
           formControlName="turmaCodigo"></cmp-componente-turma>
       </div>
 
@@ -30,13 +30,14 @@
       <div class="campo">
         <label for="date">Data</label>
 
-        <input id="date" type="date" formControlName="data" class="input-field"  [disabled]="disabled ?? true" readonly />
+        <input id="date" type="date" formControlName="data" class="input-field" [disabled]="disabled ?? true"
+          readonly />
       </div>
 
-       <!-- Professor -->
+      <!-- Professor -->
       <div class="campo">
         <label>Professor</label>
-        <cmp-componente-professor inputId="codProfessor"  cmpProximoCampo="bt-add" #pesqProfessor
+        <cmp-componente-professor inputId="codProfessor" cmpProximoCampo="bt-add" #pesqProfessor
           formControlName="professorCodigo"></cmp-componente-professor>
       </div>
 
@@ -58,7 +59,10 @@
               <td>{{ aluno.matricula }}</td>
               <td>{{ aluno.nome }}</td>
               <td>
-                <p-checkbox [disabled]="disabled ?? true" value="aluno.presente"></p-checkbox>
+                <p-checkbox [binary]="true" [ngModel]="aluno.presente === 1"
+                  (ngModelChange)="aluno.presente = $event ? 1 : 0" [ngModelOptions]="{ standalone: true }"
+                  >
+                </p-checkbox>
               </td>
             </tr>
           </ng-template>
