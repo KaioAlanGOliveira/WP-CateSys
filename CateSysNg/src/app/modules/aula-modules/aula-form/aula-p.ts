@@ -122,15 +122,15 @@ export class AulaP implements OnChanges, OnInit {
 
     this.aulaService.getEntity(codigo).subscribe({
       next: (dados) => {
-        console.log('Dados recebidos:', dados);
-        this.listTAluno = dados.alunos;
-        this.formulario.patchValue({
-          date: this.Selecionado?.data,
-          nome: dados.turma?.nome,
-          professorMatricula: dados.turma?.professorMatricula
-        });
+        console.log('Dados recebidos:', dados); 
+      this.listTAluno = dados.alunos;
+      this.formulario.patchValue({
+        date: this.Selecionado?.data,
+        nome: dados.turma?.nome,          
+        professorMatricula: dados.turma?.professorMatricula
+      });
 
-        this.cdr.detectChanges();
+      this.cdr.detectChanges();
       }
     });
   }
@@ -385,15 +385,7 @@ export class AulaP implements OnChanges, OnInit {
 
         this.formulario.patchValue(aula);
 
-        this.listTAluno = aula.presecas.map((p: any) => ({
-          matricula: p.aluno.matricula,
-          nome: p.aluno.nome,
-          presente: p.presente
-        }));
-
-        this.tAlunosFiltrados = [...this.listTAluno];
-
-        console.log(this.listTAluno);
+        this.originalTurma = { ...aula };
 
         this.cdr.detectChanges();
       }
