@@ -14,7 +14,7 @@ import { Aula } from "../aula/aula";
 
 @Component({
   selector: 'app-list',
-  imports: [ReactiveFormsModule, TableModule, CommonModule, Aula],
+  imports: [ReactiveFormsModule, TableModule, CommonModule, AulaP],
   standalone: true,
   templateUrl: './aula-list.html',
   styleUrl: './aula-list.css',

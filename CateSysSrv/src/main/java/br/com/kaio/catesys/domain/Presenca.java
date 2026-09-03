@@ -1,10 +1,10 @@
 package br.com.kaio.catesys.domain;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EmbeddedId;
 
 @Embeddable
 public class Presenca implements Serializable {
@@ -14,52 +14,27 @@ public class Presenca implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	@Column(name = "aula_codigo")
-	private Integer aulaCodigo;
+	@Column(name = "presente")
+	Integer presente;
 	
-	@Column(name = "aluno_matricula")
-	private Integer alunoMatricula;
-
-	public Presenca() {
+	@EmbeddedId
+	PresencaId id;
+	
+	public Integer getPresente() {
+		return presente;
 	}
 
-	public Presenca(Integer aulaCodigo, Integer alunoMatricula) {
-		this.aulaCodigo = aulaCodigo;
-		this.alunoMatricula = alunoMatricula;
+	public void setPresente(Integer presente) {
+		this.presente = presente;
 	}
 
-	public Integer getAulaCodigo() {
-		return aulaCodigo;
+	public PresencaId getId() {
+		return id;
 	}
 
-	public void setAulaCodigo(Integer aulaCodigo) {
-		this.aulaCodigo = aulaCodigo;
+	public void setId(PresencaId id) {
+		this.id = id;
 	}
 
-	public Integer getAlunoMatricula() {
-		return alunoMatricula;
-	}
 
-	public void setAlunoMatricula(Integer alunoMatricula) {
-		this.alunoMatricula = alunoMatricula;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-
-		if (!(o instanceof Presenca)) {
-			return false;
-		}
-
-		Presenca that = (Presenca) o;
-
-		return Objects.equals(aulaCodigo, that.aulaCodigo) && Objects.equals(alunoMatricula, that.alunoMatricula);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(aulaCodigo, alunoMatricula);
-	}
 }

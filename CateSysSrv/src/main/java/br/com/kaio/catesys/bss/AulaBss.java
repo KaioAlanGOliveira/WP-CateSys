@@ -73,25 +73,23 @@ public class AulaBss {
 		}
 	}
 
-	public AulaDTO getEntity(Integer codigoTurma) {
+	public AulaDTO getEntity(Integer codigo) {
 		try {
 
-			// 1. Busca a turma
-			Turma turma = em.createQuery("SELECT t FROM Turma t WHERE t.codigo = :codigo", Turma.class)
-					.setParameter("codigo", codigoTurma).getSingleResult();
+			String jpql = """
+					    SELECT p
+					    FROM Presenca p
+					    JOIN FETCH p.aluno
+					    WHERE p.id.aulaCodigo = :codigo
+					""";
 
-			// 2. Busca os alunos da turma
-			List<Aluno> alunos = em.createQuery("""
-					SELECT a
-					FROM TurmaAluno ta
-					JOIN Aluno a ON a.matricula = ta.id.alunoMatricula
-					WHERE ta.id.turmaCodigo = :codigoTurma
-					""", Aluno.class).setParameter("codigoTurma", codigoTurma).getResultList();
+			TypedQuery<Presenca> query = em.createQuery(jpql, Presenca.class);
 
-			// 3. Monta o DTO
+			query.setParameter("codigo", codigo);
+
 			AulaDTO dto = new AulaDTO();
-			dto.setAlunos(alunos);
-			dto.setTurma(turma);
+
+			dto.setPresecas(query.getResultList());
 
 			return dto;
 

@@ -93,7 +93,7 @@ export class AulaP implements OnChanges, OnInit {
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
       this.modo = 'creating';
       this.carregarTurmaSelecionada();
-      this.carregarTurma();
+      this.carregarAlunos();
       this.originalTurma = { ...this.Selecionado };
       this.disabled = true;
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
@@ -116,21 +116,21 @@ export class AulaP implements OnChanges, OnInit {
     });
   }
 
-  carregarTurma() {
-    const codigoTurma = this.Selecionado?.turmaCodigo;
-    if (!codigoTurma) return;
+  carregarAlunos() {
+    const codigo = this.Selecionado?.codigo;
+    if (!codigo) return;
 
-    this.aulaService.getEntity(codigoTurma).subscribe({
+    this.aulaService.getEntity(codigo).subscribe({
       next: (dados) => {
-        console.log('Dados recebidos:', dados); 
-      this.listTAluno = dados.alunos;
-      this.formulario.patchValue({
-        date: this.Selecionado?.data,
-        nome: dados.turma?.nome,          
-        professorMatricula: dados.turma?.professorMatricula
-      });
+        console.log('Dados recebidos:', dados);
+        this.listTAluno = dados.alunos;
+        this.formulario.patchValue({
+          date: this.Selecionado?.data,
+          nome: dados.turma?.nome,
+          professorMatricula: dados.turma?.professorMatricula
+        });
 
-      this.cdr.detectChanges();
+        this.cdr.detectChanges();
       }
     });
   }
@@ -372,7 +372,7 @@ export class AulaP implements OnChanges, OnInit {
       codigo: this.Selecionado.codigo
     } as TurmaDomain;
 
-    // carregar turma
+    // carregar presente + alunos da turma selecionada
     this.aulaService.listFiltrados(filtro).subscribe({
       next: (dados) => {
 
@@ -385,30 +385,17 @@ export class AulaP implements OnChanges, OnInit {
 
         this.formulario.patchValue(aula);
 
-        this.originalTurma = { ...aula };
+        this.listTAluno = aula.presecas.map((p: any) => ({
+          matricula: p.aluno.matricula,
+          nome: p.aluno.nome,
+          presente: p.presente
+        }));
 
-        //  carregar aluno
+        this.tAlunosFiltrados = [...this.listTAluno];
 
-        this.turmaAlunoService.getListAT(aula.codigo).subscribe({
-          next: (dados) => {
+        console.log(this.listTAluno);
 
-            this.listTAluno = dados.map((item: any) => ({
-              matricula: item[0],
-              nome: item[1],
-              status: item[2]
-            }));
-
-            this.tAlunosFiltrados = [...this.listTAluno];
-
-            console.log(this.listTAluno);
-
-            this.cdr.detectChanges();
-          },
-
-          error: (err) => {
-            console.error(err);
-          }
-        });
+        this.cdr.detectChanges();
       }
     })
   }
