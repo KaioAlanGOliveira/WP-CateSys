@@ -22,7 +22,7 @@ import { ComponenteProfessor } from '../../../shared/componente/componente-pesq-
 import { TurmaAluno } from '../../../models/TurmaAluno.model';
 
 @Component({
-  selector: 'app-turma-p',
+  selector: 'app-turma-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -39,10 +39,10 @@ import { TurmaAluno } from '../../../models/TurmaAluno.model';
     ComponenteAluno,
     ComponenteProfessor
   ],
-  templateUrl: './turma-p.html',
-  styleUrl: './turma-p.css'
+  templateUrl: './turma-form.html',
+  styleUrl: './turma-form.css'
 })
-export class TurmaP implements OnChanges, OnInit {
+export class TurmaForm implements OnChanges, OnInit {
 
 
   get novoHabilitado() { return this.modo === 'initial'; }
@@ -98,6 +98,8 @@ export class TurmaP implements OnChanges, OnInit {
       this.disabled = false;
       this.modo = 'creating';
       this.formulario.reset();
+      this.alterarEstadoUI();
+
     }
 
     this.alterarEstadoUI();

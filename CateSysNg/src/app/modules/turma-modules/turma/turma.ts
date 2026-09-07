@@ -3,13 +3,13 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { TurmaService } from '../../../service/turma.service';
 import { TableModule } from 'primeng/table';
 import { TurmaDomain } from '../../../models/turma.model';
-import { TurmaP } from '../turma-p/turma-p';
+import { TurmaForm } from '../turma-form/turma-form';
 import { RadioButton } from "primeng/radiobutton";
 import { log } from 'console';
 
 @Component({
   selector: 'app-turma',
-  imports: [ReactiveFormsModule, TableModule, TurmaP, RadioButton],
+  imports: [ReactiveFormsModule, TableModule, RadioButton, TurmaForm],
   standalone: true,
   templateUrl: './turma.html',
   styleUrl: './turma.css',
@@ -80,6 +80,7 @@ export class Turma implements OnInit {
     this.exibirModalPrincipal = true;
   }
   abrirNovoPopup() {
+    this.form.reset(); 
     this.turmaSelecionado = null;
     this.abrirPopup();
   }

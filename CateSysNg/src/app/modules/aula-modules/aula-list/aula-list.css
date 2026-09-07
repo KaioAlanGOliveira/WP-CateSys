@@ -31,8 +31,9 @@
 /* ===== Área dos filtros ===== */
 
 .filtros {
-  display: flex;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr)) auto auto;
+  align-items: end;
   gap: 20px;
 
   padding: 20px;
@@ -51,9 +52,7 @@
   display: flex;
   flex-direction: column;
   gap: 7px;
-
-  flex: 1;
-  min-width: 250px;
+  min-width: 0;
 }
 
 .form-field label,
@@ -116,12 +115,47 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 7px;
-
-  min-width: 190px;
+  min-width: 0;
 }
 
 .campo p-datepicker {
   width: 100%;
+}
+
+.form-action {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+}
+
+.btn-primary {
+  min-width: 120px;
+  height: 38px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 4px;
+  background: #1e88e5;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #1565c0;
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-add {
+  min-width: 46px;
+  width: 46px;
+  padding: 0;
+  font-size: 1.3rem;
+  line-height: 1;
 }
 
 
@@ -282,20 +316,17 @@
 @media (max-width: 900px) {
 
   .filtros {
-    flex-wrap: wrap;
-    align-items: flex-end;
+    grid-template-columns: 1fr 1fr;
   }
 
-  .form-field {
-    flex: 1 1 250px;
+  .form-field,
+  .campo,
+  .form-action {
+    width: 100%;
   }
 
   .campo-linha {
     flex: 1 1 190px;
-  }
-
-  .campo {
-    width: 100%;
   }
 
   .acoes {
@@ -307,14 +338,15 @@
 @media (max-width: 600px) {
 
   .filtros {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     align-items: stretch;
     gap: 16px;
   }
 
   .form-field,
   .campo-linha,
-  .campo {
+  .campo,
+  .form-action {
     width: 100%;
     min-width: 100%;
   }
