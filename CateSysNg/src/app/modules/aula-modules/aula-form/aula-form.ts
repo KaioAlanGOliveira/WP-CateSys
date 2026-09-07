@@ -39,7 +39,8 @@ import { json } from 'stream/consumers';
     RadioButtonModule,
     DatePickerModule,
     TableModule,
-  ],
+    ComponenteProfessor
+],
   templateUrl: './aula-form.html',
   styleUrl: './aula-form.css'
 })

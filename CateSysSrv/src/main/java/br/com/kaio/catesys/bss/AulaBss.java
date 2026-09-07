@@ -3,8 +3,9 @@ package br.com.kaio.catesys.bss;
 import java.time.LocalDate;
 import java.util.List;
 
+import br.com.kaio.catesys.domain.Aluno;
 import br.com.kaio.catesys.domain.Aula;
-import br.com.kaio.catesys.domain.Presenca;
+import br.com.kaio.catesys.domain.Turma;
 import br.com.kaio.catesys.eps.dto.AulaDTO;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -70,23 +71,25 @@ public class AulaBss {
 		}
 	}
 
-	public AulaDTO getEntity(Integer codigo) {
+	public AulaDTO getEntity(Integer codigoTurma) {
 		try {
 
-			String jpql = """
-					SELECT p, a
-					FROM Presenca p
-					JOIN Aluno a ON a.matricula = p.id.alunoMatricula
-					WHERE p.id.aulaCodigo = :codigo
-						""";
+			// 1. Busca a turma
+			Turma turma = em.createQuery("SELECT t FROM Turma t WHERE t.codigo = :codigo", Turma.class)
+					.setParameter("codigo", codigoTurma).getSingleResult();
 
-			TypedQuery<Presenca> query = em.createQuery(jpql, Presenca.class);
+			// 2. Busca os alunos da turma
+			List<Aluno> alunos = em.createQuery("""
+					SELECT a
+					FROM TurmaAluno ta
+					JOIN Aluno a ON a.matricula = ta.id.alunoMatricula
+					WHERE ta.id.turmaCodigo = :codigoTurma
+					""", Aluno.class).setParameter("codigoTurma", codigoTurma).getResultList();
 
-			query.setParameter("codigo", codigo);
-
+			// 3. Monta o DTO
 			AulaDTO dto = new AulaDTO();
-
-			dto.setPresecas(query.getResultList());
+			dto.setAlunos(alunos);
+			dto.setTurma(turma);
 
 			return dto;
 
