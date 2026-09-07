@@ -68,12 +68,12 @@
       <div class="campo-linha">
         <div class="campo">
           <label>Data nascimento</label>
-          <p-datepicker formControlName="dataNascimento" dateFormat="dd/mm/yy" placeholder="Data nascimento" />
+          <p-datepicker formControlName="dataNascimento" dateFormat="dd/mm/yy" placeholder="Data nascimento, EX: 01/01/2000" />
           @if (formulario.get('dataNascimento')?.invalid && formulario.get('dataNascimento')?.touched) {
-            <p-message severity="error" variant="simple" size="small">Data de nascimento inválida</p-message>
+            <p-message severity="error" variant="simple" size="small">Data de nascimento inválida EX: 01/01/2000</p-message>
           }
           <label>Idade</label>
-          <input pInputText formControlName="idadeAtual" placeholder="Idade" />
+          <input pInputText formControlName="idadeAtual" placeholder="Idade"  readonly/>
         </div>
       </div>
 
@@ -103,9 +103,11 @@
     <div class="acoes">
       <p-button label="Novo" [disabled]="!novoHabilitado" (onClick)="novoAluno()"></p-button>
       <p-button label="Alterar" [disabled]="!alterarHabilitado" (onClick)="editar()"></p-button>
-      <p-button label="Apagar" [disabled]="!apagarHabilitado" (onClick)="apagar()"></p-button>
+      <br><br>
       <p-button label="Salvar" [disabled]="!salvarHabilitado" (onClick)="salvar()"></p-button>
       <p-button label="Cancelar" [disabled]="!cancelarHabilitado" (onClick)="cancelar()"></p-button>
+      <br><br>
+      <p-button label="Apagar" [disabled]="!apagarHabilitado" (onClick)="apagar()"></p-button>
       <p-button label="Fechar" [disabled]="!fecharHabilitado" (onClick)="fecharModal()"></p-button>
     </div>
 

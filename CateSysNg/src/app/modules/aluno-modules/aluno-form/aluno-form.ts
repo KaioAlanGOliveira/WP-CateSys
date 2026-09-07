@@ -41,7 +41,7 @@ export class AlunoForm implements OnChanges, OnInit {
 
   private modo: 'initial' | 'creating' | 'editing' = 'creating';
 
-  @Input() Selecionado!: alunoDomain;
+  @Input() Selecionado: alunoDomain | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
 
@@ -66,8 +66,10 @@ export class AlunoForm implements OnChanges, OnInit {
       this.carregarAlunosFiltrados();
       this.atualizarEstadoUI();
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
+
       this.modo = 'creating';
       this.formulario.reset();
+      this.atualizarEstadoUI();
     }
 
     this.atualizarEstadoUI();
@@ -76,7 +78,7 @@ export class AlunoForm implements OnChanges, OnInit {
   private initForm(): void {
     this.formulario = this.fb.group({
       matricula: [{ value: '', disabled: true }, [Validators.required]],
-      nome: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]],
+      nome: [{ value: '', disabled: true }, [Validators.required]],
       telefone: [{ value: '', disabled: true }],
       nomeResponsavel: [{ value: '', disabled: true }, [Validators.required]],
       telefoneResponsavel: [{ value: '', disabled: true }],
@@ -148,16 +150,15 @@ export class AlunoForm implements OnChanges, OnInit {
   }
 
   private finalizarComSucesso() {
-    this.fecharModal();
+    this.modo = 'initial';
     this.carregarAlunos();
   }
 
   fecharModal() {
     this.modo = 'initial';
-    this.originalAluno = null;
-    this.formulario.reset();
     this.visivel = false;
     this.visivelChange.emit(false);
+    this.formulario.reset();
   }
 
   recarregarPaginaInteira() {
@@ -169,12 +170,15 @@ export class AlunoForm implements OnChanges, OnInit {
   }
 
   apagar() {
-    if (!this.Selecionado?.matricula) return;
+    const respota = window.confirm('Deseja realmente apagar o elemento selecionado?');
+    if (respota) {
+      if (!this.Selecionado?.matricula) return;
 
-    this.AlunoService.apagar(this.Selecionado).subscribe({
-      next: () => { this.finalizarComSucesso(); },
-      error: (err) => { this.finalizarComSucesso(); },
-    });
+      this.AlunoService.apagar(this.Selecionado).subscribe({
+        next: () => { this.finalizarComSucesso(); this.fecharModal(); },
+        error: (err) => { this.finalizarComSucesso(); },
+      });
+    }
   }
 
   calcularIdadeAtual() {
@@ -220,16 +224,14 @@ export class AlunoForm implements OnChanges, OnInit {
 
     if (formValue.dataNascimento) {
       const data = new Date(formValue.dataNascimento);
-      formValue.dataNascimento = data.toLocaleDateString('sv-SE'); 
+      formValue.dataNascimento = data.toLocaleDateString('sv-SE');
     }
 
     if (this.modo === 'creating') {
       this.salvarNovo(formValue);
-      this.fecharModal();
     } else {
       this.alterar(formValue);
     }
-    this.modo = 'initial';
   }
 
   private salvarNovo(formValue: alunoDomain) {
@@ -244,9 +246,11 @@ export class AlunoForm implements OnChanges, OnInit {
 
     this.AlunoService.editar(formValue).subscribe({
       next: () => {
+        alert('Aluno atualizada com sucesso.');
         this.finalizarComSucesso();
       },
       error: (err) => {
+        alert('Erro ao atualizar a aluno. A aluno já existe ou ocorreu um erro.');
         console.error('Erro ao salvar:', err);
       }
     });
@@ -255,13 +259,15 @@ export class AlunoForm implements OnChanges, OnInit {
 
   carregarAlunos() {
     this.AlunoService.listarTodos().subscribe({
-      next: (dados) => this.aluno = dados,
+      next: (dados) => this.aluno = dados[0],
       error: (err) => console.error('Erro ao buscar alunos:', err)
     });
   }
 
   carregarAlunosFiltrados() {
     const filtro = this.Selecionado;
+    if (!filtro) return;
+
     this.AlunoService.getEntity(filtro).subscribe({
       next: (dados) => {
 

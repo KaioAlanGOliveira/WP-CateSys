@@ -23,12 +23,12 @@ export class Aluno implements OnInit {
   private alunoServece = inject(AlunoService);
   private cdr = inject(ChangeDetectorRef);
   
-  listAlunos!: alunoDomain | any;
-  alunosFiltrados!: alunoDomain | any;
+  listAlunos: alunoDomain[] = [];
+  alunosFiltrados: alunoDomain[] = [];
 
   exibirModalPrincipal: boolean = false;
   alterar: boolean = false;
-  alunoSelecionado!: alunoDomain;
+  alunoSelecionado: alunoDomain | null = null;
   formAluno!: Aluno;
 
   form = new FormGroup({
@@ -81,6 +81,7 @@ export class Aluno implements OnInit {
   add() {
     this.alterar = false;
     this.form.reset();
+    this.alunoSelecionado = null;
     this.abrirMeuPopup();
   }
   retornoPopUp(exib: boolean) {

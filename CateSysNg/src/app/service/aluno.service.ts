@@ -24,8 +24,8 @@ export class AlunoService {
     return this.http.get<alunoDomain>(`${this.apiUrl}/${aluno.matricula}`);
   }
 
-  listarTodos(): Observable<alunoDomain> {
-    return this.http.get<alunoDomain>(this.apiUrl+"/ListAlunos");
+  listarTodos(): Observable<alunoDomain[]> {
+    return this.http.get<alunoDomain[]>(this.apiUrl+"/ListAlunos");
   }
 
   listarTodosFiltrados(filtro: alunoDomain): Observable<alunoDomain> {
