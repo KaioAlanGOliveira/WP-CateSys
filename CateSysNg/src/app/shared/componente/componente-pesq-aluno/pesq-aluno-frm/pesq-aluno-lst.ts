@@ -21,7 +21,7 @@ import { alunoDomain } from '../../../../models/aluno.model';
 })
 export class PesqAlunoLst {
 
-  public lista: any;
+  public lista: any[] | alunoDomain[] = [];
   public loading: boolean = false;
   public selectedItem: any;
   private cdr = inject(ChangeDetectorRef);
@@ -30,8 +30,8 @@ export class PesqAlunoLst {
   }
 
   formAluno = new FormGroup({
-    matricula: new FormControl({ value: '', disabled: false }, [Validators.required]),
-    nome: new FormControl({ value: '', disabled: false }, [Validators.required, Validators.minLength(3)]),
+    matricula: new FormControl({ value: '', disabled: false }),
+    nome: new FormControl({ value: '', disabled: false }),
   })
 
   public pesquisar() {
@@ -39,17 +39,25 @@ export class PesqAlunoLst {
       this.loading = true;
       this.cdr.markForCheck();
     });
+
     this.loading = true;
     const raw = this.formAluno.getRawValue();
+    const matricula = raw.matricula != null && raw.matricula !== '' ? Number(raw.matricula) : null;
+    const nome = raw.nome?.trim();
+
     const filtro: any = {
-      ...raw,
-      matricula: raw.matricula != null && raw.matricula !== '' ? Number(raw.matricula) : undefined
+      ...(matricula ? { matricula } : {}),
+      ...(nome ? { nome } : {})
     };
 
-    this.service.listarTodosFiltrados(filtro).subscribe({
+    const operacao = Object.keys(filtro).length > 0
+      ? this.service.listarTodosFiltrados(filtro)
+      : this.service.listarTodos();
+
+    operacao.subscribe({
       next: (dados) => {
         this.loading = false;
-        this.lista = dados;
+        this.lista = dados || [];
         this.cdr.markForCheck();
       },
       error: () => {

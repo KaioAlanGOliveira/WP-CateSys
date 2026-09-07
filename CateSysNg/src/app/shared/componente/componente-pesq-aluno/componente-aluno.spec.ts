@@ -19,4 +19,10 @@ describe('ComponenteAluno', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should accept cmpProximoCampo alias input', () => {
+    fixture.componentRef.setInput('cmpProximoCampo', 'bt-add');
+
+    expect(component.proximoCampo).toBe('bt-add');
+  });
 });

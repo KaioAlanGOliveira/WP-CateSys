@@ -28,8 +28,8 @@ export class AlunoService {
     return this.http.get<alunoDomain[]>(this.apiUrl+"/ListAlunos");
   }
 
-  listarTodosFiltrados(filtro: alunoDomain): Observable<alunoDomain> {
-    return this.http.get<alunoDomain>(`${this.apiUrl}`, { params: new HttpParamsObject(filtro) });
+  listarTodosFiltrados(filtro: alunoDomain): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}`, { params: new HttpParamsObject(filtro) });
   }
 
   editar(aluno: alunoDomain): Observable<alunoDomain> {

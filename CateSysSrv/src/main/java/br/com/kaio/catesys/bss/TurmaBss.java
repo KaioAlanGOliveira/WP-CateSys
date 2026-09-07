@@ -103,22 +103,15 @@ public class TurmaBss {
 
 		try {
 
-			
-			em.createQuery("DELETE FROM TurmaAluno ta WHERE ta.id.turmaCodigo = :turmaCodigo")
-			  .setParameter("turmaCodigo", turma.getCodigo())
-			  .executeUpdate();
-
-			em.createQuery("DELETE FROM Turma t WHERE t.codigo = :turmaCodigo")
-			  .setParameter("turmaCodigo", turma.getCodigo())
-			  .executeUpdate();
-
-			em.createQuery("DELETE FROM Aula a WHERE a.turmaCodigo = :turmaCodigo")
-            .setParameter("turmaCodigo", turma.getCodigo())
-            .executeUpdate();
-			
 			em.createQuery("DELETE FROM TurmaAluno ta WHERE ta.id.turmaCodigo = :turmaCodigo")
 					.setParameter("turmaCodigo", turma.getCodigo()).executeUpdate();
-			
+
+			em.createQuery("DELETE FROM Aula a WHERE a.turmaCodigo = :turmaCodigo")
+					.setParameter("turmaCodigo", turma.getCodigo()).executeUpdate();
+
+			em.createQuery("DELETE FROM TurmaAluno ta WHERE ta.id.turmaCodigo = :turmaCodigo")
+					.setParameter("turmaCodigo", turma.getCodigo()).executeUpdate();
+
 			em.createQuery("DELETE FROM Turma t WHERE t.codigo = :turmaCodigo")
 					.setParameter("turmaCodigo", turma.getCodigo()).executeUpdate();
 
@@ -186,16 +179,16 @@ public class TurmaBss {
 
 		try {
 			// 1. Apaga todas as presenças
-	        em.createQuery("DELETE FROM Presenca").executeUpdate();
+			em.createQuery("DELETE FROM Presenca").executeUpdate();
 
-	        // 2. Apaga todas as aulas
-	        em.createQuery("DELETE FROM Aula").executeUpdate();
+			// 2. Apaga todas as aulas
+			em.createQuery("DELETE FROM Aula").executeUpdate();
 
-	        // 3. Apaga todos os vínculos turma-aluno
-	        em.createQuery("DELETE FROM TurmaAluno").executeUpdate();
+			// 3. Apaga todos os vínculos turma-aluno
+			em.createQuery("DELETE FROM TurmaAluno").executeUpdate();
 
-	        // 4. Apaga todas as turmas
-	        em.createQuery("DELETE FROM Turma").executeUpdate();
+			// 4. Apaga todas as turmas
+			em.createQuery("DELETE FROM Turma").executeUpdate();
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao remover", e);
 		}

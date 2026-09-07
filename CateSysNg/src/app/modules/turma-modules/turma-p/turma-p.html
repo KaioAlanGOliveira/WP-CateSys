@@ -91,7 +91,8 @@
           </ng-template>
 
           <ng-template pTemplate="body" let-aluno>
-            <tr (click)="selecionado(aluno)">
+            <tr (click)="selecionado(aluno)"
+                [class.aluno-selecionado]="alunoSelecionado?.matricula === aluno.matricula">
               <td>{{ aluno.matricula }}</td>
               <td>{{ aluno.nome }}</td>
               <td>{{ aluno.status }}</td>

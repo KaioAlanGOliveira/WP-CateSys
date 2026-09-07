@@ -204,4 +204,14 @@ form {
   padding: 0;
 }
 
+:host ::ng-deep .p-datatable-tbody > tr.aluno-selecionado > td {
+  background: #dfeeff !important;
+  color: #0d47a1;
+  font-weight: 600;
+}
+
+:host ::ng-deep .p-datatable-tbody > tr.aluno-selecionado:hover > td {
+  background: #d2e6ff !important;
+}
+
 

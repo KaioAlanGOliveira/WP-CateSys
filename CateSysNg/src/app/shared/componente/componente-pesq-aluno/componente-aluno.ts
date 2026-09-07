@@ -4,7 +4,7 @@ import { InputNumber } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { DialogService } from '../dialog/services/dialog.service';
-import { alunoDomain } from '../../../models/aluno.model';
+import { alunoDomain   } from '../../../models/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { UtilService } from '../../../service/util.service';
 import { PesqAlunoLst } from './pesq-aluno-frm/pesq-aluno-lst';
@@ -35,7 +35,7 @@ export class ComponenteAluno implements ControlValueAccessor {
   @Input() public inputId?: string;
   @Input() public disabled?: boolean;
   @Input() public matricula: boolean | undefined;
-  @Input() public proximoCampo: string | undefined;
+  @Input('cmpProximoCampo') public proximoCampo: string | undefined;
   @Input() public enableCelular: boolean = false;
   @Input() public colaborador: boolean = false;
 
@@ -69,7 +69,7 @@ export class ComponenteAluno implements ControlValueAccessor {
       this.service.listarTodosFiltrados(filtro).subscribe({
         next: (lista) => {
           this.loading = false;
-          const entity = lista;
+          const entity = (lista && lista.length) ? lista[0] : null;
 
           if (!this.validaEntity(entity)) {
             this.cdr.markForCheck();

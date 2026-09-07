@@ -268,7 +268,7 @@ export class TurmaP implements OnChanges, OnInit {
         turma: formValue,
         alunos: this.listTAluno
       };
-      
+
       this.turmaService.apagar(formTADto).subscribe({
         next: () => { this.finalizarComSucesso(); this.fecharModal(); },
         error: (err) => { alert('Erro ao apagar a turma.'); this.finalizarComSucesso(); },
@@ -308,48 +308,72 @@ export class TurmaP implements OnChanges, OnInit {
     this.alunoSelecionado = null;
   }
 
-  add(aluno: alunoDomain | null): void {
-    if (!aluno) {
+  add(aluno: alunoDomain | number | null): void {
+    const matricula = typeof aluno === 'number'
+      ? aluno
+      : aluno?.matricula ?? null;
+
+    if (!matricula) {
       alert('Nenhum aluno selecionado!');
       return;
-    } else if (this.listTAluno.find(c => c.matricula == aluno)) {
-      alert("Cliente já adicionado!");
-      return;
-    } else {
-
-      const alunoPesquisa: alunoDomain = {
-        matricula: aluno
-      } as alunoDomain;
-
-      this.alunoServece.listarTodosFiltrados(alunoPesquisa).subscribe({
-        next: (dados) => {
-
-          if (!dados) {
-            alert('Aluno não encontrado.');
-            return;
-          }
-
-          const alunoEncontrado = dados;
-
-          this.listTAluno = [
-            ...this.listTAluno,
-            alunoEncontrado
-          ];
-
-          this.cdr.detectChanges();
-          this.tAlunosFiltrados = [
-            ...this.listTAluno
-          ];
-
-          this.alunoSelecionado = alunoEncontrado;
-        },
-
-        error: (err) => {
-          console.error('Erro ao buscar aluno:', err);
-          alert('Erro ao buscar o aluno.');
-        }
-      });
     }
+
+    const alunoJaAdicionado = this.listTAluno.some(
+      c => Number(c.matricula) === Number(matricula)
+    );
+
+    if (alunoJaAdicionado) {
+      alert('Aluno já adicionado!');
+      return;
+    }
+
+    const alunoPesquisa: alunoDomain = {
+      matricula: Number(matricula)
+    } as alunoDomain;
+
+    this.alunoServece.listarTodosFiltrados(alunoPesquisa).subscribe({
+      next: (dados) => {
+        const lista = Array.isArray(dados) ? dados : [dados];
+
+        if (!lista.length) {
+          alert('Aluno não encontrado.');
+          return;
+        }
+
+        const alunoEncontrado = this.normalizarAlunoParaTabela(lista[0]);
+
+        if (!alunoEncontrado) {
+          alert('Aluno não encontrado.');
+          return;
+        }
+
+        this.listTAluno = [
+          ...this.listTAluno,
+          alunoEncontrado
+        ];
+
+        this.tAlunosFiltrados = [...this.listTAluno];
+        this.alunoSelecionado = alunoEncontrado;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erro ao buscar aluno:', err);
+        alert('Erro ao buscar o aluno.');
+      }
+    });
+  }
+  private normalizarAlunoParaTabela(aluno: any): any | null {
+    if (!aluno) return null;
+
+    if (Array.isArray(aluno)) {
+      return this.normalizarAlunoParaTabela(aluno[0]);
+    }
+
+    return {
+      matricula: aluno.matricula ?? aluno[0],
+      nome: aluno.nome ?? aluno[1] ?? '',
+      status: aluno.status ?? aluno[2] ?? 1,
+    };
   }
   private carregarTurmaSelecionada(): void {
     if (!this.Selecionado) {

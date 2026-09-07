@@ -33,7 +33,7 @@ export class ComponenteTurma implements ControlValueAccessor {
   @Input() public inputId?: string;
   @Input() public disabled?: boolean;
   @Input() public codigo: boolean | undefined;
-  @Input() public proximoCampo: string | undefined;
+  @Input('cmpProximoCampo') public proximoCampo: string | undefined;
   @Input() public enableCelular: boolean = false;
   @Input() public colaborador: boolean = false;
 

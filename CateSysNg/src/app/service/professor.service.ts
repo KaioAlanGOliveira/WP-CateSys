@@ -33,6 +33,6 @@ export class ProfessorService {
   }
 
   salvar(professor: professor): Observable<professor> {
-    return this.http.post<professor>(this.apiUrl, professor);
+    return this.http.post<any>(this.apiUrl, professor);
   }
 }
