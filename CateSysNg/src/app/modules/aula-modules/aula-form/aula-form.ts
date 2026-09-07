@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, inject, OnChanges, OnInit, Simp
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
@@ -22,7 +22,8 @@ import { AulaDomain } from '../../../models/aula.model';
 import { AulaService } from '../../../service/aula.service';
 import { log } from 'console';
 import { AulaDto } from '../../../models/aulaDto.model';
-import { json } from 'stream/consumers';
+import { Presenca } from '../../../models/presenca.model';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-aula-form',
@@ -39,6 +40,7 @@ import { json } from 'stream/consumers';
     RadioButtonModule,
     DatePickerModule,
     TableModule,
+    CheckboxModule,
     ComponenteProfessor
   ],
   templateUrl: './aula-form.html',
@@ -59,6 +61,8 @@ export class AulaForm implements OnChanges, OnInit {
   tipoPagamento: any;
   formAlunos!: FormGroup;
   listTAluno: any[] = [];
+  alunos: aluno[] = [];
+  presencas: Presenca[] = [];
   alunosFiltrados: any[] = [];
   alunoSelecionado!: any;
   tAlunosFiltrados: TurmaAluno[] = [];
@@ -78,10 +82,6 @@ export class AulaForm implements OnChanges, OnInit {
   private turmaService = inject(TurmaService);
   private turmaAlunoService = inject(TurmaAlunoService);
   private aulaService = inject(AulaService);
-
-  get presencas(): FormArray {
-    return this.formulario.get('presencas') as FormArray;
-  }
 
   private originalTurma: TurmaDomain | null = null;
   turmasFiltradas: any;
@@ -128,18 +128,6 @@ export class AulaForm implements OnChanges, OnInit {
     });
   }
 
-  private preencherPresencas(presencas: any[]): void {
-    this.presencas.clear();
-
-    presencas.forEach((presenca) => {
-      this.presencas.push(this.fb.group({
-        alunoMatricula: [presenca.id?.alunoMatricula ?? null],
-        aulaCodigo: [presenca.id?.aulaCodigo ?? null],
-        presente: [Boolean(presenca.presente)]
-      }));
-    });
-  }
-
   // ==================== CONTROLE CENTRALIZADO ====================
   private alterarEstadoUI(): void {
     if (!this.formulario) return;
@@ -160,7 +148,8 @@ export class AulaForm implements OnChanges, OnInit {
     this.modo = 'creating';
     this.originalTurma = null;
     this.formulario.reset();
-    this.presencas.clear();
+    this.alunos = [];
+    this.presencas = [];
     this.formulario.markAllAsDirty();
     this.formulario.markAllAsTouched();
     this.formulario.updateValueAndValidity();
@@ -231,12 +220,12 @@ export class AulaForm implements OnChanges, OnInit {
 
     const formTADto: AulaDto = {
       turma: formValue,
-      alunos: this.listTAluno,
+      alunos: this.alunos,
       aula: formValue,
-      presencas: this.presencas.getRawValue().map((presenca: any) => ({
+      presencas: this.presencas.map((presenca) => ({
         id: {
-          alunoMatricula: presenca.alunoMatricula,
-          aulaCodigo: presenca.aulaCodigo ?? formValue.codigo
+          alunoMatricula: presenca.id.alunoMatricula,
+          aulaCodigo: presenca.id.aulaCodigo ?? formValue.codigo
         },
         presente: presenca.presente ? 1 : 0
       }))
@@ -293,12 +282,12 @@ export class AulaForm implements OnChanges, OnInit {
 
       const formTADto: AulaDto = {
         turma: formValue,
-        alunos: this.listTAluno,
+        alunos: this.alunos,
         aula: formValue,
-        presencas: this.presencas.getRawValue().map((presenca: any) => ({
+        presencas: this.presencas.map((presenca) => ({
           id: {
-            alunoMatricula: presenca.alunoMatricula,
-            aulaCodigo: presenca.aulaCodigo ?? formValue.codigo
+            alunoMatricula: presenca.id.alunoMatricula,
+            aulaCodigo: presenca.id.aulaCodigo ?? formValue.codigo
           },
           presente: presenca.presente ? 1 : 0
         }))
@@ -384,7 +373,7 @@ export class AulaForm implements OnChanges, OnInit {
   private carregarSelecionado(): void {
     if (!this.Selecionado) return;
 
-    const codigo = this.Selecionado.codigo;
+    const codigo = this.Selecionado.turmaCodigo;
 
     if (!codigo) return;
     console.log(codigo);
@@ -392,8 +381,6 @@ export class AulaForm implements OnChanges, OnInit {
 
     this.aulaService.getEntity(codigo).subscribe({
       next: (dados) => {
-
-        console.log('DTO:', dados.presencas);
 
         // Preenche os campos do formulário
         this.formulario.patchValue({
@@ -403,9 +390,8 @@ export class AulaForm implements OnChanges, OnInit {
           professorMatricula: dados.turma?.professorMatricula
         });
 
-        // Coloca os dados das presencas no formulario reativo.
-        this.listTAluno = dados.presencas ?? [];
-        this.preencherPresencas(this.listTAluno);
+        this.alunos = dados.alunos ?? [];
+        this.presencas = dados.presencas ?? [];
 
         this.cdr.detectChanges();
       },
@@ -414,5 +400,31 @@ export class AulaForm implements OnChanges, OnInit {
         console.error('Erro ao carregar aula:', err);
       }
     });
+  }
+
+  selecionado(aluno: aluno): boolean {
+    const presenca = this.presencas.find(
+      p => p.id.alunoMatricula === aluno.matricula
+    );
+
+    return Boolean(presenca?.presente);
+  }
+
+  alterarPresenca(aluno: aluno, presente: boolean): void {
+    let presenca = this.presencas.find(
+      p => p.id.alunoMatricula === aluno.matricula
+    );
+
+    if (presenca) {
+      presenca.presente = presente ? 1 : 0;
+    } else {
+      this.presencas.push({
+        id: {
+          alunoMatricula: aluno.matricula!,
+          aulaCodigo: this.formulario.getRawValue().codigo
+        },
+        presente: presente ? 1 : 0
+      });
+    }
   }
 }

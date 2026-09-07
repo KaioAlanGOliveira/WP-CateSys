@@ -3,6 +3,7 @@ package br.com.kaio.catesys.bss;
 import java.time.LocalDate;
 import java.util.List;
 
+import br.com.kaio.catesys.domain.Aluno;
 import br.com.kaio.catesys.domain.Aula;
 import br.com.kaio.catesys.domain.Presenca;
 import br.com.kaio.catesys.domain.Turma;
@@ -93,17 +94,18 @@ public class AulaBss {
 					.orElse(null);
 
 			// Busca as presenças dessa aula
-			TypedQuery<Presenca> query = em.createQuery("""
+			List<Aluno> alunos = em.createQuery("""
+					SELECT a
+					FROM TurmaAluno ta
+					JOIN Aluno a ON a.matricula = ta.id.alunoMatricula
+					WHERE ta.id.turmaCodigo = :codigoTurma
+					""", Aluno.class).setParameter("codigoTurma", aula.getTurmaCodigo()).getResultList();
+
+			List<Presenca> presencas = em.createQuery("""
 					SELECT p
 					FROM Presenca p
-					LEFT JOIN Aluno a
-					    ON a.matricula = p.id.alunoMatricula
 					WHERE p.id.aulaCodigo = :codigo
-					""", Presenca.class);
-
-			query.setParameter("codigo", aula.getCodigo());
-
-			List<Presenca> presencas = query.getResultList();
+					""", Presenca.class).setParameter("codigo", aula.getCodigo()).getResultList();
 
 			// Monta o DTO
 			AulaDTO dto = new AulaDTO();
@@ -111,6 +113,7 @@ public class AulaBss {
 			dto.setTurma(turma);
 			dto.setAula(aula);
 			dto.setPresencas(presencas);
+			dto.setAlunos(alunos);
 
 			return dto;
 
@@ -123,66 +126,57 @@ public class AulaBss {
 	}
 
 	public void alterar(AulaDTO dto) {
-	    try {
+		try {
 
-	        // Altera o professor da turma
-	        if (dto.getTurma() != null) {
-	            Turma turma = em.find(Turma.class, dto.getTurma().getCodigo());
+			if (dto.getPresencas() == null) {
+				return;
+			}
 
-	            if (turma != null) {
-	                turma.setProfessorMatricula(dto.getTurma().getProfessorMatricula());
-	            }
-	        }
+			for (Presenca presenca : dto.getPresencas()) {
 
-	        // Altera as presenças
-	        if (dto.getPresencas() != null) {
-	            for (Presenca presenca : dto.getPresencas()) {
+				// Procura a presença existente
+				Presenca existente = em.find(Presenca.class, presenca.getId());
 
-	                Presenca existente = em.find(
-	                    Presenca.class,
-	                    presenca.getId()
-	                );
+				// Apaga a antiga
+				if (existente != null) {
+					em.remove(existente);
+				}
 
-	                if (existente != null) {
-	                    existente.setPresente(presenca.getPresente());
-	                }
-	            }
-	        }
+				// Cria a nova
+				em.persist(presenca);
+			}
 
-	        em.flush();
+			em.flush();
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        throw new RuntimeException("Erro ao atualizar professor e presenças", e);
-	    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao atualizar presenças", e);
+		}
 	}
 
-
 	public void remover(Aula aula) {
-    try {
+		try {
 
-        // Apaga as presenças da aula
-        em.createQuery("""
-                DELETE FROM Presenca p
-                WHERE p.id.aulaCodigo = :codigo
-                """)
-                .setParameter("codigo", aula.getCodigo())
-                .executeUpdate();
+			// Apaga as presenças da aula
+			em.createQuery("""
+					DELETE FROM Presenca p
+					WHERE p.id.aulaCodigo = :codigo
+					""").setParameter("codigo", aula.getCodigo()).executeUpdate();
 
-        // Apaga a aula
-        Aula aulaExistente = em.find(Aula.class, aula.getCodigo());
+			// Apaga a aula
+			Aula aulaExistente = em.find(Aula.class, aula.getCodigo());
 
-        if (aulaExistente != null) {
-            em.remove(aulaExistente);
-        }
+			if (aulaExistente != null) {
+				em.remove(aulaExistente);
+			}
 
-        em.flush();
+			em.flush();
 
-    } catch (Exception e) {
-        e.printStackTrace();
-        throw new RuntimeException("Erro ao apagar aula", e);
-    }
-}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao apagar aula", e);
+		}
+	}
 
 	public Aula adicionar(Aula aula) {
 

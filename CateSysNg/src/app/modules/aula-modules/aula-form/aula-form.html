@@ -49,7 +49,7 @@
       <!-- Tabela Alunos -->
       <div class="tabela-container">
 
-        <p-table [value]="listTAluno" [tableStyle]="{ 'min-width': '50rem' }">
+        <p-table [value]="alunos" [tableStyle]="{ 'min-width': '50rem' }">
 
           <ng-template pTemplate="header">
             <tr>
@@ -59,17 +59,18 @@
             </tr>
           </ng-template>
 
-          <ng-template pTemplate="body" let-aluno let-rowIndex="rowIndex">
+          <ng-template pTemplate="body" let-aluno>
             <tr>
-              <td>{{ aluno.id.alunoMatricula }}</td>
-              <td>{{ aluno.id.aulaCodigo }}</td>
+              <td>{{ aluno.matricula }}</td>
+              <td>{{ aluno.nome }}</td>
               <td>
-                <ng-container formArrayName="presencas">
-                  <ng-container [formGroupName]="rowIndex">
-                    <input type="checkbox" formControlName="presente"
-                      [disabled]="!salvarHabilitado" />
-                  </ng-container>
-                </ng-container>
+                <p-checkbox
+                  [binary]="true"
+                  [ngModel]="selecionado(aluno)"
+                  [ngModelOptions]="{ standalone: true }"
+                  [disabled]="!salvarHabilitado"
+                  (ngModelChange)="alterarPresenca(aluno, $event)">
+                </p-checkbox>
               </td>
             </tr>
           </ng-template>
@@ -79,15 +80,16 @@
       </div>
       <!-- Rodapé -->
       <div class="table-footer">
-
+ 
+        
         <span>
           Total de registros encontrados:
-          <strong>{{ listTAluno.length }}</strong>
+          <strong>{{ alunos.length }}</strong>
         </span>
 
         <span>
           Máx. de linhas:
-          <strong>{{ listTAluno.length }}</strong>
+          <strong>{{ alunos.length }}</strong>
         </span>
 
       </div>
