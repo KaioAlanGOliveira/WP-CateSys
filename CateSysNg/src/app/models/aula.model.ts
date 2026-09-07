@@ -1,5 +1,5 @@
 
-export class AulaDoain {
+export class AulaDomain {
 	codigo?: number;
 	turmaCodigo?: number;
 	data?: Date;

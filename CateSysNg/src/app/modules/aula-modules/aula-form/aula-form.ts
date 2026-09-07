@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, inject, OnChanges, OnInit, Simp
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
@@ -18,7 +18,7 @@ import { TableModule } from "primeng/table";
 import { ComponenteAluno } from "../../../shared/componente/componente-pesq-aluno/componente-aluno";
 import { ComponenteProfessor } from '../../../shared/componente/componente-pesq-professor/componente-professor';
 import { TurmaAluno } from '../../../models/TurmaAluno.model';
-import { AulaDoain } from '../../../models/aula.model';
+import { AulaDomain } from '../../../models/aula.model';
 import { AulaService } from '../../../service/aula.service';
 import { log } from 'console';
 import { AulaDto } from '../../../models/aulaDto.model';
@@ -70,7 +70,7 @@ export class AulaForm implements OnChanges, OnInit {
   private alunoServece = inject(AlunoService);
   private cdr = inject(ChangeDetectorRef);
 
-  @Input() Selecionado: AulaDoain | null = null;
+  @Input() Selecionado: AulaDomain | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
 
@@ -79,11 +79,22 @@ export class AulaForm implements OnChanges, OnInit {
   private turmaAlunoService = inject(TurmaAlunoService);
   private aulaService = inject(AulaService);
 
+  get presencas(): FormArray {
+    return this.formulario.get('presencas') as FormArray;
+  }
+
   private originalTurma: TurmaDomain | null = null;
   turmasFiltradas: any;
 
   ngOnInit() {
     this.initForm();
+    if (this.Selecionado) {
+      this.modo = 'initial';
+      this.carregarSelecionado();
+      this.disabled = true;
+    }
+
+    this.alterarEstadoUI();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -94,7 +105,6 @@ export class AulaForm implements OnChanges, OnInit {
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
       this.modo = 'initial';
       this.carregarSelecionado();
-      this.originalTurma = { ...this.Selecionado };
       this.disabled = true;
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
       this.disabled = false;
@@ -114,25 +124,19 @@ export class AulaForm implements OnChanges, OnInit {
       codAluno: [{ value: null, disabled: true }],
       professorMatricula: [{ value: null }],
       aluno: [{ value: 1, disabled: true }],
+      presencas: this.fb.array([]),
     });
   }
 
-  carregarAlunos() {
-    const codigo = this.Selecionado?.codigo;
-    if (!codigo) return;
+  private preencherPresencas(presencas: any[]): void {
+    this.presencas.clear();
 
-    this.aulaService.getEntity(codigo).subscribe({
-      next: (dados) => {
-        console.log('Dados recebidos:', dados);
-        this.listTAluno = dados.alunos;
-        this.formulario.patchValue({
-          date: this.Selecionado?.data,
-          nome: dados.turma?.nome,
-          professorMatricula: dados.turma?.professorMatricula
-        });
-
-        this.cdr.detectChanges();
-      }
+    presencas.forEach((presenca) => {
+      this.presencas.push(this.fb.group({
+        alunoMatricula: [presenca.id?.alunoMatricula ?? null],
+        aulaCodigo: [presenca.id?.aulaCodigo ?? null],
+        presente: [Boolean(presenca.presente)]
+      }));
     });
   }
 
@@ -156,6 +160,7 @@ export class AulaForm implements OnChanges, OnInit {
     this.modo = 'creating';
     this.originalTurma = null;
     this.formulario.reset();
+    this.presencas.clear();
     this.formulario.markAllAsDirty();
     this.formulario.markAllAsTouched();
     this.formulario.updateValueAndValidity();
@@ -169,7 +174,6 @@ export class AulaForm implements OnChanges, OnInit {
     if (!this.Selecionado) return;
     this.modo = 'editing';
     this.formulario.patchValue(this.Selecionado);
-    this.originalTurma = { ...this.Selecionado };
     this.formulario.enable();
     this.formulario.markAllAsDirty();
     this.formulario.markAllAsTouched();
@@ -229,7 +233,13 @@ export class AulaForm implements OnChanges, OnInit {
       turma: formValue,
       alunos: this.listTAluno,
       aula: formValue,
-      presencas: formValue
+      presencas: this.presencas.getRawValue().map((presenca: any) => ({
+        id: {
+          alunoMatricula: presenca.alunoMatricula,
+          aulaCodigo: presenca.aulaCodigo ?? formValue.codigo
+        },
+        presente: presenca.presente ? 1 : 0
+      }))
     };
 
     if (this.modo === 'creating') {
@@ -257,12 +267,14 @@ export class AulaForm implements OnChanges, OnInit {
   }
 
 
-  private alterar(formValue: TurmaDto) {
+  private alterar(formValue: AulaDto) {
+    alert('Alterar aula');
+
     if (!this.Selecionado) return;
 
-    const atualizado: TurmaDto = { ...this.Selecionado, ...formValue };
+    const atualizado: AulaDto = { ...this.Selecionado, ...formValue };
 
-    this.turmaService.editar(atualizado).subscribe({
+    this.aulaService.editar(atualizado).subscribe({
       next: () => {
         alert('Turma atualizada com sucesso.');
         this.disabled = true;
@@ -279,14 +291,22 @@ export class AulaForm implements OnChanges, OnInit {
 
       const formValue = this.formulario.getRawValue();
 
-      const formTADto: TurmaDto = {
+      const formTADto: AulaDto = {
         turma: formValue,
-        alunos: this.listTAluno
+        alunos: this.listTAluno,
+        aula: formValue,
+        presencas: this.presencas.getRawValue().map((presenca: any) => ({
+          id: {
+            alunoMatricula: presenca.alunoMatricula,
+            aulaCodigo: presenca.aulaCodigo ?? formValue.codigo
+          },
+          presente: presenca.presente ? 1 : 0
+        }))
       };
 
-      this.turmaService.apagar(formTADto).subscribe({
+      this.aulaService.apagar(formTADto).subscribe({
         next: () => { this.finalizarComSucesso(); this.fecharModal(); },
-        error: (err) => { alert('Erro ao apagar a turma.'); this.finalizarComSucesso(); },
+        error: (err) => { alert('Erro ao apagar a aula.'); this.finalizarComSucesso(); },
       });
     }
   }
@@ -307,12 +327,6 @@ export class AulaForm implements OnChanges, OnInit {
         }
       }
     });
-  }
-
-  selecionado(aluno: aluno) {
-
-    this.alunoSelecionado = aluno;
-    this.visivel = true;
   }
 
   remover(): void {
@@ -370,14 +384,16 @@ export class AulaForm implements OnChanges, OnInit {
   private carregarSelecionado(): void {
     if (!this.Selecionado) return;
 
-    const codigo = this.Selecionado.turmaCodigo;
+    const codigo = this.Selecionado.codigo;
 
     if (!codigo) return;
+    console.log(codigo);
+
 
     this.aulaService.getEntity(codigo).subscribe({
       next: (dados) => {
 
-        console.log('DTO:', dados);
+        console.log('DTO:', dados.presencas);
 
         // Preenche os campos do formulário
         this.formulario.patchValue({
@@ -387,8 +403,9 @@ export class AulaForm implements OnChanges, OnInit {
           professorMatricula: dados.turma?.professorMatricula
         });
 
-        // Coloca as presenças na tabela
+        // Coloca os dados das presencas no formulario reativo.
         this.listTAluno = dados.presencas ?? [];
+        this.preencherPresencas(this.listTAluno);
 
         this.cdr.detectChanges();
       },

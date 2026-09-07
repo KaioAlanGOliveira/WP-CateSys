@@ -224,3 +224,188 @@ form {
 .input-field:hover {
   border-color: #93a3b8;
 }
+
+/* Acabamento do formulario de aula */
+:host {
+  --aula-blue: #1e88e5;
+  --aula-blue-dark: #1565c0;
+  --aula-border: #d9e2ec;
+  --aula-muted: #64748b;
+}
+
+:host ::ng-deep .p-dialog {
+  border: 1px solid var(--aula-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-content {
+  overflow: auto;
+}
+
+form {
+  background: #f8fafc;
+  gap: 0;
+}
+
+.campos {
+  min-width: 0;
+  background: #ffffff;
+  padding: 22px 24px 14px;
+  gap: 14px;
+}
+
+.campo,
+.field {
+  min-width: 0;
+}
+
+.campo label,
+.field > label {
+  color: #334155;
+  letter-spacing: 0.01em;
+}
+
+:host ::ng-deep .campo .p-inputtext,
+:host ::ng-deep .campo .p-inputmask,
+.input-field {
+  min-height: 40px;
+  border-color: var(--aula-border);
+  border-radius: 6px;
+  background: #ffffff;
+  color: #1e293b;
+}
+
+:host ::ng-deep .campo .p-inputtext:disabled,
+:host ::ng-deep .campo .p-inputtext[readonly] {
+  background: #f1f5f9;
+  color: #64748b;
+  opacity: 1;
+}
+
+.tabela-container {
+  display: block;
+  flex: 0 0 auto;
+  min-height: 150px;
+  border: 1px solid var(--aula-border);
+  border-radius: 7px;
+  overflow: auto;
+  background: #ffffff;
+}
+
+:host ::ng-deep .tabela-container .p-datatable {
+  width: 100%;
+  height: auto !important;
+  min-height: 120px;
+}
+
+:host ::ng-deep .tabela-container .p-datatable-wrapper {
+  width: 100%;
+  height: auto !important;
+  min-height: 120px;
+  overflow: visible;
+}
+
+:host ::ng-deep .tabela-container .p-datatable-thead > tr > th {
+  background: #eef5fc;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 10px 12px;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .tabela-container .p-datatable-tbody > tr > td {
+  color: #475569;
+  padding: 10px 12px;
+  border-color: #edf2f7;
+}
+
+:host ::ng-deep .tabela-container .p-datatable-tbody > tr:hover {
+  background: #f8fbff;
+}
+
+.tabela-container input[type='checkbox'] {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--aula-blue);
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--aula-muted);
+  font-size: 0.8rem;
+  padding: 0 2px;
+}
+
+.table-footer strong {
+  color: #334155;
+  font-weight: 700;
+}
+
+.acoes {
+  align-self: stretch;
+  width: 178px;
+  min-width: 178px;
+  justify-content: center;
+  background: #f1f5f9;
+  border-left: 1px solid var(--aula-border);
+  padding: 20px 14px;
+  gap: 9px;
+}
+
+:host ::ng-deep .acoes br {
+  display: none;
+}
+
+:host ::ng-deep .acoes .p-button {
+  min-height: 38px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+:host ::ng-deep .acoes .p-button:not(.p-disabled):hover {
+  background: var(--aula-blue-dark);
+  border-color: var(--aula-blue-dark);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 700px) {
+  :host ::ng-deep .p-dialog {
+    width: calc(100vw - 24px) !important;
+    height: auto !important;
+    max-height: calc(100vh - 24px);
+  }
+
+  form {
+    flex-direction: column;
+  }
+
+  .campos {
+    padding: 18px 16px 12px;
+    border-right: 0;
+  }
+
+  .acoes {
+    width: 100%;
+    min-width: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: stretch;
+    border-left: 0;
+    border-top: 1px solid var(--aula-border);
+  }
+
+  :host ::ng-deep .acoes .p-button {
+    flex: 1 1 calc(50% - 9px);
+  }
+
+  .table-footer {
+    flex-wrap: wrap;
+  }
+}

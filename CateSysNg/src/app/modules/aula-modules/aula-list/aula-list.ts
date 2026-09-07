@@ -4,7 +4,7 @@ import { TurmaService } from '../../../service/turma.service';
 import { TableModule } from 'primeng/table';
 import { TurmaDomain } from '../../../models/turma.model';
 import { CommonModule } from '@angular/common';
-import { AulaDoain } from '../../../models/aula.model';
+import { AulaDomain } from '../../../models/aula.model';
 import { AulaService } from '../../../service/aula.service';
 import { Aula } from "../aula/aula";
 import { AulaForm } from '../aula-form/aula-form';
@@ -29,11 +29,11 @@ export class AulaList implements OnInit {
 
   exibir = false;
   exibirModal: boolean = false;
-  aulaSelecionado!: AulaDoain | any;
+  aulaSelecionado!: AulaDomain | any;
   formTurma!: TurmaDomain;
   listAula: TurmaDomain[] = [];
   aulaFiltradas: TurmaDomain[] = [];
-  aulas: AulaDoain[] = [];
+  aulas: AulaDomain[] = [];
 
   form = new FormGroup({
     codigo: new FormControl<number | null>(null),

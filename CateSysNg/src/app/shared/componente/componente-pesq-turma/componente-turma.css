@@ -1,17 +1,71 @@
 
-.input-code {
-    flex: 0 0 auto;
+.flex {
+  display: flex;
+  width: 100%;
 }
 
+.gap-3 {
+  gap: 0.75rem;
+}
+
+.p-inputgroup {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 6px;
+}
+
+/* Campo do codigo */
 .input-code,
 :host ::ng-deep .p-inputnumber,
 :host ::ng-deep .p-inputnumber-input {
-    width: 400px !important;
+  width: 110px !important;
+  min-width: 110px;
+  height: 40px;
 }
 
-
-
+/* Campo do nome */
 .input-text {
-    opacity: 1;
-    background-color: #e9e9e9 !important;
+  flex: 1 1 auto;
+  width: auto !important;
+  min-width: 0;
+  height: 40px;
+  margin: 0 !important;
+  opacity: 1;
+  background-color: #f1f5f9 !important;
+}
+
+/* Botao de pesquisa */
+.p-inputgroup button {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  margin: 0 !important;
+  flex: 0 0 40px;
+}
+
+:host ::ng-deep .p-inputnumber input {
+  width: 100%;
+}
+
+@media (max-width: 700px) {
+  .p-inputgroup {
+    gap: 5px;
+  }
+
+  .input-code,
+  :host ::ng-deep .p-inputnumber,
+  :host ::ng-deep .p-inputnumber-input {
+    width: 90px !important;
+    min-width: 90px;
+  }
+}
+
+@media (max-width: 420px) {
+  .input-code,
+  :host ::ng-deep .p-inputnumber,
+  :host ::ng-deep .p-inputnumber-input {
+    width: 76px !important;
+    min-width: 76px;
+  }
 }

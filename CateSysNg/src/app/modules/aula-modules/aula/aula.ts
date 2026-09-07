@@ -4,10 +4,11 @@ import { TurmaService } from '../../../service/turma.service';
 import { TableModule } from 'primeng/table';
 import { TurmaDomain } from '../../../models/turma.model';
 import { CommonModule } from '@angular/common';
-import { AulaDoain } from '../../../models/aula.model';
+import { AulaDomain } from '../../../models/aula.model';
 import { AulaService } from '../../../service/aula.service';
 import { EventEmitter } from '@angular/core';
 import { Dialog } from "primeng/dialog";
+import { ComponenteTurma } from "../../../shared/componente/componente-pesq-turma/componente-turma";
 
 @Component({
   selector: 'app-aula',
@@ -28,14 +29,14 @@ export class Aula implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   exibirModalPrincipal: boolean = false;
-  turmaSelecionado!: AulaDoain | any;
+  aulaSelecionado!: AulaDomain | any;
   formTurma!: TurmaDomain;
   listTurmas: TurmaDomain[] = [];
   turmasFiltradas: TurmaDomain[] = [];
   turmas: TurmaDomain[] = [];
 
   
-  @Input() Selecionado: AulaDoain | null = null;
+  @Input() Selecionado: AulaDomain | null = null;
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
 
@@ -45,7 +46,6 @@ export class Aula implements OnInit {
   });
 
   ngOnInit() {
-    alert('Aula');
     this.carregarDados();
   }
 
@@ -63,7 +63,7 @@ export class Aula implements OnInit {
   }
   novo() {
     this.form.reset();
-    this.turmaSelecionado = null;
+    this.aulaSelecionado = null;
     this.abrirPopup();
   }
   pesquisar() {
@@ -87,7 +87,7 @@ export class Aula implements OnInit {
     this.visivelChange.emit(false);
   }
   abrirNovoPopup() {
-    this.turmaSelecionado = null;
+    this.aulaSelecionado = null;
     this.abrirPopup();
   }
   retornoPopUp(exib: boolean) {
@@ -98,7 +98,7 @@ export class Aula implements OnInit {
   }
 
   selecionado(turma: any) {
-    this.turmaSelecionado = turma;
+    this.aulaSelecionado = turma;
     this.abrirPopup();
   }
   apagar(dado: any) {
@@ -110,7 +110,19 @@ export class Aula implements OnInit {
   }
 
   criar() {
-    this.turmaSelecionado = this.form.getRawValue();
-    this.abrirPopup();
+    this.aulaSelecionado = this.form.getRawValue();
+    this.aulaService.salvar(this.aulaSelecionado).subscribe({
+      next: (res) => {
+        if (res == null) {
+          alert('Já existe uma aula cadastrada para esta turma na data informada!');
+          return;
+        }
+        this.carregarDados();
+        this.fecharModal();
+      },
+      error: (err) => {
+        console.error('Erro ao salvar a aula:', err);
+      }
+    });
   }
 }

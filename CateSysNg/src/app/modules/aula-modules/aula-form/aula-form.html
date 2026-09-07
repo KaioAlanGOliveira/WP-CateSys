@@ -22,7 +22,7 @@
       <!-- Turma -->
       <div class="campo">
         <label>Turma</label>
-        <input pInputText formControlName="nome" placeholder="turma"
+        <input pInputText formControlName="nome" placeholder="turma" readonly
           [invalid]="formulario.get('turma')?.invalid && formulario.get('turma')?.touched" />
         @if (formulario.get('turma')?.invalid && formulario.get('turma')?.touched) {
         <p-message severity="error" variant="simple" size="small">A turma é obrigatório</p-message>
@@ -43,7 +43,7 @@
       <div class="campo">
         <label for="date">Data</label>
 
-        <input id="date" type="date" formControlName="date" class="input-field">
+        <input id="date" type="date" formControlName="date" class="input-field" readonly>
       </div>
 
       <!-- Tabela Alunos -->
@@ -59,13 +59,17 @@
             </tr>
           </ng-template>
 
-          <ng-template pTemplate="body" let-aluno>
-            <tr (click)="selecionado(aluno)">
+          <ng-template pTemplate="body" let-aluno let-rowIndex="rowIndex">
+            <tr>
               <td>{{ aluno.id.alunoMatricula }}</td>
               <td>{{ aluno.id.aulaCodigo }}</td>
               <td>
-                <input type="checkbox" [(ngModel)]="aluno.presente"
-                  [ngModelOptions]="{ standalone: true }" [disabled]="!salvarHabilitado" />
+                <ng-container formArrayName="presencas">
+                  <ng-container [formGroupName]="rowIndex">
+                    <input type="checkbox" formControlName="presente"
+                      [disabled]="!salvarHabilitado" />
+                  </ng-container>
+                </ng-container>
               </td>
             </tr>
           </ng-template>
@@ -93,7 +97,7 @@
 
     <!-- BLOCO DA DIREITA: BOTÕES (180px) -->
     <div class="acoes">
-      <p-button label="Novo" [disabled]="!novoHabilitado" (onClick)="novo()"></p-button>
+      <!-- <p-button label="Novo" [disabled]="!novoHabilitado" (onClick)="novo()"></p-button> -->
       <p-button label="Alterar" [disabled]="!alterarHabilitado" (onClick)="editar()"></p-button>
       <br>
       <p-button label="Salvar" [disabled]="!salvarHabilitado" (onClick)="salvar()"></p-button>

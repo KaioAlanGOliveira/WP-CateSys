@@ -1,5 +1,5 @@
 
 export class PresencaId {
-	turmaCodigo!: number;
-	data!: string;
+	alunoMatricula!: number;
+	aulaCodigo!: number;
 }
