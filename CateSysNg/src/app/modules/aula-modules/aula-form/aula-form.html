@@ -15,7 +15,7 @@
       <!-- Codigo -->
       <div class="campo">
         <label>Código</label>
-        <input pInputText formControlName="codigo" placeholder="Codigo" [disabled]="false" readonly />
+        <input pInputText formControlName="codigo" placeholder="Codigo" readonly />
       </div>
 
 
@@ -61,10 +61,11 @@
 
           <ng-template pTemplate="body" let-aluno>
             <tr (click)="selecionado(aluno)">
-              <td>{{ aluno.matricula }}</td>
-              <td>{{ aluno.nome }}</td>
+              <td>{{ aluno.id.alunoMatricula }}</td>
+              <td>{{ aluno.id.aulaCodigo }}</td>
               <td>
-                <p-tableCheckbox [value]="aluno"></p-tableCheckbox>
+                <input type="checkbox" [(ngModel)]="aluno.presente"
+                  [ngModelOptions]="{ standalone: true }" [disabled]="!salvarHabilitado" />
               </td>
             </tr>
           </ng-template>

@@ -1,7 +1,6 @@
-import { aluno } from "./aluno.model";
-import { TurmaDomain } from "./turma.model";
+import { PresencaId } from "./presencaId.model";
 
-export class TurmaDto {
-	turma!: TurmaDomain;
-	alunos!: aluno[];
+export class Presenca {
+	id!: PresencaId;
+	presente!: number;
 }

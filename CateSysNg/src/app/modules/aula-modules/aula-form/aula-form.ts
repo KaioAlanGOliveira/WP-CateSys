@@ -40,7 +40,7 @@ import { json } from 'stream/consumers';
     DatePickerModule,
     TableModule,
     ComponenteProfessor
-],
+  ],
   templateUrl: './aula-form.html',
   styleUrl: './aula-form.css'
 })
@@ -92,9 +92,8 @@ export class AulaForm implements OnChanges, OnInit {
     }
 
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
-      this.modo = 'creating';
+      this.modo = 'initial';
       this.carregarSelecionado();
-      this.carregarAlunos();
       this.originalTurma = { ...this.Selecionado };
       this.disabled = true;
     } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
@@ -124,15 +123,15 @@ export class AulaForm implements OnChanges, OnInit {
 
     this.aulaService.getEntity(codigo).subscribe({
       next: (dados) => {
-        console.log('Dados recebidos:', dados); 
-      this.listTAluno = dados.alunos;
-      this.formulario.patchValue({
-        date: this.Selecionado?.data,
-        nome: dados.turma?.nome,          
-        professorMatricula: dados.turma?.professorMatricula
-      });
+        console.log('Dados recebidos:', dados);
+        this.listTAluno = dados.alunos;
+        this.formulario.patchValue({
+          date: this.Selecionado?.data,
+          nome: dados.turma?.nome,
+          professorMatricula: dados.turma?.professorMatricula
+        });
 
-      this.cdr.detectChanges();
+        this.cdr.detectChanges();
       }
     });
   }
@@ -218,7 +217,7 @@ export class AulaForm implements OnChanges, OnInit {
 
 
   salvar() {
-   
+
     if (this.formulario.invalid) {
       this.formulario.markAllAsTouched();
       return;
@@ -230,6 +229,7 @@ export class AulaForm implements OnChanges, OnInit {
       turma: formValue,
       alunos: this.listTAluno,
       aula: formValue,
+      presencas: formValue
     };
 
     if (this.modo === 'creating') {
@@ -366,33 +366,36 @@ export class AulaForm implements OnChanges, OnInit {
       });
     }
   }
-  private carregarSelecionado(): void {
-    if (!this.Selecionado) {
-      return;
-    }
 
-    const filtro: AulaDoain = {
-      codigo: this.Selecionado.codigo
-    } as TurmaDomain;
-    
-    this.aulaService.listFiltrados(filtro).subscribe({
+  private carregarSelecionado(): void {
+    if (!this.Selecionado) return;
+
+    const codigo = this.Selecionado.turmaCodigo;
+
+    if (!codigo) return;
+
+    this.aulaService.getEntity(codigo).subscribe({
       next: (dados) => {
 
-        if (!dados || dados.length === 0) {
-          alert('Aula não encontrada.');
-          return;
-        }
+        console.log('DTO:', dados);
 
-        const aula = dados[0];
+        // Preenche os campos do formulário
+        this.formulario.patchValue({
+          codigo: dados.aula?.codigo,
+          date: dados.aula?.data,
+          nome: dados.turma?.nome,
+          professorMatricula: dados.turma?.professorMatricula
+        });
 
-        this.formulario.patchValue(aula);
-
-        this.originalTurma = { ...aula };
+        // Coloca as presenças na tabela
+        this.listTAluno = dados.presencas ?? [];
 
         this.cdr.detectChanges();
+      },
+
+      error: (err) => {
+        console.error('Erro ao carregar aula:', err);
       }
-    })
+    });
   }
-
-
 }
