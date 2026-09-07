@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AlunoP } from './aluno-p';
+import { AlunoForm } from './aluno-form';
 
-describe('AlunoP', () => {
-  let component: AlunoP;
-  let fixture: ComponentFixture<AlunoP>;
+describe('AlunoForm', () => {
+  let component: AlunoForm;
+  let fixture: ComponentFixture<AlunoForm>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AlunoP],
+      imports: [AlunoForm],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AlunoP);
+    fixture = TestBed.createComponent(AlunoForm);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

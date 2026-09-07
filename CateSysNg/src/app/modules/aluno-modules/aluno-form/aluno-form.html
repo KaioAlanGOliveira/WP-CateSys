@@ -1,5 +1,5 @@
-<p-dialog header="Cadastro dos Fieis" [(visible)]="visivel" (onHide)="fecharModal()" [modal]="true"
-  [style]="{ width: '800px', height: '80vh' }">
+<p-dialog header="Aluno" [(visible)]="visivel" (onHide)="fecharModal()" [modal]="true"
+  [style]="{ width: '660px', height: '480px' }">
   <!-- Formulário envolve o container do grid -->
   <form [formGroup]="formulario">
 
@@ -36,7 +36,7 @@
       <!-- Telefone -->
       <div class="campo">
         <label>Telefone</label>
-        <p-input-number [minlength]="11" mask="(99) 99999-9999" formControlName="telefone" placeholder="Telefone. Ex (99) 99999-9999"
+        <input pInputText [maxlength]="11" mask="(99) 99999-9999" formControlName="telefone" placeholder="Telefone. Ex (99) 99999-9999"
           [invalid]="formulario.get('telefone')?.invalid && formulario.get('telefone')?.touched" />
         @if (formulario.get('telefone')?.invalid && formulario.get('telefone')?.touched) {
         <p-message severity="error" variant="simple" size="small">Telefone inválido</p-message>
@@ -56,7 +56,7 @@
       <!-- Telefone Responsável -->
       <div class="campo">
         <label>Telefone Responsável</label>
-        <p-inputNumber [minlength]="11" mask="(99) 99999-9999" formControlName="telefoneResponsavel" placeholder="Telefone Responsável. Ex (99) 99999-9999"
+        <input pInputText [maxlength]="11" mask="(99) 99999-9999" formControlName="telefoneResponsavel" placeholder="Telefone Responsável. Ex (99) 99999-9999"
           [invalid]="formulario.get('telefoneResponsavel')?.invalid && formulario.get('telefoneResponsavel')?.touched" />
         @if (formulario.get('telefoneResponsavel')?.invalid && formulario.get('telefoneResponsavel')?.touched)
         {
@@ -72,6 +72,7 @@
           @if (formulario.get('dataNascimento')?.invalid && formulario.get('dataNascimento')?.touched) {
             <p-message severity="error" variant="simple" size="small">Data de nascimento inválida</p-message>
           }
+          <label>Idade</label>
           <input pInputText formControlName="idadeAtual" placeholder="Idade" />
         </div>
       </div>
@@ -80,17 +81,17 @@
       <div class="campo">
         <label>Status</label>
         <div class="flex align-items-center gap-2">
-          <p-radiobutton name="tipo" formControlName="tipo" inputId="statusAtivo" value="1">
+          <p-radiobutton name="status" formControlName="status" inputId="statusAtivo" value="1">
           </p-radiobutton>
 
-          <label for="oferta">Ativo</label>
+          <label for="statusAtivo">Ativo</label>
         </div>
 
         <div class="flex align-items-center gap-2">
-          <p-radiobutton name="tipo" formControlName="tipo" inputId="statusInativo" value="2">
+          <p-radiobutton name="status" formControlName="status" inputId="statusInativo" value="0">
           </p-radiobutton>
 
-          <label for="dizimo">Inativo</label>
+          <label for="statusInativo">Inativo</label>
         </div>
       </div>
 

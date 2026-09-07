@@ -1,4 +1,4 @@
-export class aluno {
+export class alunoDomain {
     matricula?: number;
 	nome?: string;
 	telefone?: string;

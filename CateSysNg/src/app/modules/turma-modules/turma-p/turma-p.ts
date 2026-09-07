@@ -13,7 +13,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { TurmaDomain } from '../../../models/turma.model';
 import { TurmaDto } from '../../../models/turmaDto.model';
 import { Aluno } from '../../aluno-modules/aluno/aluno';
-import { aluno } from '../../../models/aluno.model';
+import { alunoDomain } from '../../../models/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { TurmaAlunoService } from '../../../service/turmaAluno.service';
 import { TableModule } from "primeng/table";
@@ -294,7 +294,7 @@ export class TurmaP implements OnChanges, OnInit {
     });
   }
 
-  selecionado(aluno: aluno) {
+  selecionado(aluno: alunoDomain) {
 
     this.alunoSelecionado = aluno;
     this.visivel = true;
@@ -308,7 +308,7 @@ export class TurmaP implements OnChanges, OnInit {
     this.alunoSelecionado = null;
   }
 
-  add(aluno: aluno | null): void {
+  add(aluno: alunoDomain | null): void {
     if (!aluno) {
       alert('Nenhum aluno selecionado!');
       return;
@@ -317,19 +317,19 @@ export class TurmaP implements OnChanges, OnInit {
       return;
     } else {
 
-      const alunoPesquisa: aluno = {
+      const alunoPesquisa: alunoDomain = {
         matricula: aluno
-      } as aluno;
+      } as alunoDomain;
 
       this.alunoServece.listarTodosFiltrados(alunoPesquisa).subscribe({
         next: (dados) => {
 
-          if (!dados || dados.length === 0) {
+          if (!dados) {
             alert('Aluno não encontrado.');
             return;
           }
 
-          const alunoEncontrado = dados[0];
+          const alunoEncontrado = dados;
 
           this.listTAluno = [
             ...this.listTAluno,

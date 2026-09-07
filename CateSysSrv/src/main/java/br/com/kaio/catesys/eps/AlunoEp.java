@@ -13,7 +13,9 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -26,14 +28,23 @@ public class AlunoEp {
 	private AlunoBss alunoBss;
 
 	@GET
+	@Path("/ListAlunos")
 	public List<Aluno> getAlunos() {
 		return alunoBss.getAlunos();
 	}
 
-	@POST
-	@Path("/filtrar")
-	public List<Aluno> getList(Aluno domain) {
-		return alunoBss.getListFiltrado(domain);
+	@GET
+	public List<Aluno> getList(@QueryParam("matricula") Integer matricula, @QueryParam("nome") String nome,
+			@QueryParam("codProfessor") Integer codProfessor, @QueryParam("status") Integer status) {
+
+		return alunoBss.getListFiltrado(matricula, nome, codProfessor, status);
+	}
+
+	@GET
+	@Path("/{codigo}")
+	public Aluno getEntity(@PathParam("codigo") Integer codigo) {
+
+		return alunoBss.getEntity(codigo);
 	}
 
 	@POST
@@ -62,13 +73,11 @@ public class AlunoEp {
 	}
 
 	@PUT
-	public Response editar(Aluno aluno) {
+	public void editar(Aluno aluno) {
 
 		try {
 			alunoBss.alterar(aluno);
-			return Response.ok(Map.of("mensagem", "Fiel alterado com sucesso")).build();
 		} catch (Exception e) {
-			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
 		}
 	}
 }

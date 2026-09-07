@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { aluno } from '../models/aluno.model';
+import { alunoDomain } from '../models/aluno.model';
+import { HttpParamsObject } from '../core/http/http-params-object';
 
 @Injectable({
   providedIn: 'root'
@@ -12,25 +13,30 @@ export class AlunoService {
 
   constructor(private http: HttpClient) { }
 
-  apagar(aluno: aluno) {
+  apagar(aluno: alunoDomain) {
     return this.http.delete<{ mensagem: string }>(this.apiUrl, {
       body: aluno
     });
   }
 
-  listarTodos(): Observable<aluno[]> {
-    return this.http.get<aluno[]>(this.apiUrl);
+  getEntity(aluno: alunoDomain): Observable<alunoDomain> {
+
+    return this.http.get<alunoDomain>(`${this.apiUrl}/${aluno.matricula}`);
   }
 
-  listarTodosFiltrados(filtro: aluno): Observable<aluno[]> {
-    return this.http.post<aluno[]>(`${this.apiUrl}/filtrar`,  filtro);
+  listarTodos(): Observable<alunoDomain> {
+    return this.http.get<alunoDomain>(this.apiUrl+"/ListAlunos");
   }
 
-  editar(aluno: aluno) {
+  listarTodosFiltrados(filtro: alunoDomain): Observable<alunoDomain> {
+    return this.http.get<alunoDomain>(`${this.apiUrl}`, { params: new HttpParamsObject(filtro) });
+  }
+
+  editar(aluno: alunoDomain): Observable<alunoDomain> {
     return this.http.put(this.apiUrl, aluno);
   }
 
-  salvar(aluno: aluno): Observable<aluno> {
-    return this.http.post<aluno>(this.apiUrl, aluno);
+  salvar(aluno: alunoDomain): Observable<alunoDomain> {
+    return this.http.post<alunoDomain>(this.apiUrl, aluno);
   }
 }

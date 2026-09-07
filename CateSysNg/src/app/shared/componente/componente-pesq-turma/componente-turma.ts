@@ -4,7 +4,7 @@ import { InputNumber } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { DialogService } from '../dialog/services/dialog.service';
-import { aluno } from '../../../models/aluno.model';
+import { alunoDomain } from '../../../models/aluno.model';
 import { PesqProfessorLst } from './pesq-turma-frm/pesq-turma-frm';
 import { CommonModule } from '@angular/common';
 import { ProfessorService } from '../../../service/professor.service';
@@ -41,7 +41,7 @@ export class ComponenteTurma implements ControlValueAccessor {
   public loading: boolean = false;
 
   enableCmp: boolean = false;
-  private _entity: aluno | null = null;
+  private _entity: alunoDomain | null = null;
 
   public form = new FormGroup({
     codigo: new FormControl<number | null>(null),
@@ -92,14 +92,14 @@ export class ComponenteTurma implements ControlValueAccessor {
     }
   }
 
-  private validaEntity(entity: aluno | null) {
+  private validaEntity(entity: alunoDomain | null) {
 
     if (!entity) {
       return false;
     }
     return true;
   }
-  public get entity(): aluno | null {
+  public get entity(): alunoDomain | null {
     return this._entity;
   }
 

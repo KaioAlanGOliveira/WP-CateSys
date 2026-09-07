@@ -5,14 +5,14 @@ import { LoginService } from '../../../service/login.service';
 import { AlunoService } from '../../../service/aluno.service';
 import { loginDto } from '../../../models/login.model';
 import { TableModule } from 'primeng/table';
-import { aluno } from '../../../models/aluno.model';
+import { alunoDomain } from '../../../models/aluno.model';
 import { log } from 'node:console';
-import { AlunoP } from "../aluno-p/aluno-p";
+import { AlunoForm } from "../aluno-form/aluno-form";
 
 
 @Component({
   selector: 'app-aluno',
-  imports: [ReactiveFormsModule, TableModule, AlunoP],
+  imports: [ReactiveFormsModule, TableModule, AlunoForm],
   standalone: true,
   templateUrl: './aluno.html',
   styleUrl: './aluno.css',
@@ -23,17 +23,18 @@ export class Aluno implements OnInit {
   private alunoServece = inject(AlunoService);
   private cdr = inject(ChangeDetectorRef);
   
-  listAlunos: aluno[] = [];
-  alunosFiltrados: any[] = [];
+  listAlunos!: alunoDomain | any;
+  alunosFiltrados!: alunoDomain | any;
 
   exibirModalPrincipal: boolean = false;
   alterar: boolean = false;
-  alunoSelecionado!: any;
+  alunoSelecionado!: alunoDomain;
   formAluno!: Aluno;
 
   form = new FormGroup({
     matricula: new FormControl<number | null>(null),
-    nome: new FormControl<string | "">("", Validators.required)
+    nome: new FormControl<string | "">("", Validators.required),
+    status: new FormControl<number | null>(1, Validators.required),
   });
 
   ngOnInit() {
@@ -41,11 +42,11 @@ export class Aluno implements OnInit {
   }
 
   carregarDados() {
-    const dado = this.form.getRawValue() as aluno;
+    const dado = this.form.getRawValue() as alunoDomain;
     this.alunoServece.listarTodos().subscribe({
       next: (dados) => {
-        this.listAlunos = dados || [];
-        this.alunosFiltrados = dados || [];
+        this.listAlunos = dados ;
+        this.alunosFiltrados = dados;
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -68,7 +69,7 @@ export class Aluno implements OnInit {
     const buscaNome = termoNome ? termoNome.toLocaleLowerCase().trim() : '';
     const buscaMatricula = termoMatricula ? termoMatricula.trim() : '';
 
-    this.alunosFiltrados = this.listAlunos.filter(a =>
+    this.alunosFiltrados = this.listAlunos.filter((a: alunoDomain) =>
       (buscaNome && a.nome && a.nome.toLocaleLowerCase().includes(buscaNome.toLocaleLowerCase().trim())) ||
       (buscaMatricula && a.matricula && String(a.matricula).includes(buscaMatricula.trim()))
     );
@@ -88,10 +89,8 @@ export class Aluno implements OnInit {
       this.carregarDados();
     }
   }
-  selecionado(aluno: aluno) {
-    this.alterar = true;
+  selecionado(aluno: alunoDomain) {
     this.alunoSelecionado = aluno;
-    this.form.patchValue(aluno);
     this.abrirMeuPopup();
   }
 }

@@ -57,7 +57,7 @@
         <tr (dblclick)="selecionado(aluno)">
           <td>{{ aluno.matricula }}</td>
           <td>{{ aluno.nome }}</td>
-          <td>{{ aluno.status }}</td>
+          <td>{{ aluno.status === 1 ? 'Ativo' : 'Inativo' }}</td>
         </tr>
       </ng-template>
 
@@ -70,18 +70,11 @@
   <div class="table-footer">
 
     <span>
-      Total de registros encontrados:
-      <strong>{{ listAlunos.length }}</strong>
+      <p>Total de registros encontrados: {{ listAlunos.length }}</p>
     </span>
-
-    <span>
-      Máx. de linhas:
-      <strong>{{ listAlunos.length }}</strong>
-    </span>
-
   </div>
 
 </div>
-<app-aluno-p [(visivel)]="exibirModalPrincipal" (visivelChange)="retornoPopUp($event)"  [Selecionado]="alunoSelecionado">
+<app-aluno-form [(visivel)]="exibirModalPrincipal" (visivelChange)="retornoPopUp($event)"  [Selecionado]="alunoSelecionado">
 
-</app-aluno-p>
+</app-aluno-form>

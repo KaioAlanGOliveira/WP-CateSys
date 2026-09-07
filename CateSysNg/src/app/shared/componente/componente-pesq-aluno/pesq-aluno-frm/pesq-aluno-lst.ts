@@ -10,6 +10,7 @@ import { ButtonDirective } from "primeng/button";
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { json } from 'node:stream/consumers';
+import { alunoDomain } from '../../../../models/aluno.model';
 
 @Component({
   selector: 'app-pesq-aluno-lst',
@@ -20,7 +21,7 @@ import { json } from 'node:stream/consumers';
 })
 export class PesqAlunoLst {
 
-  public lista: any[] = [];
+  public lista: any;
   public loading: boolean = false;
   public selectedItem: any;
   private cdr = inject(ChangeDetectorRef);
@@ -48,7 +49,7 @@ export class PesqAlunoLst {
     this.service.listarTodosFiltrados(filtro).subscribe({
       next: (dados) => {
         this.loading = false;
-        this.lista = dados || [];
+        this.lista = dados;
         this.cdr.markForCheck();
       },
       error: () => {

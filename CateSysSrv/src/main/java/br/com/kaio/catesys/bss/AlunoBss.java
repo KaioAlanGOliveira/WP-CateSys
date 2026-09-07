@@ -26,6 +26,20 @@ public class AlunoBss {
 		}
 	}
 
+	public Aluno getEntity(Integer matricula) {
+
+		try {
+			String jpql = "	SELECT a FROM Aluno a WHERE a.matricula = :matricula";
+			TypedQuery<Aluno> query = em.createQuery(jpql, Aluno.class);
+			query.setParameter("matricula", matricula);
+
+			return query.getSingleResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao listar", e);
+		}
+	}
+
 	public void adicionar(Aluno aluno) throws Exception {
 
 		try {
@@ -48,27 +62,34 @@ public class AlunoBss {
 	public void remover(Aluno aluno) {
 
 		try {
+			em.createQuery("DELETE FROM Presenca p WHERE p.id.alunoMatricula = :matricula")
+					.setParameter("matricula", aluno.getMatricula()).executeUpdate();
+
+			em.createQuery("DELETE FROM TurmaAluno ta WHERE ta.id.alunoMatricula = :matricula")
+					.setParameter("matricula", aluno.getMatricula()).executeUpdate();
+
 			em.remove(em.find(Aluno.class, aluno.getMatricula()));
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException("Erro ao remover", e);
 		}
 	}
 
-	public List<Aluno> getListFiltrado(Aluno domain) {
-
+	public List<Aluno> getListFiltrado(Integer matricula, String nome, Integer status, Integer professor) {
 		try {
 			String jpql = """
 					SELECT a
 					FROM Aluno a
-					WHERE (:nome IS NULL OR :nome = '' OR
-					       LOWER(a.nome) LIKE LOWER(CONCAT('%', :nome, '%')))
+					WHERE (:nome IS NULL OR :nome = '' OR LOWER(a.nome) LIKE LOWER(CONCAT('%', :nome, '%')))
 					  AND (:matricula IS NULL OR a.matricula = :matricula)
+					  AND (:status IS NULL OR a.status = :status)
 					""";
 
 			TypedQuery<Aluno> query = em.createQuery(jpql, Aluno.class);
 
-			query.setParameter("nome", domain.getNome());
-			query.setParameter("matricula", domain.getMatricula());
+			query.setParameter("nome", nome);
+			query.setParameter("matricula", matricula.equals("null") ? null : matricula);
+			query.setParameter("status", status);
 
 			return query.getResultList();
 		} catch (Exception e) {

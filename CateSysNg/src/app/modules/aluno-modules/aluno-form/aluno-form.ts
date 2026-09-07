@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, OnChanges, OnInit, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
@@ -7,14 +7,14 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumber } from "primeng/inputnumber";
-import { aluno } from '../../../models/aluno.model';
+import { alunoDomain } from '../../../models/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { Aluno } from '../aluno/aluno';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
-  selector: 'app-aluno-p',
+  selector: 'app-aluno-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -27,14 +27,13 @@ import { DatePickerModule } from 'primeng/datepicker';
     FormsModule,
     RadioButtonModule,
     DatePickerModule,
-    InputNumber
-],
-  templateUrl: './aluno-p.html',
-  styleUrl: './aluno-p.css'
+  ],
+  templateUrl: './aluno-form.html',
+  styleUrl: './aluno-form.css'
 })
-export class AlunoP implements OnChanges, OnInit {
+export class AlunoForm implements OnChanges, OnInit {
 
-  aluno: aluno[] = [];
+  aluno!: alunoDomain;
 
   formulario!: FormGroup;
 
@@ -42,18 +41,19 @@ export class AlunoP implements OnChanges, OnInit {
 
   private modo: 'initial' | 'creating' | 'editing' = 'creating';
 
-  @Input() Selecionado: aluno | null = null;
+  @Input() Selecionado!: alunoDomain;
   @Output() visivelChange = new EventEmitter<boolean>();
   @Input() visivel = false;
+
   private fb = inject(FormBuilder);
+  private cdr = inject(ChangeDetectorRef);
   private AlunoService = inject(AlunoService);
 
-  private originalAluno: aluno | null = null;
+  private originalAluno: alunoDomain | null = null;
 
   ngOnInit() {
     this.initForm();
     this.calcularIdadeAtual();
-    // this.carregarAlunos();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -63,9 +63,14 @@ export class AlunoP implements OnChanges, OnInit {
 
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
       this.modo = 'initial';
-      this.originalAluno = { ...this.Selecionado };
-      this.formulario.patchValue(this.Selecionado);
+      this.carregarAlunosFiltrados();
+      this.atualizarEstadoUI();
+    } else if (changes['visivel'] && this.visivel && !this.Selecionado && this.formulario) {
+      this.modo = 'creating';
+      this.formulario.reset();
     }
+
+    this.atualizarEstadoUI();
   }
 
   private initForm(): void {
@@ -85,20 +90,16 @@ export class AlunoP implements OnChanges, OnInit {
     });
   }
 
-  carregarAlunos() {
-    this.AlunoService.listarTodos().subscribe({
-      next: (dados) => this.aluno = dados || [],
-      error: (err) => console.error('Erro ao buscar alunos:', err)
-    });
-  }
 
   // ==================== CONTROLE CENTRALIZADO ====================
   private atualizarEstadoUI(): void {
     if (!this.formulario) return;
-    const isInitial = this.modo === 'initial';
 
-    if (isInitial) {
+    if (this.modo === 'initial') {
       this.formulario.disable();
+    } else if (this.modo === 'editing') {
+      this.formulario.enable();
+      this.formulario.get('matricula')?.disable();
     } else {
       this.formulario.enable();
     }
@@ -124,7 +125,10 @@ export class AlunoP implements OnChanges, OnInit {
     this.modo = 'editing';
     this.formulario.get('matricula')?.disable();
     this.originalAluno = { ...this.Selecionado };
-    this.formulario.patchValue(this.Selecionado);
+    this.formulario.patchValue({
+      ...this.Selecionado,
+      dataNascimento: this.converterDataNascimento(this.Selecionado.dataNascimento)
+    });
     this.atualizarEstadoUI();
   }
 
@@ -189,8 +193,9 @@ export class AlunoP implements OnChanges, OnInit {
       return null;
     }
 
-    const nascimento = dataNascimento instanceof Date ? dataNascimento : new Date(dataNascimento);
-    if (Number.isNaN(nascimento.getTime())) {
+    const nascimento = this.converterDataNascimento(dataNascimento);
+
+    if (!nascimento) {
       return null;
     }
 
@@ -205,37 +210,100 @@ export class AlunoP implements OnChanges, OnInit {
     return idade;
   }
 
-   salvar() {
-      if (this.formulario.invalid) {
-        this.formulario.markAllAsTouched();
-        return;
-      }
-  
-      const formValue = this.formulario.getRawValue();
-  
-      if (this.modo === 'creating') {
-        this.salvarNovo(formValue);
-        this.fecharModal();
-      } else {
-        this.alterar(formValue);
-      }
-      this.modo = 'initial';
-    }
-  
-    private salvarNovo(formValue: aluno) {
-  
-      this.AlunoService.salvar(formValue).subscribe({
-        next: () => this.finalizarComSucesso(),
-        error: (err) => { alert('Erro ao salvar a aluno. A aluno já existe.'); console.error('Erro ao salvar:', err); }
-      });
+  salvar() {
+    if (this.formulario.invalid) {
+      this.formulario.markAllAsTouched();
+      return;
     }
 
-     private alterar(formValue: aluno) {
-  
-      this.AlunoService.editar(formValue).subscribe({
-        next: () => this.finalizarComSucesso(),
-        error: (err) => { alert('Erro ao salvar a aluno. A aluno já existe.'); console.error('Erro ao salvar:', err); }
-      });
+    const formValue = this.formulario.getRawValue();
+
+    if (formValue.dataNascimento) {
+      const data = new Date(formValue.dataNascimento);
+      formValue.dataNascimento = data.toLocaleDateString('sv-SE'); 
     }
-  
+
+    if (this.modo === 'creating') {
+      this.salvarNovo(formValue);
+      this.fecharModal();
+    } else {
+      this.alterar(formValue);
+    }
+    this.modo = 'initial';
+  }
+
+  private salvarNovo(formValue: alunoDomain) {
+
+    this.AlunoService.salvar(formValue).subscribe({
+      next: () => this.finalizarComSucesso(),
+      error: (err) => { alert('Erro ao salvar a aluno. A aluno já existe.'); console.error('Erro ao salvar:', err); }
+    });
+  }
+
+  private alterar(formValue: alunoDomain) {
+
+    this.AlunoService.editar(formValue).subscribe({
+      next: () => {
+        this.finalizarComSucesso();
+      },
+      error: (err) => {
+        console.error('Erro ao salvar:', err);
+      }
+    });
+  }
+
+
+  carregarAlunos() {
+    this.AlunoService.listarTodos().subscribe({
+      next: (dados) => this.aluno = dados,
+      error: (err) => console.error('Erro ao buscar alunos:', err)
+    });
+  }
+
+  carregarAlunosFiltrados() {
+    const filtro = this.Selecionado;
+    this.AlunoService.getEntity(filtro).subscribe({
+      next: (dados) => {
+
+        this.aluno = dados;
+        this.formulario.patchValue({
+          ...dados,
+          dataNascimento: this.converterDataNascimento(dados.dataNascimento)
+        });
+        this.calcularIdadeAtual();
+        this.cdr.detectChanges();
+      },
+      error: (err) => { console.error('Erro ao buscar alunos:', err) }
+    });
+  }
+
+  private converterDataNascimento(dataNascimento: unknown): Date | null {
+    if (!dataNascimento) {
+      return null;
+    }
+
+    if (dataNascimento instanceof Date) {
+      return Number.isNaN(dataNascimento.getTime()) ? null : dataNascimento;
+    }
+
+    if (typeof dataNascimento !== 'string') {
+      return null;
+    }
+
+    const data = dataNascimento.slice(0, 10);
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(data)) {
+      const [ano, mes, dia] = data.split('-').map(Number);
+      return new Date(ano, mes - 1, dia);
+    }
+
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(data)) {
+      const [dia, mes, ano] = data.split('/').map(Number);
+      return new Date(ano, mes - 1, dia);
+    }
+
+    const dataConvertida = new Date(dataNascimento);
+    return Number.isNaN(dataConvertida.getTime()) ? null : dataConvertida;
+  }
+
 }

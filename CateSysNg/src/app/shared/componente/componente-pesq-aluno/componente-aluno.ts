@@ -4,7 +4,7 @@ import { InputNumber } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { DialogService } from '../dialog/services/dialog.service';
-import { aluno } from '../../../models/aluno.model';
+import { alunoDomain } from '../../../models/aluno.model';
 import { AlunoService } from '../../../service/aluno.service';
 import { UtilService } from '../../../service/util.service';
 import { PesqAlunoLst } from './pesq-aluno-frm/pesq-aluno-lst';
@@ -42,7 +42,7 @@ export class ComponenteAluno implements ControlValueAccessor {
   private viaSet: boolean = false;
   public loading: boolean = false;
 
-  private _entity: aluno | null = null;
+  private _entity: alunoDomain | null = null;
 
   public form = new FormGroup({
     matricula: new FormControl<number | null>(null),
@@ -69,7 +69,7 @@ export class ComponenteAluno implements ControlValueAccessor {
       this.service.listarTodosFiltrados(filtro).subscribe({
         next: (lista) => {
           this.loading = false;
-          const entity = (lista && lista.length) ? lista[0] : null;
+          const entity = lista;
 
           if (!this.validaEntity(entity)) {
             this.cdr.markForCheck();
@@ -93,14 +93,14 @@ export class ComponenteAluno implements ControlValueAccessor {
     }
   }
 
-  private validaEntity(entity: aluno | null) {
+  private validaEntity(entity: alunoDomain | null) {
 
     if (!entity) {
       return false;
     }
     return true;
   }
-  public get entity(): aluno | null {
+  public get entity(): alunoDomain | null {
     return this._entity;
   }
 
