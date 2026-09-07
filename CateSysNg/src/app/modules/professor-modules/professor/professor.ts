@@ -37,9 +37,14 @@ export class Professor implements OnInit {
 
   carregarDados() {
     const filtro = this.form.value as professor;
-    this.professorServece.listFiltrados(filtro).subscribe({
-      next: (dados) => {
+    const temFiltro = !!filtro?.nome?.trim() || !!filtro?.matricula;
 
+    const operacao = temFiltro
+      ? this.professorServece.listFiltrados(filtro)
+      : this.professorServece.listarTodos();
+
+    operacao.subscribe({
+      next: (dados) => {
         this.listprofessors = dados || [];
         this.professorsFiltrados = dados || [];
         this.cdr.detectChanges();

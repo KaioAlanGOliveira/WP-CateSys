@@ -161,6 +161,7 @@ export class AulaForm implements OnChanges, OnInit {
 
   editar() {
     if (!this.Selecionado) return;
+    this.originalTurma = { ...this.Selecionado } as any;
     this.modo = 'editing';
     this.formulario.patchValue(this.Selecionado);
     this.formulario.enable();
@@ -179,10 +180,19 @@ export class AulaForm implements OnChanges, OnInit {
     if (this.modo === 'creating') {
       this.formulario.reset();
       this.fecharModal();
-    } else if (this.modo === 'editing' && this.originalTurma) {
-      this.formulario.patchValue(this.originalTurma);
-      this.disabled = true;
+      return;
+    }
+
+    if (this.modo === 'editing') {
       this.modo = 'initial';
+      this.disabled = true;
+
+      if (this.Selecionado) {
+        this.carregarSelecionado();
+      } else if (this.originalTurma) {
+        this.formulario.patchValue(this.originalTurma as any);
+      }
+
       this.alterarEstadoUI();
     }
   }
@@ -219,18 +229,28 @@ export class AulaForm implements OnChanges, OnInit {
     const formValue = this.formulario.getRawValue();
 
     const formTADto: AulaDto = {
-      turma: formValue,
+      turma: {
+        codigo: this.Selecionado?.turmaCodigo,
+        nome: formValue.nome,
+        professorMatricula: formValue.professorMatricula
+      } as TurmaDomain,
+
       alunos: this.alunos,
-      aula: formValue,
-      presencas: this.presencas.map((presenca) => ({
+
+      aula: {
+        codigo: formValue.codigo,
+        data: formValue.date,
+        turmaCodigo: this.Selecionado?.turmaCodigo
+      } as AulaDomain,
+
+      presencas: this.presencas.map(p => ({
         id: {
-          alunoMatricula: presenca.id.alunoMatricula,
-          aulaCodigo: presenca.id.aulaCodigo ?? formValue.codigo
+          alunoMatricula: p.id.alunoMatricula,
+          aulaCodigo: p.id.aulaCodigo ?? formValue.codigo
         },
-        presente: presenca.presente ? 1 : 0
+        presente: p.presente ? 1 : 0
       }))
     };
-
     if (this.modo === 'creating') {
       this.create(formTADto);
     } else {
@@ -265,7 +285,6 @@ export class AulaForm implements OnChanges, OnInit {
 
     this.aulaService.editar(atualizado).subscribe({
       next: () => {
-        alert('Turma atualizada com sucesso.');
         this.disabled = true;
         this.finalizarComSucesso();
       },

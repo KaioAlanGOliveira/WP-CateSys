@@ -9,7 +9,7 @@ import Aura from '@primeuix/themes/aura';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideClientHydration(),
+    provideClientHydration(withEventReplay()),
     providePrimeNG({
       theme: {
         preset: Aura,
@@ -20,6 +20,6 @@ export const appConfig: ApplicationConfig = {
     }),
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(withFetch()),
-    provideRouter(routes), provideClientHydration(withEventReplay())
+    provideRouter(routes)
   ]
 };

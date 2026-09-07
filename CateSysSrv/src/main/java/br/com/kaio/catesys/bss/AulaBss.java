@@ -128,6 +128,21 @@ public class AulaBss {
 	public void alterar(AulaDTO dto) {
 		try {
 
+	        if (dto.getTurma() != null) {
+
+	            Turma turma = em.find(
+	                Turma.class,
+	                dto.getTurma().getCodigo()
+	            );
+
+	            if (turma != null) {
+	                turma.setProfessorMatricula(
+	                    dto.getTurma().getProfessorMatricula()
+	                );
+	            }
+	        }
+
+			
 			if (dto.getPresencas() == null) {
 				return;
 			}
