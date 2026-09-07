@@ -74,11 +74,11 @@ public class AulaBss {
 		try {
 
 			String jpql = """
-					    SELECT p
-					    FROM Presenca p
-					    JOIN FETCH p.aluno
-					    WHERE p.id.aulaCodigo = :codigo
-					""";
+					SELECT p, a
+					FROM Presenca p
+					JOIN Aluno a ON a.matricula = p.id.alunoMatricula
+					WHERE p.id.aulaCodigo = :codigo
+						""";
 
 			TypedQuery<Presenca> query = em.createQuery(jpql, Presenca.class);
 

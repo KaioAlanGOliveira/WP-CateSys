@@ -22,6 +22,7 @@ import { AulaDoain } from '../../../models/aula.model';
 import { AulaService } from '../../../service/aula.service';
 import { log } from 'console';
 import { AulaDto } from '../../../models/aulaDto.model';
+import { json } from 'stream/consumers';
 
 @Component({
   selector: 'app-aula-form',
@@ -89,10 +90,9 @@ export class AulaForm implements OnChanges, OnInit {
       this.resetToInitialState();
     }
 
-    alert('Aula selecionada para edição: ' + JSON.stringify(this.Selecionado));
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
       this.modo = 'creating';
-      this.carregarTurmaSelecionada();
+      this.carregarSelecionado();
       this.carregarAlunos();
       this.originalTurma = { ...this.Selecionado };
       this.disabled = true;
@@ -112,7 +112,8 @@ export class AulaForm implements OnChanges, OnInit {
       nome: [{ value: '', disabled: true }, [Validators.required]],
       date: [{ value: '', disabled: false }, [Validators.required]],
       codAluno: [{ value: null, disabled: true }],
-      professorMatricula: [{ value: null }]
+      professorMatricula: [{ value: null }],
+      aluno: [{ value: 1, disabled: true }],
     });
   }
 
@@ -122,15 +123,15 @@ export class AulaForm implements OnChanges, OnInit {
 
     this.aulaService.getEntity(codigo).subscribe({
       next: (dados) => {
-        console.log('Dados recebidos:', dados);
-        this.listTAluno = dados.alunos;
-        this.formulario.patchValue({
-          date: this.Selecionado?.data,
-          nome: dados.turma?.nome,
-          professorMatricula: dados.turma?.professorMatricula
-        });
+        console.log('Dados recebidos:', dados); 
+      this.listTAluno = dados.alunos;
+      this.formulario.patchValue({
+        date: this.Selecionado?.data,
+        nome: dados.turma?.nome,          
+        professorMatricula: dados.turma?.professorMatricula
+      });
 
-        this.cdr.detectChanges();
+      this.cdr.detectChanges();
       }
     });
   }
@@ -216,6 +217,7 @@ export class AulaForm implements OnChanges, OnInit {
 
 
   salvar() {
+   
     if (this.formulario.invalid) {
       this.formulario.markAllAsTouched();
       return;
@@ -363,7 +365,7 @@ export class AulaForm implements OnChanges, OnInit {
       });
     }
   }
-  private carregarTurmaSelecionada(): void {
+  private carregarSelecionado(): void {
     if (!this.Selecionado) {
       return;
     }
@@ -371,13 +373,12 @@ export class AulaForm implements OnChanges, OnInit {
     const filtro: AulaDoain = {
       codigo: this.Selecionado.codigo
     } as TurmaDomain;
-
-    // carregar presente + alunos da turma selecionada
+    
     this.aulaService.listFiltrados(filtro).subscribe({
       next: (dados) => {
 
         if (!dados || dados.length === 0) {
-          alert('Turma não encontrada.');
+          alert('Aula não encontrada.');
           return;
         }
 
@@ -385,15 +386,7 @@ export class AulaForm implements OnChanges, OnInit {
 
         this.formulario.patchValue(aula);
 
-        this.listTAluno = aula.presecas.map((p: any) => ({
-          matricula: p.aluno.matricula,
-          nome: p.aluno.nome,
-          presente: p.presente
-        }));
-
-        this.tAlunosFiltrados = [...this.listTAluno];
-
-        console.log(this.listTAluno);
+        this.originalTurma = { ...aula };
 
         this.cdr.detectChanges();
       }
