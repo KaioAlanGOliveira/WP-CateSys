@@ -6,15 +6,13 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { InputMaskModule } from 'primeng/inputmask';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputNumber } from "primeng/inputnumber";
 import { ProfessorService } from '../../../service/professor.service';
 import { professor } from '../../../models/professor.model';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
-import { log } from 'console';
 
 @Component({
-  selector: 'app-professor-p',
+  selector: 'app-professor-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -28,10 +26,10 @@ import { log } from 'console';
     RadioButtonModule,
     DatePickerModule,
   ],
-  templateUrl: './professor-p.html',
-  styleUrl: './professor-p.css'
+  templateUrl: './professor-form.html',
+  styleUrl: './professor-form.css'
 })
-export class ProfessorP implements OnChanges, OnInit {
+export class ProfessorForm implements OnChanges, OnInit {
 
   professores: professor[] = [];
   formulario!: FormGroup;
@@ -73,7 +71,7 @@ export class ProfessorP implements OnChanges, OnInit {
   private initForm(): void {
     this.formulario = this.fb.group({
       matricula: [{ value: '', disabled: true }, [Validators.required]],
-      nome: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(3)]],
+      nome: [{ value: '', disabled: true }, [Validators.required]],
       telefone: [{ value: '', disabled: true }],
       status: [{ value: 1, disabled: true }, [Validators.required]]
     });
@@ -182,6 +180,7 @@ export class ProfessorP implements OnChanges, OnInit {
       ...formValue,
       telefone: this.removerMascaras(formValue.telefone),
     };
+
     if (this.modo === 'creating') {
       this.salvarNovo(professorFormatado);
       this.fecharModal();
@@ -201,6 +200,7 @@ export class ProfessorP implements OnChanges, OnInit {
   }
 
   private atualizar(professorFormatado: professor) {
+
     if (!this.Selecionado) return;
 
     const atualizado: professor = { ...this.Selecionado, ...professorFormatado };
@@ -228,6 +228,7 @@ export class ProfessorP implements OnChanges, OnInit {
   }
 
   private finalizarComSucesso() {
+    this.modo = 'initial';
     this.carregarProfessores();
   }
 

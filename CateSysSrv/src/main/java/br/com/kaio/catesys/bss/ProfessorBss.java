@@ -28,20 +28,20 @@ public class ProfessorBss {
 
 	public List<Professor> getListFiltrado(Professor pf) {
 
-	    String jpql = """
-	        SELECT p
-	        FROM Professor p
-	        WHERE (:nome IS NULL OR :nome = '' OR
-	               LOWER(p.nome) LIKE LOWER(CONCAT('%', :nome, '%')))
-	          AND (:matricula IS NULL OR p.matricula = :matricula)
-	        """;
+		String jpql = """
+				SELECT p
+				FROM Professor p
+				WHERE (:nome IS NULL OR :nome = '' OR
+				       LOWER(p.nome) LIKE LOWER(CONCAT('%', :nome, '%')))
+				  AND (:matricula IS NULL OR p.matricula = :matricula)
+				""";
 
-	    TypedQuery<Professor> query = em.createQuery(jpql, Professor.class);
+		TypedQuery<Professor> query = em.createQuery(jpql, Professor.class);
 
-	    query.setParameter("nome", pf.getNome());
-	    query.setParameter("matricula", pf.getMatricula());
+		query.setParameter("nome", pf.getNome());
+		query.setParameter("matricula", pf.getMatricula());
 
-	    return query.getResultList();
+		return query.getResultList();
 	}
 
 	public void adicionar(Professor professor) throws Exception {
@@ -66,9 +66,12 @@ public class ProfessorBss {
 	public void remover(Professor professor) {
 
 		try {
+			em.createQuery("DELETE FROM Turma t WHERE t.professorMatricula = :matricula")
+					.setParameter("matricula", professor.getMatricula()).executeUpdate();
+
 			em.remove(em.find(Professor.class, professor.getMatricula()));
 		} catch (Exception e) {
-			throw new RuntimeException("Erro ao remover", e);
+			e.printStackTrace();
 		}
 	}
 }

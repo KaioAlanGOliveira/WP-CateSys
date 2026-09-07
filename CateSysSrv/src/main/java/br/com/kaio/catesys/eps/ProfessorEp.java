@@ -37,24 +37,22 @@ public class ProfessorEp {
 	}
 
 	@POST
-	public String adicionar(Professor professor) {
+	public void adicionar(Professor professor) {
 
 		try {
 			professorBss.adicionar(professor);
-			return "Novo cadastrado no banco";
 		} catch (Exception e) {
-			return e.getMessage();
+			e.printStackTrace();
 		}
 	}
 
 	@DELETE
-	public Response remover(Professor professor) {
+	public void remover(Professor professor) {
 
 		try {
 			professorBss.remover(professor);
-			return Response.ok(Map.of("mensagem", " apagado com sucesso")).build();
 		} catch (Exception e) {
-			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
+			e.printStackTrace();
 		}
 	}
 
