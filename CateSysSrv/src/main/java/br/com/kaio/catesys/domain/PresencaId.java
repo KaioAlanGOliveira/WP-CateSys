@@ -1,7 +1,6 @@
 package br.com.kaio.catesys.domain;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -15,7 +14,7 @@ public class PresencaId implements Serializable {
 
 	@Column(name = "aula_codigo")
 	private Integer aulaCodigo;
-	
+
 	@Column(name = "aluno_matricula")
 	private Integer alunoMatricula;
 
@@ -43,22 +42,4 @@ public class PresencaId implements Serializable {
 		this.alunoMatricula = alunoMatricula;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-
-		if (!(o instanceof Presenca)) {
-			return false;
-		}
-
-		Presenca that = (Presenca) o;
-
-		return Objects.equals(aulaCodigo, that.aulaCodigo) && Objects.equals(alunoMatricula, that.alunoMatricula);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(aulaCodigo, alunoMatricula);
-	}
 }

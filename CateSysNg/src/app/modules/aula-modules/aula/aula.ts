@@ -3,17 +3,15 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { TurmaService } from '../../../service/turma.service';
 import { TableModule } from 'primeng/table';
 import { TurmaDomain } from '../../../models/turma.model';
-import { AulaP } from '../aula-form/aula-p';
 import { CommonModule } from '@angular/common';
-import { Turma } from '../../turma-modules/turma/turma';
 import { AulaDoain } from '../../../models/aula.model';
-import { log } from 'console';
 import { AulaService } from '../../../service/aula.service';
 import { EventEmitter } from '@angular/core';
+import { Dialog } from "primeng/dialog";
 
 @Component({
   selector: 'app-aula',
-  imports: [ReactiveFormsModule, TableModule, AulaP, CommonModule],
+  imports: [ReactiveFormsModule, TableModule, CommonModule, Dialog],
   standalone: true,
   templateUrl: './aula.html',
   styleUrl: './aula.css',
@@ -22,7 +20,7 @@ import { EventEmitter } from '@angular/core';
 export class Aula implements OnInit {
 
   cancelar() {
-    throw new Error('Method not implemented.');
+    this.fecharModal();
   }
 
   private aulaService = inject(AulaService);
@@ -47,6 +45,7 @@ export class Aula implements OnInit {
   });
 
   ngOnInit() {
+    alert('Aula');
     this.carregarDados();
   }
 
@@ -78,7 +77,14 @@ export class Aula implements OnInit {
     this.carregarDados();
   }
   abrirPopup() {
+    this.visivel = true;
     this.exibirModalPrincipal = true;
+  }
+
+  fecharModal() {
+    this.visivel = false;
+    this.exibirModalPrincipal = false;
+    this.visivelChange.emit(false);
   }
   abrirNovoPopup() {
     this.turmaSelecionado = null;

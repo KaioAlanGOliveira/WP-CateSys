@@ -1,25 +1,20 @@
 package br.com.kaio.catesys.domain;
 
-import java.io.Serializable;
-
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
-@Embeddable
-public class Presenca implements Serializable {
+@Entity
+@Table(name = "presenca")
+public class Presenca {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
 	@Column(name = "presente")
 	Integer presente;
-	
+
 	@EmbeddedId
 	PresencaId id;
-	
+
 	public Integer getPresente() {
 		return presente;
 	}
@@ -35,6 +30,5 @@ public class Presenca implements Serializable {
 	public void setId(PresencaId id) {
 		this.id = id;
 	}
-
 
 }

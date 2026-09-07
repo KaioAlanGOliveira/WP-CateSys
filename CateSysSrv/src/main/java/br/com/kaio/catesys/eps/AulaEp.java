@@ -11,7 +11,6 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -29,7 +28,8 @@ public class AulaEp {
 	private AulaBss aulaBss;
 
 	@GET
-	public List<Aula> getList(@QueryParam("codigo") String codigo, @QueryParam("turmaCodigo") String turmaCodigo, @QueryParam("data") String data) {
+	public List<Aula> getList(@QueryParam("codigo") String codigo, @QueryParam("turmaCodigo") String turmaCodigo,
+			@QueryParam("data") String data) {
 
 		return aulaBss.getList(codigo, data, turmaCodigo);
 	}
@@ -46,17 +46,6 @@ public class AulaEp {
 	public List<Aula> getList() {
 
 		return aulaBss.getTA();
-	}
-
-	@POST
-	public AulaDTO adicionar(AulaDTO dto) {
-
-		try {
-			return aulaBss.adicionar(dto.getTurma(), dto.getAlunos(), dto.getAula());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	@DELETE

@@ -24,7 +24,7 @@ import { log } from 'console';
 import { AulaDto } from '../../../models/aulaDto.model';
 
 @Component({
-  selector: 'app-aula-p',
+  selector: 'app-aula-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -38,12 +38,11 @@ import { AulaDto } from '../../../models/aulaDto.model';
     RadioButtonModule,
     DatePickerModule,
     TableModule,
-    ComponenteProfessor
   ],
-  templateUrl: './aula-p.html',
-  styleUrl: './aula-p.css'
+  templateUrl: './aula-form.html',
+  styleUrl: './aula-form.css'
 })
-export class AulaP implements OnChanges, OnInit {
+export class AulaForm implements OnChanges, OnInit {
 
 
   get novoHabilitado() { return this.modo === 'initial'; }
@@ -90,6 +89,7 @@ export class AulaP implements OnChanges, OnInit {
       this.resetToInitialState();
     }
 
+    alert('Aula selecionada para edição: ' + JSON.stringify(this.Selecionado));
     if (changes['Selecionado'] && this.Selecionado && this.formulario) {
       this.modo = 'creating';
       this.carregarTurmaSelecionada();

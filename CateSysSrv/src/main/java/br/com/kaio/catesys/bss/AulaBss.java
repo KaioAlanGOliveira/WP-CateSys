@@ -3,15 +3,12 @@ package br.com.kaio.catesys.bss;
 import java.time.LocalDate;
 import java.util.List;
 
-import br.com.kaio.catesys.domain.Aluno;
 import br.com.kaio.catesys.domain.Aula;
 import br.com.kaio.catesys.domain.Presenca;
-import br.com.kaio.catesys.domain.Turma;
 import br.com.kaio.catesys.eps.dto.AulaDTO;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
 @Stateless
@@ -99,26 +96,6 @@ public class AulaBss {
 		}
 	}
 
-	public AulaDTO adicionar(Turma turma, List<Aluno> alunos, Aula aula) throws Exception {
-
-		try {
-			aula.setCodigo(getNextCod());
-
-			for (Aluno aluno : alunos) {
-
-				Presenca presenca = new Presenca();
-				presenca.setAlunoMatricula(aluno.getMatricula());
-				presenca.setAulaCodigo(aula.getCodigo());
-				em.persist(presenca);
-
-			}
-			em.persist(aula);
-			return null;
-		} catch (Exception e) {
-			throw new RuntimeException("Erro ao adicionar", e);
-		}
-	}
-
 	public void alterar(Aula aula) {
 
 		try {
@@ -138,23 +115,4 @@ public class AulaBss {
 		}
 	}
 
-	private Integer getNextCod() {
-
-		Query query = em.createQuery("select max(codigo) + 1 from Turma");
-		Object cod = query.getSingleResult();
-
-		if (cod == null)
-			return 1;
-
-		if (cod instanceof Integer)
-			return (Integer) cod;
-
-		if (cod instanceof Long)
-			return ((Long) cod).intValue();
-
-		if (cod instanceof Short)
-			return ((Short) cod).intValue();
-
-		return (Integer) cod;
-	}
 }

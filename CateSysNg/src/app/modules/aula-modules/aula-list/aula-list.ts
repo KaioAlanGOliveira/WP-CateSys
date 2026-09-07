@@ -3,18 +3,15 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { TurmaService } from '../../../service/turma.service';
 import { TableModule } from 'primeng/table';
 import { TurmaDomain } from '../../../models/turma.model';
-import { AulaP } from '../aula-form/aula-p';
 import { CommonModule } from '@angular/common';
-import { Turma } from '../../turma-modules/turma/turma';
 import { AulaDoain } from '../../../models/aula.model';
-import { log } from 'console';
 import { AulaService } from '../../../service/aula.service';
-import { Aluno } from "../../aluno-modules/aluno/aluno";
 import { Aula } from "../aula/aula";
+import { AulaForm } from '../aula-form/aula-form';
 
 @Component({
   selector: 'app-list',
-  imports: [ReactiveFormsModule, TableModule, CommonModule, AulaP],
+  imports: [ReactiveFormsModule, TableModule, CommonModule, Aula, AulaForm],
   standalone: true,
   templateUrl: './aula-list.html',
   styleUrl: './aula-list.css',
@@ -30,6 +27,7 @@ export class AulaList implements OnInit {
   private aulaService = inject(AulaService);
   private cdr = inject(ChangeDetectorRef);
 
+  exibir = false;
   exibirModal: boolean = false;
   aulaSelecionado!: AulaDoain | any;
   formTurma!: TurmaDomain;
@@ -84,6 +82,7 @@ export class AulaList implements OnInit {
   }
 
   abrirNovoPopup() {
+    this.exibir = false;
     this.aulaSelecionado = null;
     this.abrirFormulario();
   }
@@ -96,6 +95,7 @@ export class AulaList implements OnInit {
 
   selecionado(turma: any) {
     this.aulaSelecionado = turma;
+    this.exibir = true;
     this.abrirFormulario();
   }
   apagar(dado: any) {

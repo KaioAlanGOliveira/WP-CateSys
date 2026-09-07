@@ -1,3 +1,5 @@
+<p-dialog header="Cadastro de Aula" [(visible)]="visivel" (onHide)="fecharModal()" [modal]="true"
+  [style]="{ width: '800px' }">
 <!-- Cabeçalho -->
 <div class="page-header">
   <h2>Aula</h2>
@@ -44,6 +46,4 @@
   </form>
 
 </div>
-
-<app-aula-p [(visivel)]="exibirModalPrincipal" (visivelChange)="retornoPopUp($event)" [Selecionado]="turmaSelecionado">
-</app-aula-p>
+</p-dialog>
