@@ -152,6 +152,7 @@ export class AlunoForm implements OnChanges, OnInit {
   private finalizarComSucesso() {
     this.modo = 'initial';
     this.carregarAlunos();
+    this.atualizarEstadoUI();
   }
 
   fecharModal() {
@@ -229,7 +230,7 @@ export class AlunoForm implements OnChanges, OnInit {
 
     if (this.modo === 'creating') {
       this.salvarNovo(formValue);
-    } else {
+    } else if (this.modo === 'editing') {
       this.alterar(formValue);
     }
   }

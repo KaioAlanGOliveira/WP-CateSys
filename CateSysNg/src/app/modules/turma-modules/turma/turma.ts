@@ -5,7 +5,6 @@ import { TableModule } from 'primeng/table';
 import { TurmaDomain } from '../../../models/turma.model';
 import { TurmaForm } from '../turma-form/turma-form';
 import { RadioButton } from "primeng/radiobutton";
-import { log } from 'console';
 
 @Component({
   selector: 'app-turma',
@@ -94,12 +93,5 @@ export class Turma implements OnInit {
   selecionado(turma: any) {
     this.turmaSelecionado = turma;
     this.abrirPopup();
-  }
-  apagar(dado: any) {
-     
-  }
-  removerAll() {
-
-     this.turmaServece.apagarAll().subscribe();
   }
 }

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { loginDto } from '../models/login.model';
 import { log } from 'node:console';
 import { professor } from '../models/professor.model';
+import { Professor } from '../modules/professor-modules/professor/professor';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,7 @@ export class ProfessorService {
     return this.http.put(this.apiUrl, professor);
   }
 
-  salvar(professor: professor): Observable<professor> {
-    return this.http.post<any>(this.apiUrl, professor);
+  salvar(professor: professor): Observable<Professor> {
+    return this.http.post<Professor>(this.apiUrl, professor);
   }
 }

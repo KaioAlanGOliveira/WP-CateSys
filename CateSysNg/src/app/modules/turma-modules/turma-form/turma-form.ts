@@ -133,11 +133,13 @@ export class TurmaForm implements OnChanges, OnInit {
 
     if (this.modo === 'initial') {
       this.formulario.disable();
+      this.disabled = true;
     } else if (this.modo === 'editing') {
       this.formulario.enable();
       this.disabled = false;
     } else {
       this.formulario.enable();
+      this.disabled = false;
     }
   }
 

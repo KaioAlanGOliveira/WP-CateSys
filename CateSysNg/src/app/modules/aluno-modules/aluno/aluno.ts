@@ -1,12 +1,8 @@
 import { ChangeDetectorRef, Component, inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterOutlet } from '@angular/router';
-import { LoginService } from '../../../service/login.service';
 import { AlunoService } from '../../../service/aluno.service';
-import { loginDto } from '../../../models/login.model';
 import { TableModule } from 'primeng/table';
 import { alunoDomain } from '../../../models/aluno.model';
-import { log } from 'node:console';
 import { AlunoForm } from "../aluno-form/aluno-form";
 
 
@@ -42,11 +38,19 @@ export class Aluno implements OnInit {
   }
 
   carregarDados() {
-    const dado = this.form.getRawValue() as alunoDomain;
-    this.alunoServece.listarTodos().subscribe({
+    const { nome, matricula } = this.form.getRawValue();
+    const filtro: alunoDomain = {
+      ...(nome?.trim() ? { nome: nome.trim() } : {}),
+      ...(matricula ? { matricula } : {})
+    };
+    const operacao = Object.keys(filtro).length
+      ? this.alunoServece.listarTodosFiltrados(filtro)
+      : this.alunoServece.listarTodos();
+
+    operacao.subscribe({
       next: (dados) => {
-        this.listAlunos = dados ;
-        this.alunosFiltrados = dados;
+        this.listAlunos = dados || [];
+        this.alunosFiltrados = dados || [];
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -60,19 +64,11 @@ export class Aluno implements OnInit {
     this.abrirMeuPopup();
   }
   pesquisar(termoNome: string, termoMatricula: string) {
-
-    if (!termoNome && !termoMatricula) {
-      this.alunosFiltrados = [...this.listAlunos];
-      return;
-    }
-
-    const buscaNome = termoNome ? termoNome.toLocaleLowerCase().trim() : '';
-    const buscaMatricula = termoMatricula ? termoMatricula.trim() : '';
-
-    this.alunosFiltrados = this.listAlunos.filter((a: alunoDomain) =>
-      (buscaNome && a.nome && a.nome.toLocaleLowerCase().includes(buscaNome.toLocaleLowerCase().trim())) ||
-      (buscaMatricula && a.matricula && String(a.matricula).includes(buscaMatricula.trim()))
-    );
+    this.form.patchValue({
+      nome: termoNome,
+      matricula: termoMatricula ? Number(termoMatricula) : null
+    });
+    this.carregarDados();
   }
   abrirMeuPopup() {
     this.exibirModalPrincipal = true;

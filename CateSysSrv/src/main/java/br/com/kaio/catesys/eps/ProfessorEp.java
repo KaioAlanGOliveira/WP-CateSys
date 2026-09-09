@@ -37,13 +37,14 @@ public class ProfessorEp {
 	}
 
 	@POST
-	public void adicionar(Professor professor) {
+	public Professor adicionar(Professor professor) {
 
 		try {
-			professorBss.adicionar(professor);
+			return professorBss.adicionar(professor);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	@DELETE

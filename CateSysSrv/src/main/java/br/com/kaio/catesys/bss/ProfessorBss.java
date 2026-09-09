@@ -44,13 +44,18 @@ public class ProfessorBss {
 		return query.getResultList();
 	}
 
-	public void adicionar(Professor professor) throws Exception {
+	public Professor adicionar(Professor professor) throws Exception {
 
 		try {
-			em.persist(professor);
+			Professor prof = em.find(Professor.class, professor.getMatricula());
+			if (prof == null) {
+				em.persist(professor);
+				return professor;
+			}
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao adicionar", e);
 		}
+		return null;
 	}
 
 	public void alterar(Professor professor) {
