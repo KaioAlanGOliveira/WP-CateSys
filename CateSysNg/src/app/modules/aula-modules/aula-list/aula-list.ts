@@ -31,8 +31,8 @@ export class AulaList implements OnInit {
   exibirModal: boolean = false;
   aulaSelecionado!: AulaDomain | any;
   formTurma!: TurmaDomain;
-  listAula: TurmaDomain[] = [];
-  aulaFiltradas: TurmaDomain[] = [];
+  listAula: AulaDomain[] = [];
+  aulaFiltradas: AulaDomain[] = [];
   aulas: AulaDomain[] = [];
 
   form = new FormGroup({
@@ -55,8 +55,13 @@ export class AulaList implements OnInit {
 
     this.aulaService.listFiltrados(parametros).subscribe({
       next: (dados) => {
-        this.aulas = dados;
-        this.aulaFiltradas = dados;
+        this.aulas = (dados || []).map((aula: any) => ({
+          ...aula,
+          turma: aula.turma ?? (aula.nomeTurma ? { nome: aula.nomeTurma } : undefined),
+          turmaNome: aula.turmaNome ?? aula.nomeTurma
+        }));
+        this.listAula = this.aulas;
+        this.aulaFiltradas = this.aulas;
         this.cdr.markForCheck();
       },
       error: (err) => {
