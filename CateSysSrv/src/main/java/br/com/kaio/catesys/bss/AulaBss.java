@@ -44,34 +44,34 @@ public class AulaBss {
 		}
 	}
 
-	public List<Aula> getList(String codigo, String data, String turmaCodigo) {
+	public List<Object[]> getList(String codigo, String data, String turmaCodigo) {
 
-		try {
+	    try {
+	        String jpql = """
+	                    SELECT a, t
+	                    FROM Aula a
+	                    LEFT JOIN Turma t ON a.turmaCodigo = t.codigo
+	                    WHERE (:codigo IS NULL OR a.codigo = :codigo)
+	                    AND (:data IS NULL OR a.data = :data)
+	                    AND (:turmaCodigo IS NULL OR a.turmaCodigo = :turmaCodigo)
+	                """;
 
-			String jpql = """
-					SELECT a
-					FROM Aula a
-					WHERE (:codigo IS NULL OR a.codigo = :codigo)
-					  AND (:data IS NULL OR a.data = :data)
-					  AND (:turmaCodigo IS NULL OR a.turmaCodigo = :turmaCodigo)
-					""";
+	        TypedQuery<Object[]> query = em.createQuery(jpql, Object[].class);
 
-			TypedQuery<Aula> query = em.createQuery(jpql, Aula.class);
+	        query.setParameter("codigo", codigo);
 
-			query.setParameter("codigo", codigo);
+	        query.setParameter("data",
+	                data == null || data.equals("null") || data.isBlank() ? null : LocalDate.parse(data));
 
-			query.setParameter("data",
-					data == null || data.equals("null") || data.isBlank() ? null : LocalDate.parse(data));
+	        query.setParameter("turmaCodigo", turmaCodigo);
 
-			query.setParameter("turmaCodigo", turmaCodigo);
+	        return query.getResultList();
 
-			return query.getResultList();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException("Erro ao listar aulas", e);
-		}
+	    } catch (Exception e) {
+	        throw e;
+	    }
 	}
+
 
 	public AulaDTO getEntity(Integer codigoTurma) {
 
@@ -128,21 +128,15 @@ public class AulaBss {
 	public void alterar(AulaDTO dto) {
 		try {
 
-	        if (dto.getTurma() != null) {
+			if (dto.getTurma() != null) {
 
-	            Turma turma = em.find(
-	                Turma.class,
-	                dto.getTurma().getCodigo()
-	            );
+				Turma turma = em.find(Turma.class, dto.getTurma().getCodigo());
 
-	            if (turma != null) {
-	                turma.setProfessorMatricula(
-	                    dto.getTurma().getProfessorMatricula()
-	                );
-	            }
-	        }
+				if (turma != null) {
+					turma.setProfessorMatricula(dto.getTurma().getProfessorMatricula());
+				}
+			}
 
-			
 			if (dto.getPresencas() == null) {
 				return;
 			}

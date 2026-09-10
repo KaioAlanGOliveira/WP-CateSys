@@ -30,7 +30,7 @@ public class AulaEp {
 	private AulaBss aulaBss;
 
 	@GET
-	public List<Aula> getList(@QueryParam("codigo") String codigo, @QueryParam("turmaCodigo") String turmaCodigo,
+	public List<Object[]> getList(@QueryParam("codigo") String codigo, @QueryParam("turmaCodigo") String turmaCodigo,
 			@QueryParam("data") String data) {
 
 		return aulaBss.getList(codigo, data, turmaCodigo);

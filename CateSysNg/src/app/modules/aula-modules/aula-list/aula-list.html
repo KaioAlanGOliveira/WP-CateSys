@@ -62,9 +62,9 @@
 
       <ng-template pTemplate="body" let-aula>
         <tr (dblclick)="selecionado(aula)">
-          <td>{{ aula.codigo }}</td>
-          <td>{{ aula.turmaNome}}</td>
-          <td>{{ aula.data }}</td>
+          <td>{{ aula[0].codigo }}</td>
+          <td>{{ aula[1].nome}}</td>
+          <td>{{ aula[0].data }}</td>
         </tr>
       </ng-template>
 
