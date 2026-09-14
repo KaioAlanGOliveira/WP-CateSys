@@ -1,6 +1,6 @@
 <div class="flex gap-3">
     <form [formGroup]="form" class="p-inputgroup" >
-        <p-inputNumber #input class="input-code" [disabled]="disabled ?? false" formControlName="codigo" (keydown)="keydown($event)" (onInput)="limpar()"  [useGrouping]="false" >
+        <p-inputNumber #input class="input-code" style=" width: 58px !important;" [disabled]="disabled ?? false" formControlName="codigo" (keydown)="keydown($event)" (onInput)="limpar()"  [useGrouping]="false" >
         </p-inputNumber>
 
         <input class="input-text" pInputText formControlName="nome" [disabled]="disabled ?? false" aria-hidden style="width: 428px; margin: 2px;"  readonly />

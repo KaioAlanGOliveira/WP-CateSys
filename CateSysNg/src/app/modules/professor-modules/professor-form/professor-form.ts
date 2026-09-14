@@ -141,6 +141,7 @@ export class ProfessorForm implements OnChanges, OnInit {
       this.formulario.reset();
       this.fecharModal();
     } else if (this.modo === 'editing' && this.originalprofessor) {
+      this.carregarProfessores();
       this.formulario.patchValue(this.originalprofessor);
       this.modo = 'initial';
       this.atualizarEstadoUI();

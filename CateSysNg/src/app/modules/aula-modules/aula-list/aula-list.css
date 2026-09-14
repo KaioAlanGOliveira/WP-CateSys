@@ -1,408 +1,277 @@
-/* ===== Página ===== */
+/* ================================
+   PÁGINA
+================================ */
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #ffffff;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+/* ================================
+   CABEÇALHO
+================================ */
 
 .page-header {
-  background: #1e88e5;
-  color: #ffffff;
-  padding: 12px 20px;
-  margin-bottom: 0;
-  border-radius: 4px 4px 0 0;
+  background: #1e85d3;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  margin-bottom: 20px;
+  border-radius: 0;
+  box-sizing: border-box;
 }
 
 .page-header h2 {
   margin: 0;
-  font-size: 1.15rem;
+  color: #ffffff;
+  font-size: 22px;
   font-weight: 600;
-  letter-spacing: 0.3px;
 }
 
-
-/* ===== Card principal ===== */
+/* ================================
+   CARD PRINCIPAL
+================================ */
 
 .alunos-card {
   background: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-top: none;
-  border-radius: 0 0 4px 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #d5d5d5;
+  border-radius: 0;
+  box-shadow: none;
   overflow: hidden;
 }
 
-
-/* ===== Área dos filtros ===== */
+/* ================================
+   FILTROS
+================================ */
 
 .filtros {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(180px, 1fr)) auto auto;
-  align-items: end;
-  gap: 20px;
-
-  padding: 20px;
-
-  background: #fafafa;
-  border-bottom: 1px solid #e0e0e0;
-
-  width: 100%;
-  box-sizing: border-box;
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  padding: 22px 24px;
+  background: #ffffff;
+  border-bottom: 1px solid #d5d5d5;
 }
 
-
-/* ===== Campo Turma ===== */
-
-.form-field {
+.form-field,
+.campo {
   display: flex;
   flex-direction: column;
   gap: 7px;
-  min-width: 0;
+  flex: 1;
+  min-width: 160px;
 }
 
 .form-field label,
-.campo > label {
-  font-size: 0.82rem;
+.campo label {
+  color: #000000;
+  font-size: 14px;
   font-weight: 600;
-  color: #424242;
-  margin: 0;
 }
 
-
-/* ===== Input ===== */
+/* ================================
+   INPUTS
+================================ */
 
 .input-field {
   width: 100%;
   height: 38px;
-
-  box-sizing: border-box;
-
-  padding: 8px 12px;
-
-  border: 1px solid #cfd8dc;
-  border-radius: 4px;
-
-  font-size: 0.9rem;
-  color: #333;
-
+  padding: 0 11px;
+  border: 1px solid #bdbdbd;
+  border-radius: 0;
   background: #ffffff;
-
+  color: #000000;
+  font-size: 14px;
   outline: none;
-
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
-}
-
-.input-field:hover {
-  border-color: #90caf9;
-}
-
-.input-field:focus {
-  border-color: #1e88e5;
-  box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.15);
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .input-field::placeholder {
-  color: #9e9e9e;
+  color: #888888;
 }
 
+.input-field:focus {
+  border-color: #1e85d3;
+  box-shadow: 0 0 0 1px #1e85d3;
+}
 
-/* ===== Campo Data ===== */
+/* ================================
+   BOTÕES
+================================ */
 
-.campo-linha {
+.form-action {
   display: flex;
   align-items: flex-end;
 }
 
-.campo {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 7px;
-  min-width: 0;
-}
-
-.campo p-datepicker {
-  width: 100%;
-}
-
-.form-action {
-  display: flex;
-  align-items: end;
-  justify-content: center;
-}
-
 .btn-primary {
-  min-width: 120px;
   height: 38px;
+  min-width: 105px;
   padding: 0 18px;
   border: none;
-  border-radius: 4px;
-  background: #1e88e5;
-  color: #fff;
-  font-size: 0.875rem;
+  border-radius: 0;
+  background: #1e85d3;
+  color: #ffffff;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s;
 }
 
 .btn-primary:hover {
-  background: #1565c0;
+  background: #0b4f7a;
 }
 
 .btn-primary:active {
-  transform: translateY(1px);
+  background: #063653;
 }
+
+/* ================================
+   BOTÃO +
+================================ */
 
 .btn-add {
-  min-width: 46px;
-  width: 46px;
+  min-width: 40px;
+  width: 40px;
   padding: 0;
-  font-size: 1.3rem;
-  line-height: 1;
+  font-size: 23px;
+  font-weight: 400;
+  line-height: 38px;
 }
 
-
-/* Faz o DatePicker ocupar o mesmo tamanho do input */
-
-:host ::ng-deep .p-datepicker {
-  width: 100%;
-}
-
-:host ::ng-deep .p-datepicker-input {
-  width: 100%;
-  height: 38px;
-
-  box-sizing: border-box;
-}
-
-
-/* ===== Mensagem de erro ===== */
-
-:host ::ng-deep .p-message {
-  margin-top: 2px;
-}
-
-
-/* ===== Área dos botões ===== */
-
-.acoes {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  height: 38px;
-
-  margin-left: auto;
-}
-
-
-/* ===== Botões PrimeNG ===== */
-
-:host ::ng-deep .acoes .p-button {
-  height: 38px;
-  padding: 0 18px;
-
-  border-radius: 4px;
-
-  font-size: 0.875rem;
-  font-weight: 500;
-
-  white-space: nowrap;
-}
-
-
-/* Botão Cancelar */
-
-:host ::ng-deep .acoes .p-button:first-child {
-  background: #ffffff;
-  color: #616161;
-
-  border: 1px solid #cfd8dc;
-}
-
-:host ::ng-deep .acoes .p-button:first-child:hover {
-  background: #f5f5f5;
-}
-
-
-/* Botão Criar */
-
-:host ::ng-deep .acoes .p-button:last-child {
-  background: #1e88e5;
-  border: 1px solid #1e88e5;
-  color: #ffffff;
-}
-
-:host ::ng-deep .acoes .p-button:last-child:hover {
-  background: #1565c0;
-  border-color: #1565c0;
-}
-
-
-/* ===== Tabela ===== */
+/* ================================
+   TABELA
+================================ */
 
 .tabela-container {
-  padding: 0;
+  width: 100%;
   overflow-x: auto;
+  background: #ffffff;
 }
+
+.tabela-container p-table {
+  width: 100%;
+}
+
+/* ================================
+   PRIME NG
+================================ */
 
 :host ::ng-deep .p-datatable {
-  border: none;
+  width: 100%;
+  font-size: 14px;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
-  background: #f5f7fa;
-  color: #424242;
+:host ::ng-deep .p-datatable-table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
+/* Cabeçalho da tabela */
+
+:host ::ng-deep .p-datatable-thead > tr > th {
+  background: #e9e9e9;
+  color: #000000;
+  border: 1px solid #d5d5d5;
+  padding: 10px 12px;
+  font-size: 14px;
   font-weight: 600;
-  font-size: 0.85rem;
-
-  padding: 10px 14px;
-
-  border-bottom: 1px solid #e0e0e0;
-  border-top: none;
-
-  white-space: nowrap;
+  text-align: left;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-tbody > tr {
-  transition: background 0.15s;
+/* Linhas */
+
+:host ::ng-deep .p-datatable-tbody > tr > td {
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #d5d5d5;
+  padding: 9px 12px;
+  font-size: 14px;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
-  padding: 10px 14px;
+/* Hover */
 
-  font-size: 0.9rem;
-  color: #333;
-
-  border-bottom: 1px solid #f0f0f0;
-}
-
-:host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
-  background: #f5f9ff !important;
+:host ::ng-deep .p-datatable-tbody > tr:hover > td {
+  background: #f2f8fc;
   cursor: pointer;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-tbody > tr:nth-child(even) {
-  background: #fafafa;
+/* Linha */
+
+:host ::ng-deep .p-datatable-tbody > tr {
+  transition: background 0.15s;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-tbody > tr:nth-child(even):hover {
-  background: #f5f9ff !important;
-}
-
-
-/* ===== Rodapé ===== */
+/* ================================
+   RODAPÉ
+================================ */
 
 .table-footer {
+  min-height: 48px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-
-  padding: 10px 16px;
-
-  background: #f5f7fa;
-  border-top: 1px solid #e0e0e0;
-
-  font-size: 0.85rem;
-  color: #616161;
+  padding: 0 20px;
+  background: #e9e9e9;
+  border-top: 1px solid #d5d5d5;
+  color: #000000;
+  font-size: 13px;
+  box-sizing: border-box;
 }
 
 .table-footer strong {
-  color: #212121;
-  font-weight: 600;
+  color: #000000;
+  font-weight: 700;
 }
 
-
-/* ===== Responsivo ===== */
+/* ================================
+   RESPONSIVIDADE
+================================ */
 
 @media (max-width: 900px) {
-
   .filtros {
-    grid-template-columns: 1fr 1fr;
+    flex-wrap: wrap;
   }
 
   .form-field,
-  .campo,
-  .form-action {
-    width: 100%;
-  }
-
-  .campo-linha {
-    flex: 1 1 190px;
-  }
-
-  .acoes {
-    margin-left: 0;
+  .campo {
+    min-width: calc(50% - 10px);
   }
 }
 
-
 @media (max-width: 600px) {
+  :host {
+    padding: 12px;
+  }
+
+  .page-header {
+    padding: 0 16px;
+  }
 
   .filtros {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     align-items: stretch;
-    gap: 16px;
   }
 
   .form-field,
-  .campo-linha,
-  .campo,
-  .form-action {
+  .campo {
     width: 100%;
     min-width: 100%;
   }
 
-  .acoes {
+  .form-action {
     width: 100%;
-    height: auto;
-    margin-left: 0;
   }
 
-  :host ::ng-deep .acoes .p-button {
-    flex: 1;
+  .btn-primary {
+    width: 100%;
   }
-}
-/* Área dos botões */
-.acoes {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 25px;
-}
 
-/* Estilo geral dos botões */
-.acoes button {
-  border: none;
-  border-radius: 8px;
-  padding: 11px 24px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-/* Botão Cancelar */
-.acoes button:first-child {
-  background: #e9eef5;
-  color: #344054;
-}
-
-.acoes button:first-child:hover {
-  background: #d9e1ec;
-}
-
-/* Botão Criar */
-.acoes button:last-child {
-  background: #2563eb;
-  color: white;
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
-}
-
-.acoes button:last-child:hover {
-  background: #1d4ed8;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.35);
-}
-
-.acoes button:active {
-  transform: scale(0.97);
+  .btn-add {
+    width: 40px;
+  }
 }

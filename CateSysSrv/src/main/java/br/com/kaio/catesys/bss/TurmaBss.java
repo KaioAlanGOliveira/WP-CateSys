@@ -1,6 +1,7 @@
 package br.com.kaio.catesys.bss;
 
 import java.util.List;
+import java.util.Objects;
 
 import br.com.kaio.catesys.domain.Aluno;
 import br.com.kaio.catesys.domain.Turma;
@@ -33,15 +34,15 @@ public class TurmaBss {
 			TypedQuery<Turma> query = em.createQuery(jpql, Turma.class);
 
 			query.setParameter("nome", nome);
-			query.setParameter("codigo", codigo.equals("null") ? null : codigo);
+			query.setParameter("codigo", Objects.equals(codigo, "null") ? null : codigo);
 			query.setParameter("status", status);
 			query.setParameter("professorMatricula", codProfessor);
 
 			return query.getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("Erro ao listar", e);
 		}
+		return null;
 	}
 
 	public Turma getEntity(Integer codigo) {

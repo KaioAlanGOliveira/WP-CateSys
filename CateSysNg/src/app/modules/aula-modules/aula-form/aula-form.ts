@@ -277,7 +277,6 @@ export class AulaForm implements OnChanges, OnInit {
 
 
   private alterar(formValue: AulaDto) {
-    alert('Alterar aula');
 
     if (!this.Selecionado) return;
 
@@ -285,6 +284,7 @@ export class AulaForm implements OnChanges, OnInit {
 
     this.aulaService.editar(atualizado).subscribe({
       next: () => {
+        alert('Aula alterar com sucesso.');
         this.disabled = true;
         this.finalizarComSucesso();
       },
@@ -390,6 +390,8 @@ export class AulaForm implements OnChanges, OnInit {
   }
 
   private carregarSelecionado(): void {
+    console.log(this.Selecionado);
+
     if (!this.Selecionado) return;
 
     const codigo = this.Selecionado.turmaCodigo;
@@ -410,7 +412,10 @@ export class AulaForm implements OnChanges, OnInit {
         });
 
         this.alunos = dados.alunos ?? [];
-        this.presencas = dados.presencas ?? [];
+
+        console.log(dados.presencas);
+
+        console.log(dados.presencas);
 
         this.cdr.detectChanges();
       },

@@ -68,6 +68,7 @@ public class AulaBss {
 	        return query.getResultList();
 
 	    } catch (Exception e) {
+	    	e.printStackTrace();
 	        throw e;
 	    }
 	}
@@ -110,6 +111,7 @@ public class AulaBss {
 			// Monta o DTO
 			AulaDTO dto = new AulaDTO();
 
+			System.out.println(presencas);
 			dto.setTurma(turma);
 			dto.setAula(aula);
 			dto.setPresencas(presencas);

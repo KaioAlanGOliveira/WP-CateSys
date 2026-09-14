@@ -56,7 +56,7 @@ export class Turma implements OnInit {
     });
   }
   novo() {
-    this.form.reset();
+    this.form.reset({ status: 1 });
     this.turmaSelecionado = null;
     this.abrirPopup();
   }
@@ -79,7 +79,7 @@ export class Turma implements OnInit {
     this.exibirModalPrincipal = true;
   }
   abrirNovoPopup() {
-    this.form.reset(); 
+    this.form.reset({ status: 1 }); 
     this.turmaSelecionado = null;
     this.abrirPopup();
   }

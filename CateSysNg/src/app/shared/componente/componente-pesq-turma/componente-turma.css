@@ -56,7 +56,7 @@
   .input-code,
   :host ::ng-deep .p-inputnumber,
   :host ::ng-deep .p-inputnumber-input {
-    width: 90px !important;
+     width: 58px !important;
     min-width: 90px;
   }
 }

@@ -64,13 +64,7 @@
               <td>{{ aluno.matricula }}</td>
               <td>{{ aluno.nome }}</td>
               <td>
-                <p-checkbox
-                  [binary]="true"
-                  [ngModel]="selecionado(aluno)"
-                  [ngModelOptions]="{ standalone: true }"
-                  [disabled]="!salvarHabilitado"
-                  (ngModelChange)="alterarPresenca(aluno, $event)">
-                </p-checkbox>
+                 <p-tableCheckbox [value]="aluno"></p-tableCheckbox>
               </td>
             </tr>
           </ng-template>

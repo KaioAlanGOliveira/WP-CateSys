@@ -32,6 +32,8 @@ export class TurmaService {
   }
 
   listFiltrados(filtro: TurmaDomain): Observable<TurmaDomain[]> {
+    console.log(filtro);
+    
     return this.http.get<any[]>(`${this.apiUrl}`, { params: new HttpParamsObject(filtro) });
   }
 

@@ -98,6 +98,8 @@ export class TurmaForm implements OnChanges, OnInit {
       this.disabled = false;
       this.modo = 'creating';
       this.formulario.reset();
+      this.formulario.patchValue({ status: 1 });
+      this.listTAluno = [];
       this.alterarEstadoUI();
 
     }
@@ -110,9 +112,9 @@ export class TurmaForm implements OnChanges, OnInit {
     this.formulario = this.fb.group({
       codigo: [{ value: '', disabled: false }],
       nome: [{ value: '', disabled: true }, [Validators.required]],
-      status: [{ value: 0, disabled: true }, [Validators.required]],
+      status: [{ value: 1, disabled: true }, [Validators.required]],
       codAluno: [{ value: null, disabled: true }],
-      professorMatricula: [{ value: null }]
+      professorMatricula: [{ value: null }, [Validators.required]]
     });
   }
 
@@ -130,6 +132,8 @@ export class TurmaForm implements OnChanges, OnInit {
   // ==================== CONTROLE CENTRALIZADO ====================
   private alterarEstadoUI(): void {
     if (!this.formulario) return;
+
+    this.formulario.get('status')?.setValue(1, { emitEvent: false });
 
     if (this.modo === 'initial') {
       this.formulario.disable();
@@ -170,17 +174,11 @@ export class TurmaForm implements OnChanges, OnInit {
     this.alterarEstadoUI();
   }
 
-  private removerMascaras(valor: any): string {
-    if (!valor) return '';
-    return valor.toString().replace(/\D/g, '');
-  }
-
   cancelar() {
     if (this.modo === 'creating') {
       this.formulario.reset();
       this.fecharModal();
     } else if (this.modo === 'editing' && this.originalTurma) {
-      this.formulario.patchValue(this.originalTurma);
       this.disabled = true;
       this.modo = 'initial';
       this.alterarEstadoUI();
@@ -190,9 +188,8 @@ export class TurmaForm implements OnChanges, OnInit {
   fecharModal() {
     this.modo = 'initial';
     this.visivel = false;
-    this.originalTurma = null;
     this.visivelChange.emit(false);
-    this.formulario.reset();
+    window.location.reload();
   }
 
   recarregarPaginaInteira() {
@@ -218,7 +215,7 @@ export class TurmaForm implements OnChanges, OnInit {
     const formValue = this.formulario.getRawValue();
 
     const formTADto: TurmaDto = {
-      turma: formValue,
+      turma: { ...formValue, status: 1 },
       alunos: this.listTAluno
     };
 
@@ -254,7 +251,7 @@ export class TurmaForm implements OnChanges, OnInit {
 
     this.turmaService.editar(atualizado).subscribe({
       next: () => {
-        alert('Turma atualizada com sucesso.');
+        alert('Turma atualizada com sucesso!.');
         this.disabled = true;
         this.finalizarComSucesso();
       },
@@ -274,8 +271,8 @@ export class TurmaForm implements OnChanges, OnInit {
       };
 
       this.turmaService.apagar(formTADto).subscribe({
-        next: () => { this.finalizarComSucesso(); this.fecharModal(); },
-        error: (err) => { alert('Erro ao apagar a turma.'); this.finalizarComSucesso(); },
+        next: () => { this.finalizarComSucesso(); this.fecharModal(); alert('Turma pagar com sucesso! .'); },
+        error: (err) => { this.finalizarComSucesso(); },
       });
     }
   }
@@ -415,8 +412,6 @@ export class TurmaForm implements OnChanges, OnInit {
             }));
 
             this.tAlunosFiltrados = [...this.listTAluno];
-
-            console.log(this.listTAluno);
 
             this.cdr.detectChanges();
           },

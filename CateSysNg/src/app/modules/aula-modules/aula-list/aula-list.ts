@@ -60,7 +60,6 @@ export class AulaList implements OnInit {
           turma: aula.turma ?? (aula.nomeTurma ? { nome: aula.nomeTurma } : undefined),
           turmaNome: aula.turmaNome ?? aula.nomeTurma
         }));
-        console.log(dados[1]);
         
         this.listAula = this.aulas;
         this.aulaFiltradas = this.aulas;
