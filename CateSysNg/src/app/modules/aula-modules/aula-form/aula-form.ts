@@ -394,13 +394,13 @@ export class AulaForm implements OnChanges, OnInit {
 
     if (!this.Selecionado) return;
 
-    const codigo = this.Selecionado.turmaCodigo;
+    const codigoAula = this.Selecionado.codigo;
 
-    if (!codigo) return;
-    console.log(codigo);
+    if (!codigoAula) return;
 
+    console.log('Código da aula:', codigoAula);
 
-    this.aulaService.getEntity(codigo).subscribe({
+    this.aulaService.getEntity(codigoAula).subscribe({
       next: (dados) => {
 
         // Preenche os campos do formulário
@@ -413,9 +413,19 @@ export class AulaForm implements OnChanges, OnInit {
 
         this.alunos = dados.alunos ?? [];
 
-        console.log(dados.presencas);
+        this.presencas = (dados.presencas ?? []).map(p => ({
+          id: {
+            alunoMatricula: p.id.alunoMatricula,
+            aulaCodigo: p.id.aulaCodigo
+          },
+          presente: p.presente
+        }));
 
-        console.log(dados.presencas);
+        console.log('MATRÍCULAS DOS ALUNOS:', this.alunos.map(a => a.matricula));
+        console.log('MATRÍCULAS DAS PRESENÇAS:', this.presencas.map(p => p.id.alunoMatricula));
+
+        console.log('Alunos:', this.alunos);
+        console.log('Presenças:', this.presencas);
 
         this.cdr.detectChanges();
       },
@@ -434,21 +444,35 @@ export class AulaForm implements OnChanges, OnInit {
     return Boolean(presenca?.presente);
   }
 
-  alterarPresenca(aluno: alunoDomain, presente: boolean): void {
-    let presenca = this.presencas.find(
-      p => p.id.alunoMatricula === aluno.matricula
-    );
+ alterarPresenca(aluno: alunoDomain, presente: boolean): void {
 
-    if (presenca) {
-      presenca.presente = presente ? 1 : 0;
-    } else {
-      this.presencas.push({
-        id: {
-          alunoMatricula: aluno.matricula!,
-          aulaCodigo: this.formulario.getRawValue().codigo
-        },
-        presente: presente ? 1 : 0
-      });
-    }
+  console.log(
+    'Checkbox:',
+    aluno.matricula,
+    'Presente:',
+    presente
+  );
+
+  const presenca = this.presencas.find(
+    p => p.id.alunoMatricula === aluno.matricula
+  );
+
+  if (presenca) {
+
+    presenca.presente = presente ? 1 : 0;
+
+  } else {
+
+    this.presencas.push({
+      id: {
+        alunoMatricula: aluno.matricula!,
+        aulaCodigo: this.formulario.getRawValue().codigo
+      },
+      presente: presente ? 1 : 0
+    });
+
   }
+
+  console.log('Presenças:', this.presencas);
+}
 }

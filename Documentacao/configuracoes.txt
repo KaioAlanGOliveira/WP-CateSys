@@ -1,22 +1,22 @@
+https://chatgpt.com/share/6a5e52b8-7bf4-83e9-9c29-e6eba36f9dac.
 
-https://chatgpt.com/share/6a5e52b8-7bf4-83e9-9c29-e6eba36f9dac
+mvn clean install, mvn clean package.
 
-mvn clean install 2
-
-mvn clean package 1
-
-
-
-Principais comando do GitHub
-
-Enviar:
-git add .
-git commit -m ""
-git push.
-
-puxar:
-git pull
-
-git branch	Lista as branches
-git switch nome	Troca de branch
-git switch -c nome	Cria e entra em uma branchgit checkout    
+INSERT INTO aluno
+(matricula, nome, telefone, nome_responsavel, telefone_responsavel, data_nascimento, status)
+VALUES
+(10, 'Milena de Sousa da Rocha',     NULL, 'Evanice',                '6196591040', NULL, 1),
+(11, 'Geovanna Cristiny',            NULL, NULL,                     NULL,         NULL, 1),
+(12, 'Lucas Lima dos Santos',        NULL, NULL,                     NULL,         NULL, 1),
+(13, 'Letícia Nunes Silva',          NULL, 'Responsável da Letícia', '6184786996', NULL, 1),
+(14, 'Jônatas',                      NULL, 'Responsável',            '6192031717', NULL, 1),
+(15, 'Giovanna Maria',               NULL, 'Responsável',            '6192031717', NULL, 1),
+(16, 'Sophia de Sousa Santos Silva', NULL, 'Responsável da Sophia',  '6194169097', NULL, 1),
+(17, 'Amanda',                       NULL, NULL,                     NULL,         NULL, 1),
+(18, 'João Miguel',                  NULL, 'Responsável',            '6181575465', NULL, 1),
+(19, 'María Clara Santos',            NULL, NULL,                     NULL,         NULL, 1),
+(20, 'Matheus Veras dos Santos',     NULL, 'Responsável',            '6182835332', NULL, 1),
+(21, 'Davi Nunes Januzzi',           NULL, 'Responsável',            '6192607126', NULL, 1),
+(22, 'João Paulo Nunes Januzzi',     NULL, 'Responsável',            '6192607126', NULL, 1),
+(23, 'Nicolas',                      NULL, 'Responsável/avô',        '6181293385', NULL, 1),
+(24, 'Rebecca Sophia',               NULL, NULL,                     NULL,         NULL, 1);

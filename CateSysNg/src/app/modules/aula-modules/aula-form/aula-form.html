@@ -64,7 +64,9 @@
               <td>{{ aluno.matricula }}</td>
               <td>{{ aluno.nome }}</td>
               <td>
-                 <p-tableCheckbox [value]="aluno"></p-tableCheckbox>
+                <p-checkbox [binary]="true" [ngModel]="selecionado(aluno)"
+                  (onChange)="alterarPresenca(aluno, $event.checked)" [ngModelOptions]="{ standalone: true }">
+                </p-checkbox>
               </td>
             </tr>
           </ng-template>
@@ -74,8 +76,8 @@
       </div>
       <!-- Rodapé -->
       <div class="table-footer">
- 
-        
+
+
         <span>
           Total de registros encontrados:
           <strong>{{ alunos.length }}</strong>
