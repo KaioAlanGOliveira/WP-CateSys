@@ -153,9 +153,6 @@ export class TurmaForm implements OnChanges, OnInit {
     this.modo = 'creating';
     this.originalTurma = null;
     this.formulario.reset();
-    this.formulario.markAllAsDirty();
-    this.formulario.markAllAsTouched();
-    this.formulario.updateValueAndValidity();
     this.formulario.enable();
     this.listTAluno = [];
     this.disabled = false;
@@ -271,7 +268,14 @@ export class TurmaForm implements OnChanges, OnInit {
       };
 
       this.turmaService.apagar(formTADto).subscribe({
-        next: () => { this.finalizarComSucesso(); this.fecharModal(); alert('Turma pagar com sucesso! .'); },
+        next: (dados) => {  
+          if (dados == null) { 
+            alert("Não posso apagar turma que tem aula!") 
+          } else {
+            this.finalizarComSucesso(); this.fecharModal(); alert('Turma pagar com sucesso! .'); 
+          }
+          this.finalizarComSucesso(); this.fecharModal();
+        },
         error: (err) => { this.finalizarComSucesso(); },
       });
     }

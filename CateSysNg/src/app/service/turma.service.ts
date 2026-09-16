@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { TurmaDomain } from '../models/turma.model';
 import { HttpParamsObject } from '../core/http/http-params-object';
 import { TurmaDto } from '../models/turmaDto.model';
+import { Turma } from '../modules/turma-modules/turma/turma';
+import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +20,8 @@ export class TurmaService {
     return this.http.post<TurmaDto>(this.apiUrl, dto);
   }
 
-  apagar(turma: TurmaDto) {
-    return this.http.post(`${this.apiUrl}/remover`, turma);
+  apagar(turma: TurmaDto): Observable<Turma> {
+    return this.http.post<Turma>(`${this.apiUrl}/remover`, turma);
   }
 
   apagarAll() {

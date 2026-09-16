@@ -100,10 +100,9 @@ public class TurmaBss {
 		}
 	}
 
-	public void remover(Turma turma, List<Aluno> alunos) {
+	public Turma remover(Turma turma, List<Aluno> alunos) {
 
 		try {
-
 			em.createQuery("DELETE FROM TurmaAluno ta WHERE ta.id.turmaCodigo = :turmaCodigo")
 					.setParameter("turmaCodigo", turma.getCodigo()).executeUpdate();
 
@@ -115,7 +114,7 @@ public class TurmaBss {
 
 			em.createQuery("DELETE FROM Turma t WHERE t.codigo = :turmaCodigo")
 					.setParameter("turmaCodigo", turma.getCodigo()).executeUpdate();
-
+			return turma;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Erro ao remover", e);

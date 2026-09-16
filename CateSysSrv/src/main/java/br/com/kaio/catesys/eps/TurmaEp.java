@@ -69,17 +69,15 @@ public class TurmaEp {
 
 	@POST
 	@Path("/remover")
-	public Response remover(TurmaDTO dto) {
+	public Turma remover(TurmaDTO dto) {
 
 		try {
-			turmaBss.remover(dto.getTurma(), dto.getAlunos());
-			return Response.ok(Map.of("mensagem", " apagado com sucesso")).build();
+			return turmaBss.remover(dto.getTurma(), dto.getAlunos());
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Response.serverError().entity(Map.of("erro", e.getMessage())).build();
+			return null;
 		}
 	}
-
 
 	@PUT
 	public Response editar(TurmaDTO dto) {

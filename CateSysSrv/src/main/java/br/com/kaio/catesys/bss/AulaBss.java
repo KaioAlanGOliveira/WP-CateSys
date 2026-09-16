@@ -75,125 +75,105 @@ public class AulaBss {
 		}
 	}
 
-public AulaDTO getEntity(Integer codigoAula) {
+	public AulaDTO getEntity(Integer codigoAula) {
 
-    try {
+		try {
 
-        // ==============================
-        // BUSCA A AULA
-        // ==============================
+			// ==============================
+			// BUSCA A AULA
+			// ==============================
 
-        Aula aula = em.createQuery("""
-                SELECT a
-                FROM Aula a
-                WHERE a.codigo = :codigo
-                """, Aula.class)
-                .setParameter("codigo", codigoAula)
-                .getSingleResult();
+			Aula aula = em.createQuery("""
+					SELECT a
+					FROM Aula a
+					WHERE a.codigo = :codigo
+					""", Aula.class).setParameter("codigo", codigoAula).getSingleResult();
 
+			// ==============================
+			// BUSCA A TURMA DA AULA
+			// ==============================
 
-        // ==============================
-        // BUSCA A TURMA DA AULA
-        // ==============================
+			Turma turma = em.createQuery("""
+					SELECT t
+					FROM Turma t
+					WHERE t.codigo = :codigo
+					""", Turma.class).setParameter("codigo", aula.getTurmaCodigo()).getSingleResult();
 
-        Turma turma = em.createQuery("""
-                SELECT t
-                FROM Turma t
-                WHERE t.codigo = :codigo
-                """, Turma.class)
-                .setParameter("codigo", aula.getTurmaCodigo())
-                .getSingleResult();
+			// ==============================
+			// BUSCA OS ALUNOS DA TURMA
+			// ==============================
 
+			List<Aluno> alunos = em.createQuery("""
+					SELECT a
+					FROM TurmaAluno ta
+					JOIN Aluno a
+					    ON a.matricula = ta.id.alunoMatricula
+					WHERE ta.id.turmaCodigo = :codigoTurma
+					""", Aluno.class).setParameter("codigoTurma", aula.getTurmaCodigo()).getResultList();
 
-        // ==============================
-        // BUSCA OS ALUNOS DA TURMA
-        // ==============================
+			// ==============================
+			// BUSCA AS PRESENÇAS DA AULA
+			// ==============================
 
-        List<Aluno> alunos = em.createQuery("""
-                SELECT a
-                FROM TurmaAluno ta
-                JOIN Aluno a
-                    ON a.matricula = ta.id.alunoMatricula
-                WHERE ta.id.turmaCodigo = :codigoTurma
-                """, Aluno.class)
-                .setParameter("codigoTurma", aula.getTurmaCodigo())
-                .getResultList();
+			List<Presenca> presencasExistentes = em.createQuery("""
+					SELECT p
+					FROM Presenca p
+					WHERE p.id.aulaCodigo = :codigoAula
+					""", Presenca.class).setParameter("codigoAula", aula.getCodigo()).getResultList();
 
+			// ==============================
+			// GARANTE UMA PRESENÇA PARA
+			// CADA ALUNO DA TURMA
+			// ==============================
 
-        // ==============================
-        // BUSCA AS PRESENÇAS DA AULA
-        // ==============================
+			List<Presenca> presencas = new ArrayList<>();
 
-        List<Presenca> presencasExistentes = em.createQuery("""
-                SELECT p
-                FROM Presenca p
-                WHERE p.id.aulaCodigo = :codigoAula
-                """, Presenca.class)
-                .setParameter("codigoAula", aula.getCodigo())
-                .getResultList();
+			for (Aluno aluno : alunos) {
 
+				Presenca encontrada = presencasExistentes.stream()
+						.filter(p -> p.getId().getAlunoMatricula().equals(aluno.getMatricula())).findFirst()
+						.orElse(null);
 
-        // ==============================
-        // GARANTE UMA PRESENÇA PARA
-        // CADA ALUNO DA TURMA
-        // ==============================
+				if (encontrada != null) {
 
-        List<Presenca> presencas = new ArrayList<>();
+					presencas.add(encontrada);
 
-        for (Aluno aluno : alunos) {
+				} else {
 
-            Presenca encontrada = presencasExistentes.stream()
-                    .filter(p ->
-                        p.getId().getAlunoMatricula()
-                            .equals(aluno.getMatricula())
-                    )
-                    .findFirst()
-                    .orElse(null);
+					Presenca nova = new Presenca();
 
+					PresencaId id = new PresencaId();
 
-            if (encontrada != null) {
+					id.setAulaCodigo(aula.getCodigo());
+					id.setAlunoMatricula(aluno.getMatricula());
 
-                presencas.add(encontrada);
+					nova.setId(id);
+					nova.setPresente(0);
 
-            } else {
+					presencas.add(nova);
+				}
+			}
 
-                Presenca nova = new Presenca();
+			// ==============================
+			// MONTA DTO
+			// ==============================
 
-                PresencaId id = new PresencaId();
+			AulaDTO dto = new AulaDTO();
 
-                id.setAulaCodigo(aula.getCodigo());
-                id.setAlunoMatricula(aluno.getMatricula());
+			dto.setTurma(turma);
+			dto.setAula(aula);
+			dto.setAlunos(alunos);
+			dto.setPresencas(presencas);
 
-                nova.setId(id);
-                nova.setPresente(0);
+			return dto;
 
-                presencas.add(nova);
-            }
-        }
+		} catch (Exception e) {
 
+			e.printStackTrace();
 
-        // ==============================
-        // MONTA DTO
-        // ==============================
-
-        AulaDTO dto = new AulaDTO();
-
-        dto.setTurma(turma);
-        dto.setAula(aula);
-        dto.setAlunos(alunos);
-        dto.setPresencas(presencas);
-
-        return dto;
-
-    } catch (Exception e) {
-
-        e.printStackTrace();
-
-        throw new RuntimeException(
-            "Erro ao buscar dados da aula", e
-        );
-    }
-}
+			throw new RuntimeException("Erro ao buscar dados da aula", e);
+		}
+	}
 
 	public void alterar(AulaDTO dto) {
 		try {
