@@ -29,7 +29,7 @@ public class ProfessorEp {
 	public List<Professor> getProfessores() {
 		return professorBss.getList();
 	}
-	
+
 	@POST
 	@Path("/filtrar")
 	public List<Professor> getList(Professor pf) {
@@ -48,13 +48,14 @@ public class ProfessorEp {
 	}
 
 	@DELETE
-	public void remover(Professor professor) {
+	public Integer remover(Professor professor) {
 
 		try {
-			professorBss.remover(professor);
+			return professorBss.remover(professor.getMatricula());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return 1;
 	}
 
 	@PUT

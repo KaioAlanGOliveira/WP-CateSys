@@ -1,108 +1,119 @@
-<!-- Cabeçalho -->
-<div class="page-header">
-  <h2>Turma</h2>
-</div>
+<div class="container">
+  <!-- Cabeçalho -->
+  <div class="page-header">
+    <h2>Turma</h2>
+  </div>
 
-<!-- Card principal -->
-<div class="alunos-card">
+  <!-- Card principal -->
+  <div class="alunos-card">
 
-  <!-- Filtros -->
-  <form class="filtros" [formGroup]="form" (ngSubmit)="carregarDados()">
+    <!-- Filtros -->
+    <form class="filtros" [formGroup]="form" (ngSubmit)="carregarDados()">
 
-    <!-- Código -->
-    <div class="form-field">
-      <label for="codigo">Código</label>
+      <div class="filtros-campos">
+        <!-- Código -->
+        <div class="form-field">
+          <label for="codigo">Código</label>
 
-      <input id="codigo" class="input-field" type="text" formControlName="codigo" placeholder="Digite o código"
-        #inputCodigo>
-    </div>
-
-    <!-- Nome -->
-    <div class="form-field">
-      <label for="nome">Nome</label>
-
-      <input id="nome" class="input-field" type="text" formControlName="nome" placeholder="Digite o nome" #inputNome>
-    </div>
-
-    <!-- Professor -->
-    <div class="form-field">
-      <label for="professor">Professor</label>
-
-      <input id="professor" class="input-field" type="text" formControlName="professorMatricula" placeholder="Digite o professor"
-        #inputProfessor>
-    </div>
-
-    <!-- Status -->
-    <div class="campo">
-      <label>Status</label>
-
-      <div class="radio-group">
-        <div class="radio-option">
-          <p-radioButton name="status" [value]="1" formControlName="status" inputId="ativo" ></p-radioButton>
-          <label for="ativo">Ativo</label>
+          <input id="codigo" class="input-field" type="text" formControlName="codigo" placeholder="Digite o código"
+            #inputCodigo>
         </div>
 
-        <div class="radio-option">
-          <p-radioButton name="status" [value]="0" formControlName="status" inputId="inativo"></p-radioButton>
-          <label for="inativo">Inativo</label>
+        <!-- Nome -->
+        <div class="form-field">
+          <label for="nome">Nome</label>
+
+          <input id="nome" class="input-field" type="text" formControlName="nome" placeholder="Digite o nome"
+            #inputNome>
+        </div>
+
+        <!-- Professor -->
+        <div class="form-field">
+          <label for="professor">Professor</label>
+
+          <input id="professor" class="input-field" type="text" formControlName="professorMatricula"
+            placeholder="Digite o professor" #inputProfessor>
+        </div>
+
+        <!-- Status -->
+        <div class="campo">
+          <label>Status</label>
+
+          <div class="radio-group">
+            <div class="radio-option">
+              <p-radioButton name="status" [value]="1" formControlName="status" inputId="ativo"></p-radioButton>
+              <label for="ativo">Ativo</label>
+            </div>
+
+            <div class="radio-option">
+              <p-radioButton name="status" [value]="0" formControlName="status" inputId="inativo"></p-radioButton>
+              <label for="inativo">Inativo</label>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="form-action">
-      <button id="btn" class="btn-primary" type="submit" (click)="pesquisar()">
-        Pesquisar
-      </button>
-    </div>
+      <div class="form-action">
+        <button id="btn" class="btn-primary" type="submit" style="width: 8rem;" (click)="pesquisar()">
+          Pesquisar
+        </button>
+      </div>
 
-    <div class="form-action">
+
+    </form>
+
+    <div class="form-action-add">
       <button id="btn" class="btn-primary" icon="pi pi-plus" type="button" (click)="abrirNovoPopup()">
         +
       </button>
     </div>
 
-  </form>
+    <label for="list"
+      style="display: flex; align-items: center; justify-content: start;  margin: 0 0 1rem 1.2rem; color: black; font-size: 15px; font-family: sans-serif;">Lista</label>
+
+    <!-- Tabela -->
+    <div class="tabela-container">
+
+      <p-table [value]="turmasFiltradas" [tableStyle]="{ 'min-width': '50rem' }">
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Status</th>
+            <th>Professor</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-turma>
+          <tr (dblclick)="selecionado(turma)">
+            <td>{{ turma.codigo }}</td>
+            <td>{{ turma.nome }}</td>
+            <td>{{ turma.status === 1 ? 'Ativo' : 'Inativo' }}</td>
+            <td>{{ turma.professorMatricula === null || turma.professorMatricula === undefined ||
+              turma.professorMatricula
+              === "" ? 'Não atribuído' : turma.professorMatricula }}</td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+
+    </div>
 
 
-  <!-- Tabela -->
-  <div class="tabela-container">
+    <!-- Rodapé -->
+    <div class="table-footer">
 
-    <p-table [value]="turmasFiltradas" [tableStyle]="{ 'min-width': '50rem' }">
+      <span>
+        Total de registros encontrados:
+        <strong>{{ listTurmas.length }}</strong>
+      </span>
 
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Código</th>
-          <th>Nome</th>
-          <th>Status</th>
-          <th>Professor</th>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="body" let-turma>
-        <tr (dblclick)="selecionado(turma)">
-          <td>{{ turma.codigo }}</td>
-          <td>{{ turma.nome }}</td>
-          <td>{{ turma.status === 1 ? 'Ativo' : 'Inativo' }}</td>
-          <td>{{ turma.professorMatricula === null || turma.professorMatricula === undefined || turma.professorMatricula === "" ? 'Não atribuído' : turma.professorMatricula }}</td>
-        </tr>
-      </ng-template>
-
-    </p-table>
+    </div>
 
   </div>
+  <app-turma-form [(visivel)]="exibirModalPrincipal" (visivelChange)="retornoPopUp($event)"
+    [Selecionado]="turmaSelecionado">
 
-
-  <!-- Rodapé -->
-  <div class="table-footer">
-
-    <span>
-      Total de registros encontrados:
-      <strong>{{ listTurmas.length }}</strong>
-    </span>
-
-  </div>
-
+  </app-turma-form>
 </div>
-<app-turma-form [(visivel)]="exibirModalPrincipal" (visivelChange)="retornoPopUp($event)" [Selecionado]="turmaSelecionado">
-
-</app-turma-form>

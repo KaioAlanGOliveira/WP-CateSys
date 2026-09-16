@@ -87,7 +87,7 @@
 /* 5. Área de Conteúdo (Onde os filhos como Aluno renderizam) */
 .content-area {
   flex-grow: 1;
-  padding: 2rem;
+  padding: 0.9rem;
   overflow-y: auto; /* Scroll apenas no conteúdo, se necessário */
   background-color: #ffffff;
 }

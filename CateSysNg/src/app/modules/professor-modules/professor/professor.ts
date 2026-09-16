@@ -15,7 +15,7 @@ import { ProfessorForm } from "../professor-form/professor-form";
   styleUrl: './professor.css',
 })
 
-export class Professor implements OnInit {
+export class ProfessorClass implements OnInit {
 
   private professorServece = inject(ProfessorService);
   private cdr = inject(ChangeDetectorRef);

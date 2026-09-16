@@ -1,10 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { loginDto } from '../models/login.model';
-import { log } from 'node:console';
 import { professor } from '../models/professor.model';
-import { Professor } from '../modules/professor-modules/professor/professor';
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +13,8 @@ export class ProfessorService {
 
   constructor(private http: HttpClient) { }
 
-  apagar(professor: professor) {
-    return this.http.delete<{ mensagem: string }>(this.apiUrl, {
-      body: professor
-    });
+  apagar(filtro: professor): Observable<professor> {
+    return this.http.delete<professor>(this.apiUrl, { body: filtro });
   }
 
   listarTodos(): Observable<professor[]> {
@@ -33,7 +29,7 @@ export class ProfessorService {
     return this.http.put(this.apiUrl, professor);
   }
 
-  salvar(professor: professor): Observable<Professor> {
-    return this.http.post<Professor>(this.apiUrl, professor);
+  salvar(professor: professor): Observable<professor> {
+    return this.http.post<professor>(this.apiUrl, professor);
   }
 }

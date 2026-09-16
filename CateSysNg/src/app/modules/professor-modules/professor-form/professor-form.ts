@@ -228,7 +228,13 @@ export class ProfessorForm implements OnChanges, OnInit {
       if (!this.Selecionado?.matricula) return;
 
       this.professService.apagar(this.Selecionado).subscribe({
-        next: () => { this.finalizarComSucesso(); },
+        next: (dados) => {
+          if (dados != null) {
+            this.finalizarComSucesso();
+          } else {
+            alert('Não posso apagar um professor que está vinculado a uma turma.');
+          }
+        },
         error: (err) => { alert('Erro ao apagar o professor.'); this.finalizarComSucesso(); },
       });
       this.fecharModal();

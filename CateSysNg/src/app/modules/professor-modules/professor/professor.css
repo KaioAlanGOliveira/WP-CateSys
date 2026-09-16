@@ -1,12 +1,20 @@
+*{
+  border: 0;
+  padding: 0;
+  color: #000000;
+}
 /* ===== Página de Alunos - Estilo Dashboard ===== */
-
+.container {
+  border: 1px solid #d3d3d3;
+  height: 97%;
+}
 /* Cabeçalho da página */
 .page-header {
-  background: #1e88e5;
+  background: #1174c0;
   color: #ffffff;
   padding: 12px 20px;
   margin-bottom: 0;
-  border-radius: 4px 4px 0 0;
+  border-radius: 0;
 }
 
 .page-header h2 {
@@ -19,22 +27,31 @@
 /* Card principal */
 .alunos-card {
   background: #ffffff;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #ff0000;
   border-top: none;
-  border-radius: 0 0 4px 4px;
+  border-radius: 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   overflow: hidden;
 }
 
 /* ===== Filtros ===== */
 .filtros {
+  min-height: 7rem;
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: stretch;
   gap: 16px;
   padding: 16px 20px;
   background: #fafafa;
-  border-bottom: 1px solid #e0e0e0;
+  border: 1px solid #d3d3d3;
+  margin: 3rem 0.9rem 0 0.9rem;
+}
+
+.filtros-campos {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  width: 100%;
 }
 
 .form-field {
@@ -48,7 +65,7 @@
 .form-field label {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #424242;
+  color: #000000;
   text-transform: none;
 }
 
@@ -80,13 +97,21 @@
 /* Botões de ação dos filtros */
 .form-action {
   display: flex;
-  align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.form-action-add {
+  display: flex;
+  justify-content: end;
+  align-items: flex-start;
+   margin: 1rem 2.5rem 0 0;
 }
 
 .btn-primary {
-  background: #1e88e5;
+  background: #1174c0;
   color: #ffffff;
-  border: 1px solid #1e88e5;
+  border: 1px solid #1174c0;
   border-radius: 3px;
   padding: 8px 18px;
   font-size: 0.875rem;
@@ -112,7 +137,7 @@
 
 /* Botão de adicionar (+) mais compacto */
 .form-action:last-child .btn-primary {
-  width: 40px;
+  width: 8rem;
   padding: 8px 0;
   font-size: 1.2rem;
   font-weight: 600;
@@ -120,7 +145,7 @@
 
 /* ===== Tabela ===== */
 .tabela-container {
-  padding: 0;
+  padding: 0.9rem;
   overflow-x: auto;
 }
 
@@ -130,8 +155,8 @@
 }
 
 :host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
-  background: #f5f7fa;
-  color: #424242;
+  background: #f2f4f8;
+  color: #000000;
   font-weight: 600;
   font-size: 0.85rem;
   padding: 10px 14px;
@@ -147,7 +172,7 @@
 :host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
   padding: 10px 14px;
   font-size: 0.9rem;
-  color: #333;
+  color: #020202;
   border-bottom: 1px solid #f0f0f0;
 }
 
@@ -184,6 +209,11 @@
 /* ===== Responsivo ===== */
 @media (max-width: 768px) {
   .filtros {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filtros-campos {
     flex-direction: column;
     align-items: stretch;
   }

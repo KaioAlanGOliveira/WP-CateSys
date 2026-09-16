@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { Login } from './modules/login-modules/login';
 import { Aluno } from './modules/aluno-modules/aluno/aluno';
-import { Professor } from './modules/professor-modules/professor/professor';
+import { ProfessorClass } from './modules/professor-modules/professor/professor';
 import { MenuLateral } from './shared/menu-lateral/menu-lateral';
 import { Turma } from './modules/turma-modules/turma/turma';
 import { AulaList } from './modules/aula-modules/aula-list/aula-list';
@@ -15,7 +15,7 @@ export const routes: Routes = [
         component: MenuLateral,
         children: [
             { path: 'aluno', component: Aluno },
-            { path: 'professor', component: Professor },
+            { path: 'professor', component: ProfessorClass },
             { path: 'turma', component: Turma },
             { path: 'aula', component: AulaList },
         ]

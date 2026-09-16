@@ -68,15 +68,17 @@ public class ProfessorBss {
 		}
 	}
 
-	public void remover(Professor professor) {
+	public Integer remover(Integer professor) {
 
 		try {
 			em.createQuery("DELETE FROM Turma t WHERE t.professorMatricula = :matricula")
-					.setParameter("matricula", professor.getMatricula()).executeUpdate();
+					.setParameter("matricula", professor).executeUpdate();
 
-			em.remove(em.find(Professor.class, professor.getMatricula()));
+			em.remove(em.find(Professor.class, professor));
+			return 2;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return 3;
 		}
 	}
 }

@@ -1,6 +1,7 @@
 <!-- Cabeçalho -->
-<div class="page-header">
-  <h2>Professor</h2>
+<div class="container">
+  <div class="page-header">
+  <h2 style="color: white;">Professor</h2>
 </div>
 
 <!-- Card principal -->
@@ -9,17 +10,19 @@
   <!-- Filtros -->
   <form class="filtros" [formGroup]="form" (ngSubmit)="carregarDados()">
 
-    <div class="form-field">
-      <label for="nome">Nome</label>
+    <div class="filtros-campos">
+      <div class="form-field">
+        <label for="nome">Nome</label>
 
-      <input id="nome" class="input-field" type="text" formControlName="nome" placeholder="Digite o nome" #inputNome>
-    </div>
+        <input id="nome" class="input-field" type="text" formControlName="nome" placeholder="Digite o nome" #inputNome>
+      </div>
 
-    <div class="form-field">
-      <label for="matricula">Matrícula</label>
+      <div class="form-field">
+        <label for="matricula">Matrícula</label>
 
-      <input id="matricula" class="input-field" type="number" formControlName="matricula"
-        placeholder="Digite a matrícula" #inputMatricular>
+        <input id="matricula" class="input-field" type="number" formControlName="matricula"
+          placeholder="Digite a matrícula" #inputMatricular>
+      </div>
     </div>
 
     <div class="form-action">
@@ -27,16 +30,14 @@
         Pesquisar
       </button>
     </div>
-    
-    <div class="form-action">
-      <button id="btn" class="btn-primary" icon="pi pi-plus" type="button" (click)="add()">
-        +
-      </button>
-    </div>
-
   </form>
+  <div class="form-action-add">
+    <button id="btn" class="btn-primary" icon="pi pi-plus" type="button" (click)="add()">
+      +
+    </button>
+  </div>
 
-
+  <label for="list" style="display: flex; align-items: center; justify-content: start;  margin: 0 0 1rem 1.2rem; color: black; font-size: 15px; font-family: sans-serif;">Lista</label>
   <!-- Tabela -->
   <div class="tabela-container">
 
@@ -62,18 +63,17 @@
 
   </div>
 
-
-  <!-- Rodapé -->
-  <div class="table-footer">
-
-    <span>
-      Total de registros encontrados:
-      <strong>{{ listprofessors.length }}</strong>
-    </span>
-
-  </div>
-
 </div>
 <app-professor-form [(visivel)]="exibirModalPrincipal" (visivelChange)="retornoPopUp($event)"  [Selecionado]="professorSelecionado">
-
+  
 </app-professor-form>
+</div>
+<!-- Rodapé -->
+ <div class="table-footer">
+
+   <span>
+     Total de registros encontrados:
+     <strong>{{ listprofessors.length }}</strong>
+   </span>
+
+ </div>

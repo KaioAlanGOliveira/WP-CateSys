@@ -28,13 +28,22 @@
 
 /* ===== Filtros ===== */
 .filtros {
+  min-height: 7rem;
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: stretch;
   gap: 16px;
   padding: 16px 20px;
   background: #fafafa;
-  border-bottom: 1px solid #e0e0e0;
+  border: 1px solid #d3d3d3;
+  margin: 3rem 0.9rem 0 0.9rem;
+}
+
+.filtros-campos {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  width: 100%;
 }
 
 .form-field {
@@ -80,7 +89,8 @@
 /* Botões de ação dos filtros */
 .form-action {
   display: flex;
-  align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
 }
 
 .btn-primary {
@@ -120,7 +130,7 @@
 
 /* ===== Tabela ===== */
 .tabela-container {
-  padding: 0;
+  padding: 0.9rem;
   overflow-x: auto;
 }
 
@@ -129,7 +139,7 @@
   border: none;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+:host ::ng-deep .p-datatable .p-datatable-thead>tr>th {
   background: #f5f7fa;
   color: #424242;
   font-weight: 600;
@@ -140,28 +150,35 @@
   white-space: nowrap;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-tbody > tr {
+:host ::ng-deep .p-datatable .p-datatable-tbody>tr {
   transition: background 0.15s;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+:host ::ng-deep .p-datatable .p-datatable-tbody>tr>td {
   padding: 10px 14px;
   font-size: 0.9rem;
   color: #333;
   border-bottom: 1px solid #f0f0f0;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+:host ::ng-deep .p-datatable .p-datatable-tbody>tr:hover {
   background: #f5f9ff !important;
   cursor: pointer;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-tbody > tr:nth-child(even) {
+:host ::ng-deep .p-datatable .p-datatable-tbody>tr:nth-child(even) {
   background: #fafafa;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-tbody > tr:nth-child(even):hover {
+:host ::ng-deep .p-datatable .p-datatable-tbody>tr:nth-child(even):hover {
   background: #f5f9ff !important;
+}
+
+.form-action-add {
+  display: flex;
+  justify-content: end;
+  align-items: flex-start;
+  margin: 1rem 2.5rem 0 0;
 }
 
 /* ===== Rodapé ===== */
@@ -183,36 +200,42 @@
 
 
 .campo {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
 }
 
-.campo > label {
-    margin: 0;
-    font-weight: 600;
+.campo>label {
+  margin: 0;
+  font-weight: 600;
 }
 
 .radio-group {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .radio-option {
-    display: flex;
-    align-items: center;
-    gap: 2px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
 
 .radio-option label {
-    margin: 0;
-    line-height: 18px;
+  margin: 0;
+  line-height: 18px;
 }
+
 /* ===== Responsivo ===== */
 @media (max-width: 768px) {
   .filtros {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filtros-campos {
     flex-direction: column;
     align-items: stretch;
   }

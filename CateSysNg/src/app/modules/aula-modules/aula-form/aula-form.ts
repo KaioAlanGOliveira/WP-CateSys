@@ -55,6 +55,7 @@ export class AulaForm implements OnChanges, OnInit {
   get salvarHabilitado() { return this.modo !== 'initial'; }
   get cancelarHabilitado() { return this.modo !== 'initial'; }
   get fecharHabilitado() { return true; }
+  get presencaHabilitada() { return this.modo === 'editing'; }
 
   turmas: TurmaDomain[] = [];
   formulario!: FormGroup;
@@ -445,6 +446,8 @@ export class AulaForm implements OnChanges, OnInit {
   }
 
  alterarPresenca(aluno: alunoDomain, presente: boolean): void {
+
+  if (!this.presencaHabilitada) return;
 
   console.log(
     'Checkbox:',
