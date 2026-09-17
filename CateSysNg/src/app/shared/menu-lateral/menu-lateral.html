@@ -1,9 +1,10 @@
-<aside class="menu-lateral">
-
-  <div class="logo">
-    <i class="pi pi-book"></i>
-    <span>CateSys</span>
-  </div>
+<aside class="menu-lateral" [style.width]="larguraMenu">
+  
+    <div class="logo"(click)="encolher()">
+      <i class="pi pi-book"></i>
+      <span >CateSys</span>
+       <!-- <button style="background-color: #0c446c; border: none; color: white;">X</button> -->
+    </div>
 
   <nav class="menu">
     <a routerLink="/aluno" routerLinkActive="ativo">
