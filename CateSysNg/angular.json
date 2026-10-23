@@ -32,7 +32,6 @@
   "outputMode": "static"
 },
             
-          },
           "configurations": {
             "production": {
               "budgets": [
