@@ -31,9 +31,7 @@
   ],
   "outputMode": "static"
 },
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            
           },
           "configurations": {
             "production": {
