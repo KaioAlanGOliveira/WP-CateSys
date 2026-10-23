@@ -16,23 +16,21 @@
       "architect": {
         "build": {
           "builder": "@angular/build:application",
-          "options": {
-            "browser": "src/main.ts",
-            "tsConfig": "tsconfig.app.json",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
-            "styles": [
-              "src/styles.css"
-            ],
-            "server": "src/main.server.ts",
-            "outputMode": "static",
-            "security": {
-              "allowedHosts": []
-            },
+          
+"options": {
+  "browser": "src/main.ts",
+  "tsConfig": "tsconfig.app.json",
+  "assets": [
+    {
+      "glob": "**/*",
+      "input": "public"
+    }
+  ],
+  "styles": [
+    "src/styles.css"
+  ],
+  "outputMode": "static"
+},
             "ssr": {
               "entry": "src/server.ts"
             }
