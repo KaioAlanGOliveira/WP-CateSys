@@ -1,7 +1,8 @@
+
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "cli": { 
+  "cli": {
     "packageManager": "npm",
     "analytics": "e4606963-33f8-442f-b0f9-515cf23c98ee"
   },
@@ -16,22 +17,20 @@
       "architect": {
         "build": {
           "builder": "@angular/build:application",
-          
-"options": {
-  "browser": "src/main.ts",
-  "tsConfig": "tsconfig.app.json",
-  "assets": [
-    {
-      "glob": "**/*",
-      "input": "public"
-    }
-  ],
-  "styles": [
-    "src/styles.css"
-  ],
-  "outputMode": "static"
-},
-            
+          "options": {
+            "browser": "src/main.ts",
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
+            "outputMode": "static"
+          },
           "configurations": {
             "production": {
               "budgets": [
@@ -58,7 +57,7 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
-           "options": {
+          "options": {
             "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
