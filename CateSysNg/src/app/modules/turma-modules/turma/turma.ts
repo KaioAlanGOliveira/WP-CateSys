@@ -1,10 +1,19 @@
-import { ChangeDetectorRef, Component, inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+  PLATFORM_ID
+} from '@angular/core';
+
+import { isPlatformBrowser } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TurmaService } from '../../../service/turma.service';
 import { TableModule } from 'primeng/table';
 import { TurmaDomain } from '../../../models/turma.model';
 import { TurmaForm } from '../turma-form/turma-form';
 import { RadioButton } from "primeng/radiobutton";
+
 
 @Component({
   selector: 'app-turma',
@@ -18,7 +27,8 @@ export class Turma implements OnInit {
 
   private turmaServece = inject(TurmaService);
   private cdr = inject(ChangeDetectorRef);
-
+  private platformId = inject(PLATFORM_ID);
+  
   exibirModalPrincipal: boolean = false;
   turmaSelecionado!: any;
   formTurma!: TurmaDomain;
@@ -32,9 +42,11 @@ export class Turma implements OnInit {
     professorMatricula: new FormControl<number | null>(null)
   });
 
-  ngOnInit() {
+ ngOnInit() {
+  if (isPlatformBrowser(this.platformId)) {
     this.carregarDados();
   }
+}
 
   carregarDados() {
     const filtro = this.form.value as TurmaDomain;
